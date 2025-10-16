@@ -29,4 +29,24 @@ class FirebaseAuthServices {
       print(error.toString());
     }
   }
+
+  // get currunt user
+  User get curruntUserData => firebaseAuth.currentUser!;
+
+  //login using email and password
+  Future<void> loginWIthEmail({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      print(FirebaseAuthException(code: e.code));
+    } catch (error) {
+      print(error.toString());
+    }
+  }
 }

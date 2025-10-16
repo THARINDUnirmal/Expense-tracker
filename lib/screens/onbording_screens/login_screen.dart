@@ -6,6 +6,7 @@ import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_field.dart';
 import 'package:expenzes/widgets/reuseble_widgets/small_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +16,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  //Loading state
+  bool isLoading = false;
   //form key
   final _formKey = GlobalKey<FormState>();
   //TextEditingControllers
@@ -30,6 +33,14 @@ class _LoginScreenState extends State<LoginScreen> {
         AppMessages().appMessage(error.toString(), context);
       }
     }
+  }
+
+  //Email login
+  Future<void> emailSign(String userEmail, String userPassword) async {
+    await FirebaseAuthServices().loginWIthEmail(
+      email: userEmail,
+      password: userPassword,
+    );
   }
 
   @override
@@ -83,8 +94,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             issecurText: false,
                             controller: _emailContraller,
                             validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter email!";
+                              if (value == null || value.isEmpty) {
+                                return "Please enter an email";
+                              } else if (!RegExp(
+                                r'^[^@]+@[^@]+\.[^@]+',
+                              ).hasMatch(value)) {
+                                return "Please enter valid email";
                               } else {
                                 return null;
                               }
@@ -146,16 +161,37 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             child: TextButton(
                               style: TextButton.styleFrom(),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {}
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  try {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    await emailSign(
+                                      _emailContraller.text,
+                                      _passwordContraller.text,
+                                    );
+
+                                    await Future.delayed(Duration(seconds: 2));
+                                  } catch (error) {
+                                    print(error.toString());
+                                  } finally {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  }
+                                }
                               },
-                              child: Text(
-                                "Login",
-                                style: AppTextStyles.subTopicTextStyle.copyWith(
-                                  color: AppColors.appBlackColor,
-                                  fontSize: 25,
-                                ),
-                              ),
+                              child: isLoading
+                                  ? CircularProgressIndicator()
+                                  : Text(
+                                      "Login",
+                                      style: AppTextStyles.subTopicTextStyle
+                                          .copyWith(
+                                            color: AppColors.appBlackColor,
+                                            fontSize: 25,
+                                          ),
+                                    ),
                             ),
                           ),
                           SizedBox(height: AppConstants.appPadding * 2),
@@ -197,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: AppConstants.appPadding * 2),
                     GestureDetector(
                       onTap: () {
-                        //todo - sign up
+                        GoRouter.of(context).go("/RegisterScreen");
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

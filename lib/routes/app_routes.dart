@@ -1,5 +1,6 @@
 import 'package:expenzes/screens/main_screen.dart';
 import 'package:expenzes/screens/onbording_screens/login_screen.dart';
+import 'package:expenzes/screens/onbording_screens/register_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRoutes {
@@ -9,6 +10,10 @@ class AppRoutes {
       //Login Route
       GoRoute(path: "/", builder: (context, state) => LoginScreen()),
       GoRoute(path: "/MainScreen", builder: (context, state) => MainScreen()),
+      GoRoute(
+        path: "/RegisterScreen",
+        builder: (context, state) => RegisterScreen(),
+      ),
     ],
   );
 }
