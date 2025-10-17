@@ -49,4 +49,32 @@ class FirebaseAuthServices {
       print(error.toString());
     }
   }
+
+  //log out
+  Future<void> logOutAccount() async {
+    try {
+      await firebaseAuth.signOut();
+    } on FirebaseAuthException catch (error) {
+      print(FirebaseAuthException(code: error.code));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  //Register user with email & password
+  Future<void> registerEmail({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (error) {
+      print(FirebaseAuthException(code: error.code));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

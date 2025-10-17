@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 class AppRoutes {
   static GoRouter route = GoRouter(
-    initialLocation: "/MainScreen",
+    initialLocation: "/",
     routes: [
       //Login Route
       GoRoute(path: "/", builder: (context, state) => AuthViewScreen()),

@@ -14,7 +14,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<Widget> pageList = [HomeScreen(), UserScreen()];
-  int curruntIndex = 1;
+  int curruntIndex = 0;
 
   @override
   Widget build(BuildContext context) {

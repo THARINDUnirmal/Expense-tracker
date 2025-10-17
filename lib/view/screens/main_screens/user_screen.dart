@@ -1,10 +1,29 @@
+import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
+
+  @override
+  State<UserScreen> createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
+  late String? userName;
+  Future<void> getUser() async {
+    User userData = FirebaseAuthServices().curruntUserData;
+    userName = userData.email ?? "No name";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +45,9 @@ class UserScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "Tharindu Nirmal",
+                      userName!,
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -76,7 +95,9 @@ class UserScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                     backgroundColor: Color(0xfffde4e3),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await FirebaseAuthServices().logOutAccount();
+                  },
                   child: Text(
                     "LogOut",
                     style: AppTextStyles.miniTextStyle.copyWith(

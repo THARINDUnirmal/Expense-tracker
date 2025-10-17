@@ -37,8 +37,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   //Email login
-  Future<void> emailSign(String userEmail, String userPassword) async {
-    await FirebaseAuthServices().loginWIthEmail(
+  Future<void> registerUser(String userEmail, String userPassword) async {
+    await FirebaseAuthServices().registerEmail(
       email: userEmail,
       password: userPassword,
     );
@@ -167,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       setState(() {
                                         isLoading = true;
                                       });
-                                      await emailSign(
+                                      await registerUser(
                                         _emailContraller.text,
                                         _passwordContraller.text,
                                       );
@@ -181,6 +181,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       setState(() {
                                         isLoading = false;
                                       });
+
+                                      GoRouter.of(context).go("/");
                                     }
                                   }
                                 },

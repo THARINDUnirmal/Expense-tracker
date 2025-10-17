@@ -1,9 +1,29 @@
+import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late String? userName;
+
+  Future<void> getUser() async {
+    User userData = FirebaseAuthServices().curruntUserData;
+    userName = userData.email ?? "No name";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +92,14 @@ class HomeScreen extends StatelessWidget {
                             "Good Evening!",
                             style: AppTextStyles.miniTextStyle,
                           ),
-                          Text(
-                            "Tharindu Nirmal",
-                            style: AppTextStyles.mainTopicTextStyle.copyWith(
-                              fontSize: 23,
+                          SizedBox(
+                            width: 210,
+                            child: Text(
+                              overflow: TextOverflow.ellipsis,
+                              userName!,
+                              style: AppTextStyles.mainTopicTextStyle.copyWith(
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ],

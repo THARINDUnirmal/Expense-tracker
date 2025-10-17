@@ -179,6 +179,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     setState(() {
                                       isLoading = false;
                                     });
+
+                                    GoRouter.of(context).go("/");
                                   }
                                 }
                               },
@@ -220,6 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         GestureDetector(
                           onTap: () async {
                             await googleSign();
+                            GoRouter.of(context).go("/");
                           },
                           child: SmallCardWidget(
                             svgImage: "assets/icons/icons8-google.svg",
