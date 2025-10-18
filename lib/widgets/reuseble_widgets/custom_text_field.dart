@@ -27,14 +27,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            blurRadius: 15,
+            blurRadius: 8,
             color: Colors.grey.withOpacity(0.5),
             offset: Offset(15, 15),
           ),
-          BoxShadow(blurRadius: 1, color: Colors.white, offset: Offset(-5, 0)),
+          BoxShadow(blurRadius: 1, color: Colors.white, offset: Offset(-1, 0)),
         ],
       ),
       child: TextFormField(

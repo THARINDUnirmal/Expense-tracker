@@ -73,6 +73,7 @@ class FirebaseAuthServices {
       );
     } on FirebaseAuthException catch (error) {
       print(FirebaseAuthException(code: error.code));
+      throw exceptions(error.code);
     } catch (e) {
       print(e.toString());
     }

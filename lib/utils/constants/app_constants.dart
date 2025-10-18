@@ -1,3 +1,3 @@
 class AppConstants {
-  static const double appPadding = 15;
+  static const double appPadding = 20;
 }

@@ -60,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: AppColors.appCreamColor,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 20,
@@ -76,18 +76,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: AppConstants.appPadding * 2),
+                      Center(
+                        child: RichText(
+                          text: TextSpan(
+                            text: "Finance",
+                            style: TextStyle(
+                              fontSize: 40,
+                              color: Color(0xfffdaa5d),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: "Mate",
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  color: Color(0xff4ab7b6),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: AppConstants.appPadding + 10),
                       Text(
                         "Sign Up For Free",
                         style: AppTextStyles.mainTopicTextStyle,
                       ),
-                      SizedBox(height: AppConstants.appPadding / 2),
                       Text(
                         "Sign Up to your account",
                         style: AppTextStyles.subTopicTextStyle,
                       ),
-                      SizedBox(height: AppConstants.appPadding * 3),
+                      SizedBox(height: 30),
                       Form(
                         key: _formKey,
                         child: Column(
@@ -105,7 +127,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               labaleTexts: "User name",
                               icon: Icons.people,
                             ),
-                            SizedBox(height: AppConstants.appPadding * 2),
+                            SizedBox(height: AppConstants.appPadding),
                             CustomTextField(
                               issecurText: false,
                               controller: _emailContraller,
@@ -123,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               labaleTexts: "Email",
                               icon: Icons.email_outlined,
                             ),
-                            SizedBox(height: AppConstants.appPadding * 2),
+                            SizedBox(height: AppConstants.appPadding),
                             CustomTextField(
                               issecurText: true,
                               controller: _passwordContraller,
@@ -139,23 +161,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               labaleTexts: "Password",
                               icon: Icons.lock_outline,
                             ),
-                            SizedBox(height: AppConstants.appPadding * 4),
+                            SizedBox(height: AppConstants.appPadding * 2),
                             Container(
                               width: double.infinity,
                               height: MediaQuery.of(context).size.height * 0.07,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
-                                    blurRadius: 15,
-                                    // ignore: deprecated_member_use
+                                    blurRadius: 8,
                                     color: Colors.grey.withOpacity(0.5),
                                     offset: Offset(15, 15),
                                   ),
                                   BoxShadow(
                                     blurRadius: 1,
                                     color: Colors.white,
-                                    offset: Offset(-5, 0),
+                                    offset: Offset(-1, 0),
                                   ),
                                 ],
                               ),
@@ -190,20 +211,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ? CircularProgressIndicator()
                                     : Text(
                                         "Register",
-                                        style: AppTextStyles.subTopicTextStyle
-                                            .copyWith(
-                                              color: AppColors.appBlackColor,
-                                              fontSize: 25,
-                                            ),
+                                        style: AppTextStyles.mainTopicTextStyle,
                                       ),
                               ),
                             ),
-                            SizedBox(height: AppConstants.appPadding * 2),
+                            SizedBox(height: AppConstants.appPadding + 5),
                             Text(
                               "Or continue with",
                               style: AppTextStyles.subTopicTextStyle,
                             ),
-                            SizedBox(height: AppConstants.appPadding * 2),
+                            SizedBox(height: AppConstants.appPadding + 5),
                           ],
                         ),
                       ),
@@ -230,11 +247,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           SmallCardWidget(
-                            svgImage: "assets/icons/icons8-facebook.svg",
+                            svgImage: "assets/icons/annonymus.svg",
                           ),
                         ],
                       ),
-                      SizedBox(height: AppConstants.appPadding * 2),
+                      SizedBox(height: AppConstants.appPadding + 5),
                       GestureDetector(
                         onTap: () {
                           GoRouter.of(context).go("/");
@@ -255,7 +272,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(height: AppConstants.appPadding * 2),
+                      SizedBox(height: AppConstants.appPadding),
                     ],
                   ),
                 ),

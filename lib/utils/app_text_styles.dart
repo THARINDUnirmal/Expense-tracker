@@ -3,19 +3,19 @@ import 'package:flutter/widgets.dart';
 
 class AppTextStyles {
   static TextStyle mainTopicTextStyle = TextStyle(
-    fontSize: 35,
+    fontSize: 22,
     fontWeight: FontWeight.bold,
     color: AppColors.appBlackColor,
   );
 
   static TextStyle subTopicTextStyle = TextStyle(
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: FontWeight.bold,
     color: AppColors.appBlackColor.withOpacity(0.3),
   );
 
   static TextStyle miniTextStyle = TextStyle(
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: FontWeight.bold,
     color: AppColors.appBlackColor.withOpacity(0.5),
   );
