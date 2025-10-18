@@ -78,4 +78,16 @@ class FirebaseAuthServices {
       print(e.toString());
     }
   }
+
+  //login as a annonymus
+  Future<void> logAsAnnonymus() async {
+    try {
+      await firebaseAuth.signInAnonymously();
+    } on FirebaseAuthException catch (error) {
+      print(FirebaseAuthException(code: error.code));
+      throw exceptions(error.code);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

@@ -18,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   //Loading state
   bool isLoading = false;
+  bool isIconLoad = false;
   //form key
   final _formKey = GlobalKey<FormState>();
   //TextEditingControllers
@@ -240,6 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
                             },
                             child: SmallCardWidget(
+                              isLoading: false,
                               svgImage: "assets/icons/icons8-apple.svg",
                             ),
                           ),
@@ -249,11 +251,29 @@ class _LoginScreenState extends State<LoginScreen> {
                               GoRouter.of(context).go("/");
                             },
                             child: SmallCardWidget(
+                              isLoading: false,
                               svgImage: "assets/icons/icons8-google.svg",
                             ),
                           ),
-                          SmallCardWidget(
-                            svgImage: "assets/icons/annonymus.svg",
+                          GestureDetector(
+                            onTap: () async {
+                              try {
+                                setState(() {
+                                  isIconLoad = true;
+                                });
+                                await FirebaseAuthServices().logAsAnnonymus();
+                              } catch (e) {
+                                AppMessages().appMessage(e.toString(), context);
+                              } finally {
+                                setState(() {
+                                  isIconLoad = false;
+                                });
+                              }
+                            },
+                            child: SmallCardWidget(
+                              isLoading: isIconLoad,
+                              svgImage: "assets/icons/annonymus.svg",
+                            ),
                           ),
                         ],
                       ),

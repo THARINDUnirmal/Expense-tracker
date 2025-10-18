@@ -18,6 +18,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   //Loading state
   bool isLoading = false;
+  bool isIconLoad = false;
   //form key
   final _formKey = GlobalKey<FormState>();
   //TextEditingControllers
@@ -235,6 +236,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               );
                             },
                             child: SmallCardWidget(
+                              isLoading: false,
                               svgImage: "assets/icons/icons8-apple.svg",
                             ),
                           ),
@@ -243,11 +245,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               await googleSign();
                             },
                             child: SmallCardWidget(
+                              isLoading: false,
                               svgImage: "assets/icons/icons8-google.svg",
                             ),
                           ),
-                          SmallCardWidget(
-                            svgImage: "assets/icons/annonymus.svg",
+                          GestureDetector(
+                            onTap: () async {
+                              try {
+                                setState(() {
+                                  isIconLoad = true;
+                                });
+                                await FirebaseAuthServices().logAsAnnonymus();
+                              } catch (e) {
+                                AppMessages().appMessage(e.toString(), context);
+                              } finally {
+                                setState(() {
+                                  isIconLoad = false;
+                                });
+                              }
+                            },
+                            child: SmallCardWidget(
+                              isLoading: isIconLoad,
+                              svgImage: "assets/icons/annonymus.svg",
+                            ),
                           ),
                         ],
                       ),

@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Icon(
                       Icons.notifications,
-                      size: 30,
+                      size: 25,
                       color: Color(0xffea7173),
                     ),
                   ),
@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
                         ),
                       ),
-                      SizedBox(width: 20),
+                      SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: AppTextStyles.miniTextStyle,
                           ),
                           SizedBox(
-                            width: 210,
+                            width: MediaQuery.of(context).size.width * 0.55,
                             child: Text(
                               overflow: TextOverflow.ellipsis,
                               userName!,
@@ -107,10 +107,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   SizedBox(width: 10),
-                  Icon(Icons.keyboard_double_arrow_right, size: 30),
+                  Icon(Icons.keyboard_double_arrow_right, size: 25),
                 ],
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  Icon(Icons.add, size: 30),
+                  Icon(Icons.add, size: 25),
                 ],
               ),
             ],

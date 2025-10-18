@@ -14,9 +14,11 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   late String? userName;
+  late User userData;
   Future<void> getUser() async {
-    User userData = FirebaseAuthServices().curruntUserData;
-    userName = userData.email ?? "No name";
+    User userDataa = FirebaseAuthServices().curruntUserData;
+    userName = userDataa.email ?? "No name";
+    userData = userDataa;
   }
 
   @override
@@ -45,16 +47,17 @@ class _UserScreenState extends State<UserScreen> {
                       ),
                     ),
                     Text(
-                      userName!,
+                      "Email:${userName!}",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      "Id:0zzxx",
+                      maxLines: 2,
+                      "Id:${userData.uid}",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
@@ -70,21 +73,21 @@ class _UserScreenState extends State<UserScreen> {
               Divider(endIndent: 30, indent: 30),
               SizedBox(height: 10),
               userPageWidget(
-                svg: "assets/icons/user.svg",
+                svg: "assets/icons/menu.svg",
                 subTitle: "Monose acccunts and description",
                 title: "Accounts",
               ),
               Divider(endIndent: 30, indent: 30),
               SizedBox(height: 10),
               userPageWidget(
-                svg: "assets/icons/user.svg",
+                svg: "assets/icons/message-circle-more.svg",
                 subTitle: "Manage categories & add sub-categories",
                 title: "Categories",
               ),
               Divider(endIndent: 30, indent: 30),
               SizedBox(height: 10),
               userPageWidget(
-                svg: "assets/icons/user.svg",
+                svg: "assets/icons/annonymus.svg",
                 subTitle: "Protect your app with PIN or Fngerprint",
                 title: "Security",
               ),
@@ -119,7 +122,7 @@ class _UserScreenState extends State<UserScreen> {
     required String subTitle,
   }) {
     return Container(
-      padding: EdgeInsets.all(AppConstants.appPadding),
+      padding: EdgeInsets.all(15),
       child: Row(
         children: [
           SvgPicture.asset(svg),
@@ -129,13 +132,14 @@ class _UserScreenState extends State<UserScreen> {
             children: [
               Text(
                 title,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 5),
               Text(
+                maxLines: 2,
                 subTitle,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.normal,
                   color: Colors.grey,
                 ),
