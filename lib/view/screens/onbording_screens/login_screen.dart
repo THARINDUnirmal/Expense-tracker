@@ -55,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(height: AppConstants.appPadding * 1.5),
                 Container(
                   padding: EdgeInsets.all(AppConstants.appPadding + 5),
                   width: double.infinity,
@@ -78,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: AppConstants.appPadding / 2),
+                      SizedBox(height: AppConstants.appPadding),
                       Center(
                         child: RichText(
                           text: TextSpan(
@@ -106,7 +107,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         "Welcome Back",
                         style: AppTextStyles.mainTopicTextStyle,
                       ),
-                      // SizedBox(height: AppConstants.appPadding / 2),
                       Text(
                         "Sign In to your account",
                         style: AppTextStyles.subTopicTextStyle,

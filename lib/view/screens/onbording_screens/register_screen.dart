@@ -56,6 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(height: AppConstants.appPadding * 1.5),
                 Container(
                   padding: EdgeInsets.all(AppConstants.appPadding + 5),
                   width: double.infinity,
@@ -79,6 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: AppConstants.appPadding),
                       Center(
                         child: RichText(
                           text: TextSpan(

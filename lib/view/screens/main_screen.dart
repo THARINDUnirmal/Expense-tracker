@@ -1,4 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:expenzes/view/screens/main_screens/add_screen.dart';
 import 'package:expenzes/view/screens/main_screens/home_screen.dart';
 import 'package:expenzes/view/screens/main_screens/user_screen.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<Widget> pageList = [HomeScreen(), UserScreen()];
-  int curruntIndex = 0;
+  List<Widget> pageList = [HomeScreen(), AddScreen(), UserScreen()];
+  int curruntIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
         items: [
           SvgPicture.asset("assets/icons/house.svg"),
 
+          SvgPicture.asset("assets/icons/circle-plus.svg"),
           SvgPicture.asset("assets/icons/user.svg"),
         ],
       ),
