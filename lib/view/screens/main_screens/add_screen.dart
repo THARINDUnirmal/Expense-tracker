@@ -1,3 +1,4 @@
+import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
@@ -16,44 +17,57 @@ class _AddScreenState extends State<AddScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Placeholder(
-              child: Container(
-                padding: EdgeInsets.all(AppConstants.appPadding),
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: RichText(
-                  text: TextSpan(
-                    text: "Add Your\n",
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "Expences",
-                        style: TextStyle(
-                          fontSize: 40,
-                          color: Color.fromARGB(255, 237, 89, 81),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+            Container(
+              padding: EdgeInsets.all(AppConstants.appPadding),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: RichText(
+                text: TextSpan(
+                  text: "Income\n",
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: AppColors.appBlackColor,
+                    fontWeight: FontWeight.bold,
                   ),
+                  children: [
+                    TextSpan(
+                      text: "Expences",
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: Color.fromARGB(255, 237, 89, 81),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
             SizedBox(height: 30),
-            Placeholder(
-              child: Container(
-                padding: EdgeInsets.all(AppConstants.appPadding),
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Expenses", style: AppTextStyles.mainTopicTextStyle),
-                  ],
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.appBlueColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
                 ),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppConstants.appPadding + 5,
+                vertical: AppConstants.appPadding * 2,
+              ),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Expenses",
+                    style: AppTextStyles.mainTopicTextStyle.copyWith(
+                      color: AppColors.appWhiteColor,
+                      fontSize: 30,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

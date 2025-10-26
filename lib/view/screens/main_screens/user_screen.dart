@@ -4,6 +4,7 @@ import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -65,10 +66,15 @@ class _UserScreenState extends State<UserScreen> {
                 ),
               ),
               SizedBox(height: 30),
-              userPageWidget(
-                svg: "assets/icons/user.svg",
-                subTitle: "Change profile image, name password",
-                title: "User profile",
+              GestureDetector(
+                onTap: () {
+                  GoRouter.of(context).push("/EdditProfileScreen");
+                },
+                child: userPageWidget(
+                  svg: "assets/icons/user.svg",
+                  subTitle: "Change profile image, name password",
+                  title: "User profile",
+                ),
               ),
               Divider(endIndent: 30, indent: 30),
               SizedBox(height: 10),

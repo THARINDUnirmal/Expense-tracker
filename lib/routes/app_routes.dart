@@ -2,6 +2,7 @@ import 'package:expenzes/view/screens/auth_view/auth_view_screen.dart';
 import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/view/screens/onbording_screens/login_screen.dart';
 import 'package:expenzes/view/screens/onbording_screens/register_screen.dart';
+import 'package:expenzes/view/screens/sub_screens/eddit_profile_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRoutes {
@@ -15,6 +16,10 @@ class AppRoutes {
       GoRoute(
         path: "/RegisterScreen",
         builder: (context, state) => RegisterScreen(),
+      ),
+      GoRoute(
+        path: "/EdditProfileScreen",
+        builder: (context, state) => EdditProfileScreen(),
       ),
     ],
   );
