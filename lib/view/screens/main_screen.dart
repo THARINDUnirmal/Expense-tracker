@@ -1,7 +1,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:expenzes/view/screens/main_screens/add_screen.dart';
+import 'package:expenzes/view/screens/sub_screens/add_screen.dart';
 import 'package:expenzes/view/screens/main_screens/home_screen.dart';
 import 'package:expenzes/view/screens/main_screens/user_screen.dart';
+import 'package:expenzes/view/screens/main_screens/add_data_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -14,7 +15,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<Widget> pageList = [HomeScreen(), AddScreen(), UserScreen()];
+  List<Widget> pageList = [HomeScreen(), AddDataScreen(), UserScreen()];
   int curruntIndex = 2;
 
   @override

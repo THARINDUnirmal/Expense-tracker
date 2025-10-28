@@ -268,6 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 setState(() {
                                   isIconLoad = false;
                                 });
+                                GoRouter.of(context).go("/");
                               }
                             },
                             child: SmallCardWidget(

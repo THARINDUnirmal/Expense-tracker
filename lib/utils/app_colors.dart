@@ -6,4 +6,6 @@ class AppColors {
   static Color appCreamColor = Color(0xffeeedf1);
   static Color appBlueColor = Color(0xff1d96e4);
   static Color appRedColor = Color(0xffFF2E63);
+  static Color appBlue2Color = Color(0xfff3ebfe);
+  static Color appCream2Color = Color.fromARGB(255, 255, 195, 177);
 }

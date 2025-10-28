@@ -1,6 +1,7 @@
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/view/screens/main_screen.dart';
-import 'package:expenzes/view/screens/onbording_screens/login_screen.dart';
+import 'package:expenzes/view/screens/onbording_screens/login/login_screen.dart';
+import 'package:expenzes/view/screens/onbording_screens/login/onbording_screen.dart';
 import 'package:flutter/material.dart';
 
 class AuthViewScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _AuthViewScreenState extends State<AuthViewScreen> {
         } else if (snapshot.hasData) {
           return MainScreen();
         } else {
-          return LoginScreen();
+          return OnbordingScreen();
         }
       },
     );

@@ -264,6 +264,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 setState(() {
                                   isIconLoad = false;
                                 });
+                                GoRouter.of(context).go("/");
                               }
                             },
                             child: SmallCardWidget(
@@ -276,7 +277,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(height: AppConstants.appPadding + 5),
                       GestureDetector(
                         onTap: () {
-                          GoRouter.of(context).go("/");
+                          GoRouter.of(context).go("/LoginScreen");
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
