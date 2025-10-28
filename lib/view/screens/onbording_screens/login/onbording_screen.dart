@@ -3,6 +3,7 @@ import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/page_view_content.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 class OnbordingScreen extends StatefulWidget {
   const OnbordingScreen({super.key});
@@ -13,6 +14,7 @@ class OnbordingScreen extends StatefulWidget {
 
 class _OnbordingScreenState extends State<OnbordingScreen> {
   bool isLastPage = false;
+
   final PageController _contraller = PageController();
   @override
   Widget build(BuildContext context) {
@@ -24,10 +26,14 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
           controller: _contraller,
           onPageChanged: (index) {
             setState(() {
-              isLastPage = index == 2;
+              isLastPage = index == 3;
             });
           },
           children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Lottie.asset("assets/lottei/Welcome.json")],
+            ),
             PageViewContent(
               title: "Meet Your Money Buddy 💰",
               content:
