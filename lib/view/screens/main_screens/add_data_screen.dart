@@ -26,7 +26,7 @@ class AddDataScreen extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    //todo: activity
+                    GoRouter.of(context).push("/AddScreen", extra: false);
                   },
                   child: AddCardWidget(
                     cardTitle: "Add Incomes",
@@ -36,7 +36,7 @@ class AddDataScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    GoRouter.of(context).push("/AddScreen");
+                    GoRouter.of(context).push("/AddScreen", extra: true);
                   },
                   child: AddCardWidget(
                     cardTitle: "Add Expenses",

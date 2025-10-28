@@ -4,7 +4,8 @@ import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class AddScreen extends StatefulWidget {
-  const AddScreen({super.key});
+  final bool isExpense;
+  const AddScreen({super.key, required this.isExpense});
 
   @override
   State<AddScreen> createState() => _AddScreenState();
@@ -14,6 +15,7 @@ class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -21,10 +23,10 @@ class _AddScreenState extends State<AddScreen> {
               Container(
                 padding: EdgeInsets.all(AppConstants.appPadding),
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.2,
                 child: RichText(
                   text: TextSpan(
-                    text: "Income\n",
+                    text: "Add Your\n",
                     style: TextStyle(
                       fontSize: 40,
                       color: AppColors.appBlackColor,
@@ -32,10 +34,12 @@ class _AddScreenState extends State<AddScreen> {
                     ),
                     children: [
                       TextSpan(
-                        text: "Expences",
+                        text: widget.isExpense ? "Expences" : "Incomes",
                         style: TextStyle(
                           fontSize: 40,
-                          color: Color.fromARGB(255, 237, 89, 81),
+                          color: widget.isExpense
+                              ? Color.fromARGB(255, 237, 89, 81)
+                              : AppColors.appGreenColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -43,7 +47,7 @@ class _AddScreenState extends State<AddScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
+
               Container(
                 decoration: BoxDecoration(
                   color: AppColors.appBlueColor,

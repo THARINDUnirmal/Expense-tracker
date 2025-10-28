@@ -14,7 +14,13 @@ class AppRoutes {
       GoRoute(path: "/", builder: (context, state) => AuthViewScreen()),
       GoRoute(path: "/LoginScreen", builder: (context, state) => LoginScreen()),
       GoRoute(path: "/MainScreen", builder: (context, state) => MainScreen()),
-      GoRoute(path: "/AddScreen", builder: (context, state) => AddScreen()),
+      GoRoute(
+        path: "/AddScreen",
+        builder: (context, state) {
+          final bool value = state.extra! as bool;
+          return AddScreen(isExpense: value);
+        },
+      ),
       GoRoute(
         path: "/RegisterScreen",
         builder: (context, state) => RegisterScreen(),

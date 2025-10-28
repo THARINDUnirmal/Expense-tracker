@@ -1,4 +1,5 @@
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,6 +31,78 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    void logoutFunction() {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Are you sure?", style: AppTextStyles.mainTopicTextStyle),
+                SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        await FirebaseAuthServices().logOutAccount();
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: 150,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: AppColors.appCream2Color,
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Ok",
+                            style: AppTextStyles.mainTopicTextStyle.copyWith(
+                              color: AppColors.appWhiteColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: 150,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: AppColors.appBlackColor,
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Cancel",
+                            style: AppTextStyles.mainTopicTextStyle.copyWith(
+                              color: AppColors.appWhiteColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -105,7 +178,8 @@ class _UserScreenState extends State<UserScreen> {
                     backgroundColor: Color(0xfffde4e3),
                   ),
                   onPressed: () async {
-                    await FirebaseAuthServices().logOutAccount();
+                    logoutFunction();
+                    // await FirebaseAuthServices().logOutAccount();
                   },
                   child: Text(
                     "LogOut",
