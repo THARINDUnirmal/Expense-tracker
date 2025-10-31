@@ -10,4 +10,9 @@ class AppColors {
   static Color appGreenColor = Color(0xff08CB00);
   static Color appGreen2Color = Color(0xffE0FBE2);
   static Color appCream2Color = Color.fromARGB(255, 255, 195, 177);
+
+  //botosheet colors
+  static const Color appSheetBlueColor = Color(0xff489eff);
+  static const Color appSheetRedColor = Color(0xffff1b2b);
+  static const Color appSheetBlackColor = Color(0xff00001c);
 }

@@ -1,4 +1,4 @@
-import 'package:expenzes/view/screens/auth_view/auth_view_screen.dart';
+import 'package:expenzes/view/auth_view/auth_view_screen.dart';
 import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/add_screen.dart';
 import 'package:expenzes/view/screens/onbording_screens/login/login_screen.dart';

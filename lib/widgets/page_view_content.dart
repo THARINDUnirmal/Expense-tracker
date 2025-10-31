@@ -19,22 +19,18 @@ class PageViewContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppConstants.appPadding),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Lottie.asset(lottieAnimation),
-          SizedBox(height: 40),
-          Text(title, style: AppTextStyles.mainTopicTextStyle),
-          SizedBox(height: 20),
-          Text(
-            textAlign: TextAlign.center,
-            content,
-            style: AppTextStyles.subTopicTextStyle,
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(height: 150),
+        Lottie.asset(lottieAnimation),
+        Text(title, style: AppTextStyles.mainTopicTextStyle),
+        Text(
+          textAlign: TextAlign.center,
+          content,
+          style: AppTextStyles.subTopicTextStyle,
+        ),
+      ],
     );
   }
 }

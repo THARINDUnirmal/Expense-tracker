@@ -1,3 +1,4 @@
+import 'package:animated_gradient_text/animated_gradient_text.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/page_view_content.dart';
@@ -14,6 +15,7 @@ class OnbordingScreen extends StatefulWidget {
 
 class _OnbordingScreenState extends State<OnbordingScreen> {
   bool isLastPage = false;
+  int pageIndex = 0;
 
   final PageController _contraller = PageController();
   @override
@@ -26,29 +28,57 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
           controller: _contraller,
           onPageChanged: (index) {
             setState(() {
+              pageIndex = index;
               isLastPage = index == 3;
             });
           },
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Lottie.asset("assets/lottei/Welcome.json")],
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+                    Lottie.asset("assets/lottei/Welcome.json"),
+                  ],
+                ),
+                SizedBox(height: 100),
+                Dismissible(
+                  key: GlobalKey(),
+                  onDismissed: (direction) {
+                    _contraller.nextPage(
+                      duration: Duration(seconds: 2),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  child: AnimatedGradientText(
+                    animationDuration: 2,
+                    colors: [Color.fromARGB(31, 99, 97, 97), Colors.white],
+                    textStyle: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    text: "> > >",
+                  ),
+                ),
+              ],
             ),
-            PageViewContent(
+            pageContentColum(
               title: "Meet Your Money Buddy 💰",
               content:
                   "Say goodbye to lost receipts and forgotten expenses. We’ll help you track every rupee, effortlessly!",
               lottieAnimation:
                   "assets/lottei/Wallet Essentials_ Money & Savings.json",
             ),
-            PageViewContent(
+
+            pageContentColum(
               title: "Be the Boss of Your Bucks 💸",
               content:
                   "Set budgets, get friendly alerts, and make sure your money goes where it matters most.",
               lottieAnimation:
                   "assets/lottei/Growth Investment. Flat, Modern, Gradient..json",
             ),
-            PageViewContent(
+            pageContentColum(
               title: "Hit Your Goals 🎯",
               content:
                   "Track your progress, save smartly, and celebrate every milestone. Your financial wins, big and small!",
@@ -58,17 +88,46 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
           ],
         ),
       ),
-      bottomSheet: GestureDetector(
-        onTap: () {
-          isLastPage
-              ? GoRouter.of(context).go("/LoginScreen")
-              : _contraller.nextPage(
-                  duration: Duration(seconds: 1),
-                  curve: Curves.easeInOut,
-                );
-        },
-        child: CustomButton(title: isLastPage ? "GetStared" : "Next"),
-      ),
+    );
+  }
+
+  Widget pageContentColum({
+    required String title,
+    required String content,
+    required String lottieAnimation,
+  }) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        PageViewContent(
+          lottieAnimation: lottieAnimation,
+          title: title,
+          content: content,
+        ),
+        pageIndex == 0
+            ? GestureDetector(
+                onTap: () {
+                  isLastPage
+                      ? GoRouter.of(context).go("/LoginScreen")
+                      : _contraller.nextPage(
+                          duration: Duration(seconds: 1),
+                          curve: Curves.easeInOut,
+                        );
+                },
+                child: CustomButton(title: ">>>"),
+              )
+            : GestureDetector(
+                onTap: () {
+                  isLastPage
+                      ? GoRouter.of(context).go("/LoginScreen")
+                      : _contraller.nextPage(
+                          duration: Duration(seconds: 1),
+                          curve: Curves.easeInOut,
+                        );
+                },
+                child: CustomButton(title: isLastPage ? "GetStared" : "Next"),
+              ),
+      ],
     );
   }
 }

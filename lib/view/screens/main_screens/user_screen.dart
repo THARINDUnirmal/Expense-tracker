@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -29,80 +30,127 @@ class _UserScreenState extends State<UserScreen> {
     getUser();
   }
 
+  void logoutFunction() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 400,
+          width: double.infinity,
+          padding: EdgeInsets.only(
+            bottom: AppConstants.appPadding,
+            left: AppConstants.appPadding,
+            right: AppConstants.appPadding,
+            top: 5,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            color: Color.fromARGB(255, 255, 255, 255),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Center(
+                child: Container(
+                  width: 80,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: AppColors.appSheetBlueColor,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    repeat: false,
+                    "assets/lottei/Alert 1.json",
+                    width: 100,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "log out",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "Are you sure you want to\nlog out?",
+                    style: AppTextStyles.mainTopicTextStyle.copyWith(
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          await FirebaseAuthServices().logOutAccount();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: 150,
+                          height: 55,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: AppColors.appSheetBlueColor,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Ok",
+                              style: AppTextStyles.mainTopicTextStyle.copyWith(
+                                color: AppColors.appWhiteColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: 150,
+                          height: 55,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppColors.appSheetRedColor,
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "No",
+                              style: AppTextStyles.mainTopicTextStyle.copyWith(
+                                color: AppColors.appSheetRedColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 40),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    void logoutFunction() {
-      showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            height: 200,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Color.fromARGB(255, 255, 255, 255),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Are you sure?", style: AppTextStyles.mainTopicTextStyle),
-                SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        await FirebaseAuthServices().logOutAccount();
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        width: 150,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: AppColors.appCream2Color,
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Ok",
-                            style: AppTextStyles.mainTopicTextStyle.copyWith(
-                              color: AppColors.appWhiteColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        width: 150,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: AppColors.appBlackColor,
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Cancel",
-                            style: AppTextStyles.mainTopicTextStyle.copyWith(
-                              color: AppColors.appWhiteColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
