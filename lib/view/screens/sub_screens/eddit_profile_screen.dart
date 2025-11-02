@@ -17,25 +17,6 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
   final TextEditingController _usePassword = TextEditingController();
   final TextEditingController _userConfirmePssword = TextEditingController();
 
-  late File? userImage;
-  bool isLoading = false;
-
-  final ImagePicker pickImager = ImagePicker();
-
-  Future<void> pickImage(ImageSource imagesourse) async {
-    try {
-      final imageFile = await pickImager.pickImage(source: imagesourse);
-
-      if (imageFile == null) {
-        return;
-      } else {
-        userImage = File(imageFile.path);
-      }
-    } catch (error) {
-      print("Image piker error");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +37,7 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    isLoading ? CircularProgressIndicator() : SizedBox(),
+                    SizedBox(),
                   ],
                 ),
               ),
@@ -76,21 +57,7 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
                     children: [
                       SizedBox(height: 40),
                       GestureDetector(
-                        onTap: () async {
-                          try {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            await pickImage(ImageSource.gallery);
-                            Future.delayed(Duration(seconds: 3));
-                          } catch (error) {
-                            print(error.toString());
-                          } finally {
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }
-                        },
+                        onTap: () async {},
                         child: Stack(
                           children: [
                             CircleAvatar(
@@ -103,21 +70,7 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
                               bottom: 1,
                               right: 0,
                               child: GestureDetector(
-                                onTap: () async {
-                                  try {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    await pickImage(ImageSource.camera);
-                                    Future.delayed(Duration(seconds: 3));
-                                  } catch (error) {
-                                    print(error.toString());
-                                  } finally {
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                  }
-                                },
+                                onTap: () async {},
                                 child: Icon(
                                   Icons.add_a_photo,
                                   size: 30,

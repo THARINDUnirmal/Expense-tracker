@@ -1,7 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:expenzes/view/screens/main_screens/home_screen.dart';
 import 'package:expenzes/view/screens/main_screens/user_screen.dart';
-import 'package:expenzes/view/screens/main_screens/add_data_screen.dart';
+import 'package:expenzes/view/screens/main_screens/add_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -14,18 +14,18 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<Widget> pageList = [HomeScreen(), AddDataScreen(), UserScreen()];
-  int curruntIndex = 2;
+  int _curruntIndex = 0;
+  final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
+        index: _curruntIndex,
         backgroundColor: Color(0xff73EC8B),
-        index: curruntIndex,
         onTap: (value) {
           setState(() {
-            curruntIndex = value;
+            _pageController.jumpToPage(value);
           });
         },
         items: [
@@ -34,7 +34,15 @@ class _MainScreenState extends State<MainScreen> {
           SvgPicture.asset("assets/icons/user.svg"),
         ],
       ),
-      body: pageList[curruntIndex],
+      body: PageView(
+        onPageChanged: (value) {
+          setState(() {
+            _curruntIndex = value;
+          });
+        },
+        controller: _pageController,
+        children: [HomeScreen(), AddScreen(), UserScreen()],
+      ),
     );
   }
 }

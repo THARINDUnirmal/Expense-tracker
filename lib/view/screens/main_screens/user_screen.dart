@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 
 class UserScreen extends StatefulWidget {
@@ -29,6 +31,145 @@ class _UserScreenState extends State<UserScreen> {
     super.initState();
     getUser();
   }
+
+  //image pick
+  File? userImage;
+  bool isLoading = false;
+
+  final ImagePicker pickImager = ImagePicker();
+
+  Future<void> pickImage(ImageSource imagesourse) async {
+    try {
+      final imageFile = await pickImager.pickImage(source: imagesourse);
+
+      if (imageFile == null) {
+        return;
+      } else {
+        setState(() {
+          userImage = File(imageFile.path);
+        });
+      }
+    } catch (error) {
+      print("Image piker error");
+    }
+  }
+
+  //image pick sheet
+  void imagePickFunction() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 350,
+          width: double.infinity,
+          padding: EdgeInsets.only(
+            bottom: AppConstants.appPadding,
+            left: AppConstants.appPadding,
+            right: AppConstants.appPadding,
+            top: 5,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            color: Color.fromARGB(255, 255, 255, 255),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Center(
+                child: Container(
+                  width: 80,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: AppColors.appSheetBlueColor,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20),
+                  Lottie.asset(
+                    repeat: false,
+                    "assets/lottei/Face scanning.json",
+                    width: 100,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "Pick image",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          await pickImage(ImageSource.gallery);
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Container(
+                          width: 150,
+                          height: 55,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: AppColors.appSheetBlueColor,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "gallery",
+                              style: AppTextStyles.mainTopicTextStyle.copyWith(
+                                color: AppColors.appWhiteColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () async {
+                          await pickImage(ImageSource.camera);
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Container(
+                          width: 150,
+                          height: 55,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: AppColors.appSheetBlueColor,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Camera",
+                              style: AppTextStyles.mainTopicTextStyle.copyWith(
+                                color: AppColors.appWhiteColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 40),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  //log out sheet
 
   void logoutFunction() {
     showModalBottomSheet(
@@ -162,12 +303,33 @@ class _UserScreenState extends State<UserScreen> {
               Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      maxRadius: 70,
-                      backgroundImage: NetworkImage(
-                        "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
+                    GestureDetector(
+                      onTap: () {
+                        imagePickFunction();
+                      },
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            maxRadius: 70,
+                            backgroundImage: userImage == null
+                                ? NetworkImage(
+                                    "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
+                                  )
+                                : FileImage(userImage!),
+                          ),
+                          Positioned(
+                            bottom: 1,
+                            right: 1,
+                            child: Icon(
+                              Icons.add_a_photo,
+                              size: 30,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                    SizedBox(height: 20),
                     Text(
                       "Email:${userName!}",
                       style: TextStyle(

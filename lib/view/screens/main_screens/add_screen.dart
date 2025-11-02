@@ -1,12 +1,13 @@
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/view/screens/sub_screens/add_data_screen.dart';
 import 'package:expenzes/widgets/reuseble_widgets/add_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AddDataScreen extends StatelessWidget {
-  const AddDataScreen({super.key});
+class AddScreen extends StatelessWidget {
+  const AddScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,12 @@ class AddDataScreen extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    GoRouter.of(context).push("/AddScreen", extra: false);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddDataScreen(isExpense: false),
+                      ),
+                    );
                   },
                   child: AddCardWidget(
                     cardTitle: "Add Incomes",
@@ -36,7 +42,12 @@ class AddDataScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    GoRouter.of(context).push("/AddScreen", extra: true);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddDataScreen(isExpense: true),
+                      ),
+                    );
                   },
                   child: AddCardWidget(
                     cardTitle: "Add Expenses",

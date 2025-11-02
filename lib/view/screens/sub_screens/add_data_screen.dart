@@ -2,16 +2,17 @@ import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class AddScreen extends StatefulWidget {
+class AddDataScreen extends StatefulWidget {
   final bool isExpense;
-  const AddScreen({super.key, required this.isExpense});
+  const AddDataScreen({super.key, required this.isExpense});
 
   @override
-  State<AddScreen> createState() => _AddScreenState();
+  State<AddDataScreen> createState() => _AddDataScreenState();
 }
 
-class _AddScreenState extends State<AddScreen> {
+class _AddDataScreenState extends State<AddDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
