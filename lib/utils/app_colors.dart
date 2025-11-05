@@ -9,6 +9,7 @@ class AppColors {
   static Color appBlue2Color = Color(0xfff3ebfe);
   static Color appGreenColor = Color(0xff08CB00);
   static Color appGreen2Color = Color(0xffE0FBE2);
+  static Color appCream3Color = Color(0xffD6F4ED);
   static Color appCream2Color = Color.fromARGB(255, 255, 195, 177);
 
   //botosheet colors
