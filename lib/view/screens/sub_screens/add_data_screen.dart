@@ -1,22 +1,31 @@
+import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_form2.dart';
 import 'package:flutter/material.dart';
 
-class AddDataScreen extends StatelessWidget {
+class AddDataScreen extends StatefulWidget {
   final bool isExpense;
-  AddDataScreen({super.key, required this.isExpense}) {
-    _dateNotifer.value = DateTime.now();
-    _timeNotifer.value = TimeOfDay.now();
-  }
+  const AddDataScreen({super.key, required this.isExpense});
 
+  @override
+  State<AddDataScreen> createState() => _AddDataScreenState();
+}
+
+class _AddDataScreenState extends State<AddDataScreen> {
+  //form key
+  final _formKey = GlobalKey<FormState>();
+
+  //TextEditing Controller
   final TextEditingController _titleContraller = TextEditingController();
   final TextEditingController _descriptionContraller = TextEditingController();
-  final TextEditingController _dateContraller = TextEditingController();
   final TextEditingController _amountContraller = TextEditingController();
 
+  //Value Notifiers
   final ValueNotifier<DateTime> _dateNotifer = ValueNotifier(DateTime.now());
   final ValueNotifier<TimeOfDay> _timeNotifer = ValueNotifier(TimeOfDay.now());
 
@@ -55,7 +64,7 @@ class AddDataScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(AppConstants.appPadding),
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.18,
+                height: MediaQuery.of(context).size.height * 0.17,
                 child: RichText(
                   text: TextSpan(
                     text: "Add Your\n",
@@ -66,10 +75,10 @@ class AddDataScreen extends StatelessWidget {
                     ),
                     children: [
                       TextSpan(
-                        text: isExpense ? "Expences" : "Incomes",
+                        text: widget.isExpense ? "Expences" : "Incomes",
                         style: TextStyle(
                           fontSize: 40,
-                          color: isExpense
+                          color: widget.isExpense
                               ? Color.fromARGB(255, 237, 89, 81)
                               : AppColors.appGreenColor,
                           fontWeight: FontWeight.bold,
@@ -93,32 +102,57 @@ class AddDataScreen extends StatelessWidget {
                   vertical: AppConstants.appPadding * 2,
                 ),
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.9,
+                height: MediaQuery.of(context).size.height * 0.92,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isExpense ? "Expenses Details" : "Income Details",
+                      widget.isExpense ? "Expenses Details" : "Income Details",
                       style: AppTextStyles.mainTopicTextStyle.copyWith(
                         fontSize: 30,
                       ),
                     ),
                     SizedBox(height: 30),
                     Form(
+                      key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomTextForm2(
                             controller: _titleContraller,
                             hintText: "Title",
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please Enter Title";
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
                           CustomTextForm2(
                             controller: _descriptionContraller,
                             hintText: "Description",
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please Enter Description";
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
                           CustomTextForm2(
+                            keyboardType: TextInputType.number,
                             controller: _amountContraller,
                             hintText: "Amount",
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please Enter Amount";
+                              } else if (int.parse(value) <= 0) {
+                                return "Invalid Input";
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
                           SizedBox(height: 20),
                           Text(
@@ -173,7 +207,41 @@ class AddDataScreen extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 30),
-                          Center(child: CustomButton(title: "Add")),
+                          Center(
+                            child: GestureDetector(
+                              onTap: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  try {
+                                    DataModel sentData = DataModel(
+                                      id: "",
+                                      title: _titleContraller.text,
+                                      isExpense: widget.isExpense,
+                                      description: _descriptionContraller.text,
+                                      createdDate: _dateNotifer.value,
+                                      createdTime: _timeNotifer.value,
+                                      amount: int.parse(_amountContraller.text),
+                                    );
+
+                                    await FirebaseDatabaseServices().addData(
+                                      data: sentData,
+                                    );
+
+                                    _amountContraller.clear();
+                                    _titleContraller.clear();
+                                    _descriptionContraller.clear();
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MainScreen(),
+                                      ),
+                                    );
+                                  } catch (error) {}
+                                }
+                              },
+                              child: CustomButton(title: "Add"),
+                            ),
+                          ),
                         ],
                       ),
                     ),

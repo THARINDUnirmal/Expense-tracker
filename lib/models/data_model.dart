@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class DataModel {
   final String id;
@@ -7,9 +7,11 @@ class DataModel {
   final bool isExpense;
   final String description;
   final DateTime createdDate;
+  final TimeOfDay createdTime;
   final num amount;
 
   DataModel({
+    required this.createdTime,
     required this.id,
     required this.title,
     required this.isExpense,
@@ -25,6 +27,7 @@ class DataModel {
       isExpense: json["isExpense"] ?? "",
       description: json["description"] ?? "",
       createdDate: (json["createdDate"] as Timestamp).toDate(),
+      createdTime: (json["createdTime"] as TimeOfDay),
       amount: json["amount"] ?? 0,
     );
   }

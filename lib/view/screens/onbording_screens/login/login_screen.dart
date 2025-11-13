@@ -1,4 +1,6 @@
+import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
@@ -255,6 +257,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           GestureDetector(
                             onTap: () async {
                               await googleSign();
+                              UserModel googleUser = UserModel(
+                                userId: "",
+                                name: "",
+                                email: FirebaseAuthServices()
+                                    .curruntUserData
+                                    .email!,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              );
+                              await FirebaseDatabaseServices().addUser(
+                                googleUser,
+                              );
                               GoRouter.of(context).go("/");
                             },
                             child: SmallCardWidget(

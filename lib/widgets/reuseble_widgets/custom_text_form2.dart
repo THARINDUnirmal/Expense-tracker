@@ -2,6 +2,7 @@ import 'package:expenzes/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextForm2 extends StatefulWidget {
+  final TextInputType? keyboardType;
   final String hintText;
   final TextEditingController controller;
   final String? Function(String?)? validator;
@@ -10,6 +11,7 @@ class CustomTextForm2 extends StatefulWidget {
     required this.hintText,
     required this.controller,
     this.validator,
+    this.keyboardType,
   });
 
   @override
@@ -23,6 +25,7 @@ class _CustomTextForm2State extends State<CustomTextForm2> {
       margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
       child: TextFormField(
+        keyboardType: widget.keyboardType,
         controller: widget.controller,
         validator: widget.validator,
         style: TextStyle(color: Colors.white),

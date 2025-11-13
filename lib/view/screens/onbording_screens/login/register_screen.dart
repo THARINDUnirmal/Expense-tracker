@@ -1,4 +1,6 @@
+import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
@@ -203,18 +205,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         _emailContraller.text,
                                         _passwordContraller.text,
                                       );
-
-                                      await Future.delayed(
-                                        Duration(seconds: 2),
+                                      UserModel emailUser = UserModel(
+                                        userId: "",
+                                        name: "",
+                                        email: FirebaseAuthServices()
+                                            .curruntUserData
+                                            .email!,
+                                        createdAt: DateTime.now(),
+                                        updatedAt: DateTime.now(),
                                       );
+                                      await FirebaseDatabaseServices().addUser(
+                                        emailUser,
+                                      );
+                                      if (context.mounted) {
+                                        GoRouter.of(context).go("/");
+                                      }
                                     } catch (error) {
                                       print(error.toString());
                                     } finally {
                                       setState(() {
                                         isLoading = false;
                                       });
-
-                                      GoRouter.of(context).go("/");
                                     }
                                   }
                                 },
@@ -253,6 +264,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           GestureDetector(
                             onTap: () async {
                               await googleSign();
+                              UserModel googleUser = UserModel(
+                                userId: "",
+                                name: "",
+                                email: FirebaseAuthServices()
+                                    .curruntUserData
+                                    .email!,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              );
+                              await FirebaseDatabaseServices().addUser(
+                                googleUser,
+                              );
                             },
                             child: SmallCardWidget(
                               isLoading: false,

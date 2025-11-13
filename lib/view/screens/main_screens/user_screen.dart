@@ -101,7 +101,7 @@ class _UserScreenState extends State<UserScreen> {
                   Text(
                     textAlign: TextAlign.center,
                     "Pick image",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
 
                   SizedBox(height: 30),
@@ -244,7 +244,7 @@ class _UserScreenState extends State<UserScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              "Ok",
+                              "Yes",
                               style: AppTextStyles.mainTopicTextStyle.copyWith(
                                 color: AppColors.appWhiteColor,
                               ),
