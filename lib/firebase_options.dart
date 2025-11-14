@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCuU_DK2XkbgLOIFmZujSK3bcMUQDFivtk',
-    appId: '1:519511834377:android:ce322b2837d1225e569dd8',
-    messagingSenderId: '519511834377',
-    projectId: 'ex-track-c0bc6',
-    storageBucket: 'ex-track-c0bc6.firebasestorage.app',
+    apiKey: 'AIzaSyDCzc-N0VHYY1UQ2cIOnfw4npLpxyP-LT0',
+    appId: '1:331522178248:android:c36adb697a3613047a79fd',
+    messagingSenderId: '331522178248',
+    projectId: 'ex-tracker-4bb43',
+    storageBucket: 'ex-tracker-4bb43.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAYfzuj7PdijMVUZ1_JtU5Vr3PM1NDRD60',
-    appId: '1:519511834377:ios:0e0d21ceed8377b8569dd8',
-    messagingSenderId: '519511834377',
-    projectId: 'ex-track-c0bc6',
-    storageBucket: 'ex-track-c0bc6.firebasestorage.app',
+    apiKey: 'AIzaSyANsJaSD_jnR7QrltrDod179_FIP50wG5s',
+    appId: '1:331522178248:ios:cac1d66fbc1adb4d7a79fd',
+    messagingSenderId: '331522178248',
+    projectId: 'ex-tracker-4bb43',
+    storageBucket: 'ex-tracker-4bb43.firebasestorage.app',
     iosBundleId: 'com.example.expenzes',
   );
 }

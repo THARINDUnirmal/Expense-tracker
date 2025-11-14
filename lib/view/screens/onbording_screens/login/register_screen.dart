@@ -217,6 +217,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       await FirebaseDatabaseServices().addUser(
                                         emailUser,
                                       );
+                                      print(
+                                        "=============================Submit button pressed!=====================",
+                                      );
                                       if (context.mounted) {
                                         GoRouter.of(context).go("/");
                                       }

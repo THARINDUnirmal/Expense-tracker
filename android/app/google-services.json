@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "519511834377",
-    "project_id": "ex-track-c0bc6",
-    "storage_bucket": "ex-track-c0bc6.firebasestorage.app"
+    "project_number": "331522178248",
+    "project_id": "ex-tracker-4bb43",
+    "storage_bucket": "ex-tracker-4bb43.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:519511834377:android:ce322b2837d1225e569dd8",
+        "mobilesdk_app_id": "1:331522178248:android:c36adb697a3613047a79fd",
         "android_client_info": {
           "package_name": "com.example.expenzes"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCuU_DK2XkbgLOIFmZujSK3bcMUQDFivtk"
+          "current_key": "AIzaSyDCzc-N0VHYY1UQ2cIOnfw4npLpxyP-LT0"
         }
       ],
       "services": {
