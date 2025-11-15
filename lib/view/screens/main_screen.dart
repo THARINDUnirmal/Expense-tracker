@@ -14,7 +14,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _curruntIndex = 0;
+  int _curruntIndex = 1;
   final PageController _pageController = PageController();
 
   @override
@@ -41,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         controller: _pageController,
-        children: [HomeScreen(), AddScreen(), UserScreen()],
+        children: [AddScreen(), HomeScreen(), UserScreen()],
       ),
     );
   }

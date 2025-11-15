@@ -1,13 +1,36 @@
+import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/view/screens/sub_screens/add_data_screen.dart';
 import 'package:expenzes/widgets/reuseble_widgets/add_card_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class AddScreen extends StatelessWidget {
+class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
+
+  @override
+  State<AddScreen> createState() => _AddScreenState();
+}
+
+class _AddScreenState extends State<AddScreen> {
+  User? curruntUser;
+
+  @override
+  void initState() {
+    super.initState();
+    userSet();
+  }
+
+  void userSet() {
+    User? userData = FirebaseAuthServices().curruntUserData;
+    setState(() {
+      curruntUser = userData;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +83,41 @@ class AddScreen extends StatelessWidget {
             SizedBox(height: 30),
             Text("Last Added", style: AppTextStyles.mainTopicTextStyle),
             SizedBox(height: 50),
-            Center(
-              child: Text("No Items", style: AppTextStyles.subTopicTextStyle),
+            FutureBuilder(
+              future: FirebaseDatabaseServices().getAllData(
+                curruntUserId: curruntUser!.uid,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      snapshot.error.toString(),
+                      style: AppTextStyles.subTopicTextStyle,
+                    ),
+                  );
+                } else if (!snapshot.hasData) {
+                  return Center(
+                    child: Text(
+                      "No Items",
+                      style: AppTextStyles.subTopicTextStyle,
+                    ),
+                  );
+                } else {
+                  List<DataModel> allData = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: allData.length,
+                    physics: ScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      DataModel singleData = allData[index];
+                      return ListTile(title: Text(singleData.title));
+                    },
+                  );
+                }
+              },
             ),
           ],
         ),

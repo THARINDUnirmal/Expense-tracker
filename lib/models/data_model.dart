@@ -8,7 +8,7 @@ class DataModel {
   final String description;
   final DateTime createdDate;
   final TimeOfDay createdTime;
-  final num amount;
+  final int amount;
 
   DataModel({
     required this.createdTime,
@@ -21,24 +21,32 @@ class DataModel {
   });
 
   factory DataModel.fromJson(Map<String, dynamic> json) {
+    // convert time string to TimeOfDay
+    String timeString = json["createdTime"] ?? "0:0";
+    List<String> parts = timeString.split(":");
+
     return DataModel(
-      id: json["Id"] ?? "",
+      id: json["id"] ?? "",
       title: json["title"] ?? "",
-      isExpense: json["isExpense"] ?? "",
+      isExpense: json["isExpense"] ?? false,
       description: json["description"] ?? "",
       createdDate: (json["createdDate"] as Timestamp).toDate(),
-      createdTime: (json["createdTime"] as TimeOfDay),
+      createdTime: TimeOfDay(
+        hour: int.parse(parts[0]),
+        minute: int.parse(parts[1]),
+      ),
       amount: json["amount"] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "Id": id,
+      "id": id,
       "title": title,
       "isExpense": isExpense,
       "description": description,
       "createdDate": createdDate,
+      "createdTime": "${createdTime.hour}:${createdTime.minute}",
       "amount": amount,
     };
   }

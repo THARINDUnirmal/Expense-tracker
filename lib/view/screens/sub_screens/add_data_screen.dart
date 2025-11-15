@@ -1,4 +1,5 @@
 import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
@@ -223,6 +224,9 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                     );
 
                                     await FirebaseDatabaseServices().addData(
+                                      userId: FirebaseAuthServices()
+                                          .curruntUserData
+                                          .uid,
                                       data: sentData,
                                     );
 
