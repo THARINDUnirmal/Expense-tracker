@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> getUser() async {
     User userData = FirebaseAuthServices().curruntUserData;
-    userName = userData.email ?? "No name";
+    userName = userData.isAnonymous ? "Anonymous User" : userData.email;
   }
 
   @override

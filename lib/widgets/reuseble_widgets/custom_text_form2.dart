@@ -28,7 +28,7 @@ class _CustomTextForm2State extends State<CustomTextForm2> {
         keyboardType: widget.keyboardType,
         controller: widget.controller,
         validator: widget.validator,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.black),
         decoration: InputDecoration(
           labelText: widget.hintText,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),

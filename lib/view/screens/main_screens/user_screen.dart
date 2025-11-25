@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
@@ -20,6 +21,9 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   late String? userName;
   late User userData;
+  File? fileImage;
+
+  bool isLoading = false;
   Future<void> getUser() async {
     User userDataa = FirebaseAuthServices().curruntUserData;
     userName = userDataa.email ?? "No name";
@@ -32,9 +36,15 @@ class _UserScreenState extends State<UserScreen> {
     getUser();
   }
 
-  //image pick
-  File? userImage;
-  bool isLoading = false;
+  //frtch image data if save
+  // Future<void> getImageFromLocal() async {
+  //   try {
+  //     String image = await LocalData().getImageData();
+  //     setState(() {
+  //       userImageLocal = image;
+  //     });
+  //   } catch (error) {}
+  // }
 
   final ImagePicker pickImager = ImagePicker();
 
@@ -46,7 +56,7 @@ class _UserScreenState extends State<UserScreen> {
         return;
       } else {
         setState(() {
-          userImage = File(imageFile.path);
+          fileImage = File(imageFile.path);
         });
       }
     } catch (error) {
@@ -309,14 +319,17 @@ class _UserScreenState extends State<UserScreen> {
                       },
                       child: Stack(
                         children: [
-                          CircleAvatar(
-                            maxRadius: 70,
-                            backgroundImage: userImage == null
-                                ? NetworkImage(
+                          fileImage == null
+                              ? CircleAvatar(
+                                  maxRadius: 70,
+                                  backgroundImage: NetworkImage(
                                     "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
-                                  )
-                                : FileImage(userImage!),
-                          ),
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  maxRadius: 70,
+                                  backgroundImage: FileImage(fileImage!),
+                                ),
                           Positioned(
                             bottom: 1,
                             right: 1,
