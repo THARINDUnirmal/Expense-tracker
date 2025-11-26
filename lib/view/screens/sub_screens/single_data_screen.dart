@@ -1,5 +1,4 @@
 import 'package:expenzes/models/data_model.dart';
-import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 

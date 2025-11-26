@@ -1,6 +1,8 @@
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/widgets/categeory_card_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -132,6 +134,68 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Icon(Icons.add, size: 25),
                 ],
+              ),
+              SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    "See All >>",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    CategeoryCardWidget(title: "Data 1"),
+                    CategeoryCardWidget(title: "Data 2"),
+                    CategeoryCardWidget(title: "Data 3"),
+                    CategeoryCardWidget(title: "Data 4"),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              Text(
+                "Resent ",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.normal),
+              ),
+              SizedBox(height: 20),
+              FutureBuilder(
+                future: FirebaseDatabaseServices().getAllData(
+                  curruntUserId: FirebaseAuthServices().curruntUserData.uid,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        "Error : ${snapshot.error}",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    );
+                  } else if (!snapshot.hasData) {
+                    return Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        "No Data !",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return SizedBox(); //todo activity !!!
+                  }
+                },
               ),
             ],
           ),
