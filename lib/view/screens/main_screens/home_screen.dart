@@ -1,5 +1,7 @@
+import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
+import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/widgets/categeory_card_widget.dart';
@@ -31,173 +33,268 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstants.appPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      text: "Finance",
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Color(0xfffdaa5d),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: "Mate",
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Color(0xff4ab7b6),
-                            fontWeight: FontWeight.bold,
-                          ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.appPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: "Finance",
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Color(0xfffdaa5d),
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xffe8eff3),
-                    ),
-                    child: Icon(
-                      Icons.notifications,
-                      size: 25,
-                      color: Color(0xffea7173),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        maxRadius: 40,
-                        backgroundImage: NetworkImage(
-                          "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            "Good Evening!",
-                            style: AppTextStyles.miniTextStyle,
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.55,
-                            child: Text(
-                              overflow: TextOverflow.ellipsis,
-                              userName!,
-                              style: AppTextStyles.mainTopicTextStyle.copyWith(
-                                fontSize: 16,
-                              ),
+                          TextSpan(
+                            text: "Mate",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Color(0xff4ab7b6),
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                  SizedBox(width: 10),
-                  Icon(Icons.keyboard_double_arrow_right, size: 25),
-                ],
-              ),
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "My Weekly Expenses",
-                        style: AppTextStyles.mainTopicTextStyle.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
-                        ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xffe8eff3),
                       ),
-                      Text(
-                        "10 Expenses Pending",
-                        style: AppTextStyles.subTopicTextStyle,
+                      child: Icon(
+                        Icons.notifications,
+                        size: 25,
+                        color: Color(0xffea7173),
                       ),
-                    ],
-                  ),
-                  Icon(Icons.add, size: 25),
-                ],
-              ),
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    "See All >>",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    CategeoryCardWidget(title: "Data 1"),
-                    CategeoryCardWidget(title: "Data 2"),
-                    CategeoryCardWidget(title: "Data 3"),
-                    CategeoryCardWidget(title: "Data 4"),
+                    ),
                   ],
                 ),
-              ),
-              SizedBox(height: 30),
-              Text(
-                "Resent ",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.normal),
-              ),
-              SizedBox(height: 20),
-              FutureBuilder(
-                future: FirebaseDatabaseServices().getAllData(
-                  curruntUserId: FirebaseAuthServices().curruntUserData.uid,
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          maxRadius: 40,
+                          backgroundImage: NetworkImage(
+                            "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Good Evening!",
+                              style: AppTextStyles.miniTextStyle,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.55,
+                              child: Text(
+                                overflow: TextOverflow.ellipsis,
+                                userName!,
+                                style: AppTextStyles.mainTopicTextStyle
+                                    .copyWith(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 10),
+                    Icon(Icons.keyboard_double_arrow_right, size: 25),
+                  ],
                 ),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        "Error : ${snapshot.error}",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.normal,
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "My Weekly Expenses",
+                          style: AppTextStyles.mainTopicTextStyle.copyWith(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
-                      ),
-                    );
-                  } else if (!snapshot.hasData) {
-                    return Center(
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        "No Data !",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
+                        Text(
+                          "10 Expenses Pending",
+                          style: AppTextStyles.subTopicTextStyle,
                         ),
+                      ],
+                    ),
+                    Icon(Icons.add, size: 25),
+                  ],
+                ),
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "See All >>",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  } else {
-                    return SizedBox(); //todo activity !!!
-                  }
-                },
-              ),
-            ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      CategeoryCardWidget(title: "Data 1"),
+                      CategeoryCardWidget(title: "Data 2"),
+                      CategeoryCardWidget(title: "Data 3"),
+                      CategeoryCardWidget(title: "Data 4"),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Text(
+                  "Resent ",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.normal),
+                ),
+                SizedBox(height: 20),
+                FutureBuilder(
+                  future: FirebaseDatabaseServices().getAllData(
+                    curruntUserId: FirebaseAuthServices().curruntUserData.uid,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          "Error : ${snapshot.error}",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      );
+                    } else if (!snapshot.hasData) {
+                      return Center(
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          "No Data !",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      );
+                    } else {
+                      List<DataModel> dataList = snapshot.data ?? [];
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: dataList.length,
+                        itemBuilder: (context, index) {
+                          DataModel singleData = dataList[index];
+                          return Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            padding: EdgeInsets.all(15),
+                            height: 100,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                right: BorderSide(
+                                  width: 8,
+                                  color: singleData.isExpense
+                                      ? AppColors.appRedColor
+                                      : AppColors.appGreenColor,
+                                ),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 2,
+                                  offset: Offset(3, 2),
+                                  color: const Color.fromARGB(
+                                    255,
+                                    236,
+                                    236,
+                                    237,
+                                  ),
+                                ),
+                              ],
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: 250,
+                                      child: Text(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        singleData.title,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    SizedBox(
+                                      width: 250,
+                                      child: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        "Rs.${singleData.amount}",
+                                        style: TextStyle(
+                                          fontSize: 23,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      singleData.isExpense
+                                          ? Icons.arrow_circle_up_outlined
+                                          : Icons.arrow_circle_down_outlined,
+                                      color: singleData.isExpense
+                                          ? AppColors.appRedColor
+                                          : AppColors.appGreenColor,
+                                      size: 30,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
