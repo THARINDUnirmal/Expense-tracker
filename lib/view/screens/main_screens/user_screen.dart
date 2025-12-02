@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/local_storage/local_data.dart';
-import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,50 +20,51 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   late String? userName;
   late User userData;
-  File? fileImage;
+  String userImageLocal = "";
 
-  bool isLoading = false;
-  Future<void> getUser() async {
-    User userDataa = FirebaseAuthServices().curruntUserData;
-    userName = userDataa.email ?? "No name";
-    userData = userDataa;
-  }
+  final ImagePicker pickImager = ImagePicker();
 
   @override
   void initState() {
     super.initState();
     getUser();
+    getImageFromLocal(); // Load saved profile image
   }
 
-  //frtch image data if save
-  // Future<void> getImageFromLocal() async {
-  //   try {
-  //     String image = await LocalData().getImageData();
-  //     setState(() {
-  //       userImageLocal = image;
-  //     });
-  //   } catch (error) {}
-  // }
+  // Fetch user data
+  Future<void> getUser() async {
+    User userDataa = FirebaseAuthServices().curruntUserData;
+    userName = userDataa.isAnonymous ? "Anonymous User" : userDataa.email;
+    userData = userDataa;
+    setState(() {});
+  }
 
-  final ImagePicker pickImager = ImagePicker();
+  // Fetch image from SharedPreferences
+  Future<void> getImageFromLocal() async {
+    String image = await LocalData().getImageData();
+    setState(() {
+      userImageLocal = image;
+    });
+  }
 
-  Future<void> pickImage(ImageSource imagesourse) async {
+  // Pick image from camera/gallery
+  Future<void> pickImage(ImageSource source) async {
     try {
-      final imageFile = await pickImager.pickImage(source: imagesourse);
+      final picked = await pickImager.pickImage(source: source);
 
-      if (imageFile == null) {
-        return;
-      } else {
-        setState(() {
-          fileImage = File(imageFile.path);
-        });
-      }
+      if (picked == null) return;
+
+      await LocalData().setImage(imageUrl: picked.path);
+
+      setState(() {
+        userImageLocal = picked.path;
+      });
     } catch (error) {
-      print("Image piker error");
+      print("Image picker error: $error");
     }
   }
 
-  //image pick sheet
+  // Bottom sheet for picking image
   void imagePickFunction() {
     showModalBottomSheet(
       context: context,
@@ -72,104 +72,83 @@ class _UserScreenState extends State<UserScreen> {
         return Container(
           height: 350,
           width: double.infinity,
-          padding: EdgeInsets.only(
-            bottom: AppConstants.appPadding,
-            left: AppConstants.appPadding,
-            right: AppConstants.appPadding,
-            top: 5,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
-            color: Color.fromARGB(255, 255, 255, 255),
+          padding: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+            color: Colors.white,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Center(
-                child: Container(
-                  width: 80,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: AppColors.appSheetBlueColor,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
+              Container(
+                width: 80,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              const SizedBox(height: 20),
+              Lottie.asset(
+                "assets/lottei/Face scanning.json",
+                width: 100,
+                repeat: false,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Pick image",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(height: 20),
-                  Lottie.asset(
-                    repeat: false,
-                    "assets/lottei/Face scanning.json",
-                    width: 100,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    textAlign: TextAlign.center,
-                    "Pick image",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  // Gallery button
+                  GestureDetector(
+                    onTap: () async {
+                      await pickImage(ImageSource.gallery);
+                      if (context.mounted) Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 150,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.blue,
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Gallery",
+                          style: AppTextStyles.mainTopicTextStyle.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
 
-                  SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          await pickImage(ImageSource.gallery);
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: Container(
-                          width: 150,
-                          height: 55,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.appSheetBlueColor,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "gallery",
-                              style: AppTextStyles.mainTopicTextStyle.copyWith(
-                                color: AppColors.appWhiteColor,
-                              ),
-                            ),
+                  // Camera button
+                  GestureDetector(
+                    onTap: () async {
+                      await pickImage(ImageSource.camera);
+                      if (context.mounted) Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 150,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.blue,
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Camera",
+                          style: AppTextStyles.mainTopicTextStyle.copyWith(
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                      SizedBox(width: 10),
-                      GestureDetector(
-                        onTap: () async {
-                          await pickImage(ImageSource.camera);
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: Container(
-                          width: 150,
-                          height: 55,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.appSheetBlueColor,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Camera",
-                              style: AppTextStyles.mainTopicTextStyle.copyWith(
-                                color: AppColors.appWhiteColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  SizedBox(height: 40),
                 ],
               ),
             ],
@@ -179,118 +158,88 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  //log out sheet
-
+  // Logout function
   void logoutFunction() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return Container(
-          height: 400,
+          height: 350,
           width: double.infinity,
-          padding: EdgeInsets.only(
-            bottom: AppConstants.appPadding,
-            left: AppConstants.appPadding,
-            right: AppConstants.appPadding,
-            top: 5,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
-            color: Color.fromARGB(255, 255, 255, 255),
+          padding: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+            color: Colors.white,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Center(
-                child: Container(
-                  width: 80,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: AppColors.appSheetBlueColor,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
+              Container(
+                width: 80,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              const SizedBox(height: 20),
+              Lottie.asset(
+                "assets/lottei/Alert 1.json",
+                width: 100,
+                repeat: false,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Logout",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Are you sure you want to logout?",
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
+
+              // YES & NO buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Lottie.asset(
-                    repeat: false,
-                    "assets/lottei/Alert 1.json",
-                    width: 100,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    textAlign: TextAlign.center,
-                    "log out",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    textAlign: TextAlign.center,
-                    "Are you sure you want to\nlog out?",
-                    style: AppTextStyles.mainTopicTextStyle.copyWith(
-                      fontWeight: FontWeight.normal,
+                  GestureDetector(
+                    onTap: () async {
+                      await FirebaseAuthServices().logOutAccount();
+                      if (context.mounted) Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 120,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Yes",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          await FirebaseAuthServices().logOutAccount();
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          width: 150,
-                          height: 55,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.appSheetBlueColor,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Yes",
-                              style: AppTextStyles.mainTopicTextStyle.copyWith(
-                                color: AppColors.appWhiteColor,
-                              ),
-                            ),
-                          ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: 120,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.red, width: 2),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "No",
+                          style: TextStyle(color: Colors.red, fontSize: 18),
                         ),
                       ),
-                      SizedBox(width: 10),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          width: 150,
-                          height: 55,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: AppColors.appSheetRedColor,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "No",
-                              style: AppTextStyles.mainTopicTextStyle.copyWith(
-                                color: AppColors.appSheetRedColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  SizedBox(height: 40),
                 ],
               ),
             ],
@@ -308,107 +257,101 @@ class _UserScreenState extends State<UserScreen> {
         child: Padding(
           padding: const EdgeInsets.all(AppConstants.appPadding),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        imagePickFunction();
-                      },
+                      onTap: imagePickFunction,
                       child: Stack(
                         children: [
-                          fileImage == null
-                              ? CircleAvatar(
-                                  maxRadius: 70,
-                                  backgroundImage: NetworkImage(
-                                    "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
-                                  ),
-                                )
-                              : CircleAvatar(
-                                  maxRadius: 70,
-                                  backgroundImage: FileImage(fileImage!),
-                                ),
-                          Positioned(
+                          // Profile Image
+                          CircleAvatar(
+                            maxRadius: 70,
+                            backgroundImage: userImageLocal.isEmpty
+                                ? const NetworkImage(
+                                        "https://images.unsplash.com/photo-1557862921-37829c790f19?auto=format&fit=crop&q=60&w=600",
+                                      )
+                                      as ImageProvider
+                                : FileImage(File(userImageLocal)),
+                          ),
+
+                          const Positioned(
                             bottom: 1,
                             right: 1,
                             child: Icon(
                               Icons.add_a_photo,
-                              size: 30,
+                              size: 32,
                               color: Colors.blueGrey,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
+
                     Text(
-                      "Email:${userName!}",
-                      style: TextStyle(
+                      "Email: ${userName ?? ""}",
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
                     Text(
-                      maxLines: 2,
-                      "Id:${userData.uid}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
+                      "ID: ${userData.uid}",
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 30),
+
+              const SizedBox(height: 30),
+
               GestureDetector(
-                onTap: () {
-                  GoRouter.of(context).push("/EdditProfileScreen");
-                },
+                onTap: () => GoRouter.of(context).push("/EdditProfileScreen"),
                 child: userPageWidget(
                   svg: "assets/icons/user.svg",
-                  subTitle: "Change profile image, name password",
                   title: "User profile",
+                  subTitle: "Change profile image, name & password",
                 ),
               ),
-              Divider(endIndent: 30, indent: 30),
-              SizedBox(height: 10),
+
+              Divider(indent: 30, endIndent: 30),
               userPageWidget(
                 svg: "assets/icons/menu.svg",
-                subTitle: "Monose acccunts and description",
                 title: "Accounts",
+                subTitle: "Manage accounts and descriptions",
               ),
-              Divider(endIndent: 30, indent: 30),
-              SizedBox(height: 10),
+              Divider(indent: 30, endIndent: 30),
               userPageWidget(
                 svg: "assets/icons/message-circle-more.svg",
-                subTitle: "Manage categories & add sub-categories",
                 title: "Categories",
+                subTitle: "Manage categories & sub-categories",
               ),
-              Divider(endIndent: 30, indent: 30),
-              SizedBox(height: 10),
+              Divider(indent: 30, endIndent: 30),
               userPageWidget(
                 svg: "assets/icons/annonymus.svg",
-                subTitle: "Protect your app with PIN or Fngerprint",
                 title: "Security",
+                subTitle: "Set PIN or fingerprint",
               ),
-              SizedBox(height: 20),
-              Center(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                    backgroundColor: Color(0xfffde4e3),
+
+              const SizedBox(height: 20),
+
+              // Logout button
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 20,
                   ),
-                  onPressed: () async {
-                    logoutFunction();
-                    // await FirebaseAuthServices().logOutAccount();
-                  },
-                  child: Text(
-                    "LogOut",
-                    style: AppTextStyles.miniTextStyle.copyWith(
-                      color: Color(0xffc65d57),
-                    ),
+                  backgroundColor: const Color(0xfffde4e3),
+                ),
+                onPressed: logoutFunction,
+                child: Text(
+                  "LogOut",
+                  style: AppTextStyles.miniTextStyle.copyWith(
+                    color: const Color(0xffc65d57),
                   ),
                 ),
               ),
@@ -425,27 +368,25 @@ class _UserScreenState extends State<UserScreen> {
     required String subTitle,
   }) {
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       child: Row(
         children: [
           SvgPicture.asset(svg),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 5),
-              Text(
-                maxLines: 2,
-                subTitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.grey,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                subTitle,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ],
           ),

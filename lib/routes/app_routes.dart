@@ -17,43 +17,6 @@ class AppRoutes {
     navigatorKey: _navigatorState,
     initialLocation: "/",
     routes: [
-      // StatefulShellRoute.indexedStack(
-      //   builder: (context, state, navigationShell) => MainScreen(),
-      //   branches: [
-      //     StatefulShellBranch(
-      //       routes: [
-      //         GoRoute(
-      //           path: "/MainScreen",
-      //           builder: (context, state) => MainScreen(),
-      //           routes: [
-      //             GoRoute(
-      //               path: "HomeScreen",
-      //               builder: (context, state) => HomeScreen(),
-      //             ),
-      //             GoRoute(
-      //               path: "AddScreen",
-      //               builder: (context, state) => AddScreen(),
-      //               routes: [
-      //                 GoRoute(
-      //                   path: "AddDataScreen",
-      //                   builder: (context, state) {
-      //                     final bool value = state.extra! as bool;
-      //                     return AddDataScreen(isExpense: value);
-      //                   },
-      //                 ),
-      //               ],
-      //             ),
-      //             GoRoute(
-      //               path: "ProfileScreen",
-      //               builder: (context, state) => UserScreen(),
-      //             ),
-      //           ],
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
-
       //Login Route
       GoRoute(path: "/", builder: (context, state) => AuthViewScreen()),
       GoRoute(path: "/LoginScreen", builder: (context, state) => LoginScreen()),

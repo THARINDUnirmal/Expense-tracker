@@ -110,108 +110,126 @@ class _AddScreenState extends State<AddScreen> {
                     );
                   } else {
                     List<DataModel> allData = snapshot.data!;
-                    return ListView.builder(
-                      itemCount: allData.length,
-                      physics: ScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        DataModel singleData = allData[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    SingleDataScreen(singleData: singleData),
+                    return allData.isEmpty
+                        ? Center(
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              "No Data !",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
                               ),
-                            );
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 10),
-                            padding: EdgeInsets.all(15),
-                            height: 100,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                right: BorderSide(
-                                  width: 8,
-                                  color: singleData.isExpense
-                                      ? AppColors.appRedColor
-                                      : AppColors.appGreenColor,
-                                ),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 2,
-                                  offset: Offset(3, 2),
-                                  color: const Color.fromARGB(
-                                    255,
-                                    236,
-                                    236,
-                                    237,
-                                  ),
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.white,
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 250,
-                                      child: Text(
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        singleData.title,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.grey,
-                                        ),
+                          )
+                        : ListView.builder(
+                            itemCount: allData.length,
+                            physics: ScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              DataModel singleData = allData[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SingleDataScreen(
+                                        singleData: singleData,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
-                                    SizedBox(
-                                      width: 250,
-                                      child: Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        "Rs.${singleData.amount}",
-                                        style: TextStyle(
-                                          fontSize: 23,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  width: 60,
-                                  height: 60,
+                                  );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 10),
+                                  padding: EdgeInsets.all(15),
+                                  height: 100,
+                                  width: double.infinity,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      singleData.isExpense
-                                          ? Icons.arrow_circle_up_outlined
-                                          : Icons.arrow_circle_down_outlined,
-                                      color: singleData.isExpense
-                                          ? AppColors.appRedColor
-                                          : AppColors.appGreenColor,
-                                      size: 30,
+                                    border: Border(
+                                      right: BorderSide(
+                                        width: 8,
+                                        color: singleData.isExpense
+                                            ? AppColors.appRedColor
+                                            : AppColors.appGreenColor,
+                                      ),
                                     ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 2,
+                                        offset: Offset(3, 2),
+                                        color: const Color.fromARGB(
+                                          255,
+                                          236,
+                                          236,
+                                          237,
+                                        ),
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Colors.white,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: 250,
+                                            child: Text(
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              singleData.title,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          SizedBox(
+                                            width: 250,
+                                            child: Text(
+                                              overflow: TextOverflow.ellipsis,
+                                              "Rs.${singleData.amount}",
+                                              style: TextStyle(
+                                                fontSize: 23,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            singleData.isExpense
+                                                ? Icons.arrow_circle_up_outlined
+                                                : Icons
+                                                      .arrow_circle_down_outlined,
+                                            color: singleData.isExpense
+                                                ? AppColors.appRedColor
+                                                : AppColors.appGreenColor,
+                                            size: 30,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
+                              );
+                            },
+                          );
                   }
                 },
               ),
