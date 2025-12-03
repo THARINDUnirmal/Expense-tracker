@@ -8,11 +8,10 @@ import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
-import 'package:expenzes/view/screens/home_see_all_screen.dart';
+import 'package:expenzes/view/screens/sub_screens/home_see_all_screen.dart';
 import 'package:expenzes/widgets/categeory_card_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -59,24 +58,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RichText(
-                      text: TextSpan(
-                        text: "Finance",
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Color(0xfffdaa5d),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: "Mate",
-                            style: TextStyle(
-                              fontSize: 30,
-                              color: Color(0xff4ab7b6),
-                              fontWeight: FontWeight.bold,
-                            ),
+                    GestureDetector(
+                      onTap: () {
+                        AppRoutes.route.push("/FinanceMateScreen");
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: "Finance",
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: Color(0xfffdaa5d),
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
+                          children: [
+                            TextSpan(
+                              text: "Mate",
+                              style: TextStyle(
+                                fontSize: 30,
+                                color: Color(0xff4ab7b6),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Container(
@@ -97,40 +101,53 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          maxRadius: 40,
-                          backgroundImage: userImageLocal.isEmpty
-                              ? NetworkImage(
-                                  "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fHVzZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
-                                )
-                              : FileImage(File(userImageLocal)),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Good Evening!",
-                              style: AppTextStyles.miniTextStyle,
+                    GestureDetector(
+                      onTap: () {
+                        AppRoutes.route.push("/EdditProfileScreen");
+                      },
+                      child: Row(
+                        children: [
+                          Hero(
+                            tag: 1,
+                            child: CircleAvatar(
+                              maxRadius: 40,
+                              backgroundImage: userImageLocal.isEmpty
+                                  ? NetworkImage(
+                                      "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                    )
+                                  : FileImage(File(userImageLocal)),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.55,
-                              child: Text(
-                                overflow: TextOverflow.ellipsis,
-                                userName!,
-                                style: AppTextStyles.mainTopicTextStyle
-                                    .copyWith(fontSize: 16),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Good Evening!",
+                                style: AppTextStyles.miniTextStyle,
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.55,
+                                child: Text(
+                                  overflow: TextOverflow.ellipsis,
+                                  userName!,
+                                  style: AppTextStyles.mainTopicTextStyle
+                                      .copyWith(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(width: 10),
-                    Icon(Icons.keyboard_double_arrow_right, size: 25),
+
+                    IconButton(
+                      onPressed: () {
+                        AppRoutes.route.push("/EdditProfileScreen");
+                      },
+                      icon: Icon(Icons.keyboard_double_arrow_right, size: 25),
+                    ),
                   ],
                 ),
                 SizedBox(height: 30),
@@ -165,29 +182,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: AppColors.appCreamColor,
-                      ),
-                      child: Center(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          "Total Expenses or\nIncomes",
+                    GestureDetector(
+                      onTap: () {
+                        AppRoutes.route.push("/SummaryScreen");
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: AppColors.appCreamColor,
+                        ),
+                        child: Center(
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            "Total Expenses or\nIncomes",
+                          ),
                         ),
                       ),
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: AppColors.appCreamColor,
-                      ),
-                      child: Center(
-                        child: Text(textAlign: TextAlign.center, "Chart"),
+                    GestureDetector(
+                      onTap: () {
+                        AppRoutes.route.push("/PieChartScreen");
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: AppColors.appCreamColor,
+                        ),
+                        child: Center(
+                          child: Text(textAlign: TextAlign.center, "Chart"),
+                        ),
                       ),
                     ),
                   ],
@@ -259,28 +286,130 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     } else if (!snapshot.hasData) {
                       return Center(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          "No Data !",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.inbox_rounded,
+                              size: 80,
+                              color: Colors.grey.shade400,
+                            ),
+
+                            SizedBox(height: 16),
+
+                            Text(
+                              "No Data Found",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+
+                            SizedBox(height: 8),
+
+                            Text(
+                              "It looks empty here. Add your first item!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 16,
+                              ),
+                            ),
+
+                            SizedBox(height: 24),
+
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.appBlue2Color,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 28,
+                                  vertical: 14,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                elevation: 3,
+                              ),
+                              onPressed: () {
+                                AppRoutes.route.push("/AddScreen");
+                              },
+                              child: Text(
+                                "Add Now",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     } else {
                       List<DataModel> dataList = snapshot.data ?? [];
                       return dataList.isEmpty
                           ? Center(
-                              child: Text(
-                                textAlign: TextAlign.center,
-                                "No Data !",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal,
-                                ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.inbox_rounded,
+                                    size: 80,
+                                    color: Colors.grey.shade400,
+                                  ),
+
+                                  SizedBox(height: 16),
+
+                                  Text(
+                                    "No Data Found",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+
+                                  SizedBox(height: 8),
+
+                                  Text(
+                                    "It looks empty here. Add your first item!",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+
+                                  SizedBox(height: 24),
+
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.appBlue2Color,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 28,
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      elevation: 3,
+                                    ),
+                                    onPressed: () {
+                                      AppRoutes.route.push("/AddScreen");
+                                    },
+                                    child: Text(
+                                      "Add Now",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             )
                           : ListView.builder(

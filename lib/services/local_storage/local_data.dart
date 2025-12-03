@@ -13,7 +13,7 @@ class LocalData {
     }
   }
 
-  //get Data
+  //get user Image Data
   Future<String> getImageData() async {
     try {
       SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -23,5 +23,13 @@ class LocalData {
       print("Get image data error==============");
       throw exceptions(error.toString());
     }
+  }
+
+  //delete image
+  Future<void> deleteUserImage() async {
+    try {
+      SharedPreferences _pref = await SharedPreferences.getInstance();
+      await _pref.remove("Image");
+    } catch (error) {}
   }
 }

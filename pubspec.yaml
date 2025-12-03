@@ -46,6 +46,7 @@ dependencies:
   image_picker: ^1.2.0
   lottie: ^3.3.2
   animated_gradient_text: ^0.0.2
+  fl_chart: ^1.1.1
 
 dev_dependencies:
   flutter_test:

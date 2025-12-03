@@ -1,4 +1,5 @@
 import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
@@ -37,7 +38,6 @@ class _AddScreenState extends State<AddScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text("Add", style: AppTextStyles.mainTopicTextStyle),
       ),
@@ -112,14 +112,50 @@ class _AddScreenState extends State<AddScreen> {
                     List<DataModel> allData = snapshot.data!;
                     return allData.isEmpty
                         ? Center(
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              "No Data !",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal,
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(height: 100),
+                                Icon(
+                                  Icons.inbox_rounded,
+                                  size: 80,
+                                  color: Colors.grey.shade400,
+                                ),
+
+                                SizedBox(height: 16),
+
+                                Text(
+                                  "No Data Found",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+
+                                SizedBox(height: 8),
+
+                                Text(
+                                  "It looks empty here. Add your first item!",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                  ),
+                                ),
+
+                                SizedBox(height: 24),
+
+                                Text(
+                                  "Add Now",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ],
                             ),
                           )
                         : ListView.builder(
