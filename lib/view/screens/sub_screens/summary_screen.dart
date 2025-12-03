@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 class SummaryScreen extends StatelessWidget {
-  const SummaryScreen({super.key});
+  final Map<String, double> allTotalData;
+  const SummaryScreen({super.key, required this.allTotalData});
 
   @override
   Widget build(BuildContext context) {
+    double totalEx = allTotalData["TotalExpenses"] ?? 0;
+    double totalIn = allTotalData["TotalIncomes"] ?? 0;
+    double totalBalance = totalIn - totalEx;
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ================= HEADER =================
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 24),
@@ -28,6 +31,7 @@ class SummaryScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
+                SizedBox(height: 20),
                 Text(
                   "Summary",
                   style: TextStyle(
@@ -47,7 +51,6 @@ class SummaryScreen extends StatelessWidget {
 
           const SizedBox(height: 25),
 
-          // ================= TOTAL BALANCE CARD =================
           Center(
             child: Container(
               width: MediaQuery.of(context).size.width * 0.88,
@@ -64,14 +67,14 @@ class SummaryScreen extends StatelessWidget {
                 ],
               ),
               child: Column(
-                children: const [
+                children: [
                   Text(
                     "Total Balance",
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Rs. 42,500.00",
+                    "Rs. $totalBalance",
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -85,7 +88,6 @@ class SummaryScreen extends StatelessWidget {
 
           const SizedBox(height: 25),
 
-          // ================= INCOME & EXPENSE CARDS =================
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -101,7 +103,7 @@ class SummaryScreen extends StatelessWidget {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Icon(
                           Icons.arrow_downward,
                           color: Colors.green,
@@ -117,7 +119,7 @@ class SummaryScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          "Rs. 75,000",
+                          "Rs. $totalIn",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -141,7 +143,7 @@ class SummaryScreen extends StatelessWidget {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Icon(Icons.arrow_upward, color: Colors.red, size: 34),
                         SizedBox(height: 10),
                         Text(
@@ -153,7 +155,7 @@ class SummaryScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          "Rs. 32,500",
+                          "Rs. $totalEx",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -170,7 +172,7 @@ class SummaryScreen extends StatelessWidget {
 
           const SizedBox(height: 35),
 
-          // ================= PROGRESS BAR =================
+          //PROGRESS BAR
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(

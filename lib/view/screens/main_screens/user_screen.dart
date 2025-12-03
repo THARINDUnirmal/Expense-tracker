@@ -159,7 +159,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   // Logout function
-  void logoutFunction() {
+  Future<void> logoutFunction() async {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -347,7 +347,9 @@ class _UserScreenState extends State<UserScreen> {
                   ),
                   backgroundColor: const Color(0xfffde4e3),
                 ),
-                onPressed: logoutFunction,
+                onPressed: () async {
+                  await logoutFunction();
+                },
                 child: Text(
                   "LogOut",
                   style: AppTextStyles.miniTextStyle.copyWith(

@@ -2,7 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class PieChartScreen extends StatelessWidget {
-  const PieChartScreen({super.key});
+  final Map<String, double> allTotalData;
+  const PieChartScreen({super.key, required this.allTotalData});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,6 @@ class PieChartScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ---------- HEADER ----------
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 24),
@@ -29,6 +29,7 @@ class PieChartScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
+                SizedBox(height: 20),
                 Text(
                   "Statistics",
                   style: TextStyle(
@@ -48,7 +49,7 @@ class PieChartScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // ---------- PIE CHART ----------
+          //PIE CHART
           Center(
             child: Container(
               height: 260,
@@ -71,8 +72,9 @@ class PieChartScreen extends StatelessWidget {
                   centerSpaceRadius: 45,
                   sections: [
                     PieChartSectionData(
+                      showTitle: true,
                       color: Colors.green,
-                      value: 65,
+                      value: allTotalData["TotalIncomes"] ?? 0,
                       radius: 55,
                       title: "Income",
                       titleStyle: const TextStyle(
@@ -82,8 +84,9 @@ class PieChartScreen extends StatelessWidget {
                       ),
                     ),
                     PieChartSectionData(
+                      showTitle: true,
                       color: Colors.red,
-                      value: 35,
+                      value: allTotalData["TotalExpenses"] ?? 0,
                       radius: 55,
                       title: "Expense",
                       titleStyle: const TextStyle(
@@ -100,7 +103,7 @@ class PieChartScreen extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          // ---------- LEGEND LIST ----------
+          //LEGEND LIST
           Expanded(
             child: Container(
               width: double.infinity,
@@ -131,13 +134,13 @@ class PieChartScreen extends StatelessWidget {
                   pieItem(
                     color: Colors.green,
                     title: "Income",
-                    amount: "Rs. 75,000",
+                    amount: "Rs. ${allTotalData["TotalIncomes"] ?? 0}",
                   ),
                   const SizedBox(height: 14),
                   pieItem(
                     color: Colors.red,
                     title: "Expense",
-                    amount: "Rs. 32,500",
+                    amount: "Rs. ${allTotalData["TotalExpenses"] ?? 0}",
                   ),
                 ],
               ),
@@ -148,7 +151,7 @@ class PieChartScreen extends StatelessWidget {
     );
   }
 
-  // ---------- CATEGORY ROW ----------
+  //CATEGORY ROW
   Widget pieItem({
     required Color color,
     required String title,

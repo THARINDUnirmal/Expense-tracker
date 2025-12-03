@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/models/user_model.dart';
-import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/utils/exceptions/app_exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -54,7 +53,6 @@ class FirebaseDatabaseServices {
   //get data from firebase
   Future<List<DataModel>> getAllData({required String curruntUserId}) async {
     try {
-      print(FirebaseAuthServices().curruntUserData.uid);
       QuerySnapshot snapshotData = await _firebaseCollection
           .doc(curruntUserId)
           .collection("allData")
@@ -67,6 +65,39 @@ class FirebaseDatabaseServices {
       return listData;
     } catch (error) {
       print("get data error=============");
+      throw exceptions(error.toString());
+    }
+  }
+
+  //get Total Incomes & Expenses
+  Future<Map<String, double>> getTotalValues({
+    required String currentUserId,
+  }) async {
+    try {
+      QuerySnapshot snapData = await _firebaseCollection
+          .doc(currentUserId)
+          .collection("allData")
+          .get();
+
+      List<DataModel> dataList = snapData.docs.map((e) {
+        return DataModel.fromJson(e.data() as Map<String, dynamic>);
+      }).toList();
+
+      double allIncomes = 0;
+      double allExpenses = 0;
+      Map<String, double> allTotalValues = {};
+      for (DataModel i in dataList) {
+        if (i.isExpense) {
+          allExpenses += i.amount.toDouble();
+        } else {
+          allIncomes += i.amount.toDouble();
+        }
+      }
+      allTotalValues["TotalIncomes"] = allIncomes;
+      allTotalValues["TotalExpenses"] = allExpenses;
+
+      return allTotalValues;
+    } catch (error) {
       throw exceptions(error.toString());
     }
   }

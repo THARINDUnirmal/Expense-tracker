@@ -75,11 +75,17 @@ class AppRoutes {
       ),
       GoRoute(
         path: "/SummaryScreen",
-        builder: (context, state) => SummaryScreen(),
+        builder: (context, state) {
+          Map<String, double> allData = state.extra as Map<String, double>;
+          return SummaryScreen(allTotalData: allData);
+        },
       ),
       GoRoute(
         path: "/PieChartScreen",
-        builder: (context, state) => PieChartScreen(),
+        builder: (context, state) {
+          Map<String, double> allData = state.extra as Map<String, double>;
+          return PieChartScreen(allTotalData: allData);
+        },
       ),
     ],
   );

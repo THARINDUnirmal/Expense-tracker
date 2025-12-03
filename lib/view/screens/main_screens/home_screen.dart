@@ -21,9 +21,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //All veriables
   String userImageLocal = "";
   late String? userName;
+  Map<String, double> allDataMap = {};
 
+  //get user image from local storage
   Future<void> getUserLocalUserImage() async {
     try {
       String userImage = await LocalData().getImageData();
@@ -33,9 +36,22 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (error) {}
   }
 
+  //get user name form current user
   Future<void> getUser() async {
     User userData = FirebaseAuthServices().curruntUserData;
     userName = userData.isAnonymous ? "Anonymous User" : userData.email;
+  }
+
+  //get Total Expenses & Incomes values
+  Future<void> getAllTotalValues() async {
+    Map<String, double> allData = await FirebaseDatabaseServices()
+        .getTotalValues(
+          currentUserId: FirebaseAuthServices().curruntUserData.uid,
+        );
+
+    setState(() {
+      allDataMap = allData;
+    });
   }
 
   @override
@@ -43,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getUser();
     getUserLocalUserImage();
+    getAllTotalValues();
   }
 
   @override
@@ -184,7 +201,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        AppRoutes.route.push("/SummaryScreen");
+                        AppRoutes.route.push(
+                          "/SummaryScreen",
+                          extra: allDataMap,
+                        );
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.4,
@@ -203,7 +223,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        AppRoutes.route.push("/PieChartScreen");
+                        AppRoutes.route.push(
+                          "/PieChartScreen",
+                          extra: allDataMap,
+                        );
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.4,
