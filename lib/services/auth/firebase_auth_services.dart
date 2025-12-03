@@ -90,4 +90,11 @@ class FirebaseAuthServices {
       print(e.toString());
     }
   }
+
+  //reset password
+  Future<void> resetPassword({required String userEmail}) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: userEmail);
+    } catch (error) {}
+  }
 }

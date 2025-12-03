@@ -1,4 +1,5 @@
 import 'package:expenzes/models/user_model.dart';
+import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
@@ -164,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    //todo - Forgot Password action !
+                                    AppRoutes.route.push("/ResetScreen");
                                   },
                                   child: Text(
                                     "Forgot Password?",
@@ -211,14 +212,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                       await Future.delayed(
                                         Duration(seconds: 2),
                                       );
+                                      GoRouter.of(context).go("/");
                                     } catch (error) {
                                       print(error.toString());
                                     } finally {
                                       setState(() {
                                         isLoading = false;
                                       });
-
-                                      GoRouter.of(context).go("/");
                                     }
                                   }
                                 },

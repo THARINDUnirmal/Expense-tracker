@@ -207,6 +207,7 @@ class _UserScreenState extends State<UserScreen> {
                     onTap: () async {
                       await FirebaseAuthServices().logOutAccount();
                       if (context.mounted) Navigator.pop(context);
+                      setState(() {});
                     },
                     child: Container(
                       width: 120,

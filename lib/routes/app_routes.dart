@@ -1,4 +1,5 @@
 import 'package:expenzes/view/auth_view/auth_view_screen.dart';
+import 'package:expenzes/view/screens/onbording_screens/login/reset_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/finance_mate_screen.dart';
 import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/view/screens/main_screens/add_screen.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
       //Login Route
       GoRoute(path: "/", builder: (context, state) => AuthViewScreen()),
       GoRoute(path: "/LoginScreen", builder: (context, state) => LoginScreen()),
+      GoRoute(path: "/ResetScreen", builder: (context, state) => ResetScreen()),
 
       //Min screen route
       GoRoute(
