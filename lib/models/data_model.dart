@@ -9,6 +9,7 @@ class DataModel {
   final DateTime createdDate;
   final TimeOfDay createdTime;
   final int amount;
+  final String? category; // <-- ADD THIS FIELD
 
   DataModel({
     required this.createdTime,
@@ -18,6 +19,7 @@ class DataModel {
     required this.description,
     required this.createdDate,
     required this.amount,
+    this.category,
   });
 
   factory DataModel.fromJson(Map<String, dynamic> json) {
@@ -36,6 +38,7 @@ class DataModel {
         minute: int.parse(parts[1]),
       ),
       amount: json["amount"] ?? 0,
+      category: json["category"],
     );
   }
 
@@ -48,6 +51,7 @@ class DataModel {
       "createdDate": createdDate,
       "createdTime": "${createdTime.hour}:${createdTime.minute}",
       "amount": amount,
+      "category": category,
     };
   }
 }

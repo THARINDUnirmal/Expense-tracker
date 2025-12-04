@@ -292,6 +292,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   isIconLoad = true;
                                 });
                                 await FirebaseAuthServices().logAsAnnonymus();
+
+                                //stroe Annonymus user data
+                                UserModel userData = UserModel(
+                                  userId: FirebaseAuthServices()
+                                      .curruntUserData
+                                      .uid,
+                                  name: "Annonymus User",
+                                  email: "Annonymus",
+                                  createdAt: DateTime.now(),
+                                );
+
+                                await FirebaseDatabaseServices().addUser(
+                                  userData,
+                                );
                               } catch (e) {
                                 AppMessages().appMessage(e.toString(), context);
                               } finally {

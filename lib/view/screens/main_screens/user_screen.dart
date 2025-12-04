@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
@@ -207,6 +208,7 @@ class _UserScreenState extends State<UserScreen> {
                     onTap: () async {
                       await FirebaseAuthServices().logOutAccount();
                       if (context.mounted) Navigator.pop(context);
+                      AppRoutes.route.go("/");
                       setState(() {});
                     },
                     child: Container(
@@ -331,33 +333,19 @@ class _UserScreenState extends State<UserScreen> {
                 subTitle: "Manage categories & sub-categories",
               ),
               Divider(indent: 30, endIndent: 30),
-              userPageWidget(
-                svg: "assets/icons/annonymus.svg",
-                title: "Security",
-                subTitle: "Set PIN or fingerprint",
+              GestureDetector(
+                onTap: () async {
+                  await logoutFunction();
+                  setState(() {});
+                },
+                child: userPageWidget(
+                  svg: "assets/icons/log-out.svg",
+                  title: "Log Out",
+                  subTitle: "Log Out in current account",
+                ),
               ),
 
               const SizedBox(height: 20),
-
-              // Logout button
-              TextButton(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 20,
-                  ),
-                  backgroundColor: const Color(0xfffde4e3),
-                ),
-                onPressed: () async {
-                  await logoutFunction();
-                },
-                child: Text(
-                  "LogOut",
-                  style: AppTextStyles.miniTextStyle.copyWith(
-                    color: const Color(0xffc65d57),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

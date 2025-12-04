@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/models/user_model.dart';
+import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/utils/exceptions/app_exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -100,5 +101,31 @@ class FirebaseDatabaseServices {
     } catch (error) {
       throw exceptions(error.toString());
     }
+  }
+
+  //get current user details
+  Future<UserModel> getCurrentUserData({required String userId}) async {
+    try {
+      DocumentSnapshot docSnap = await _firebaseCollection.doc(userId).get();
+
+      UserModel userData = UserModel.fromJson(
+        docSnap.data() as Map<String, dynamic>,
+      );
+
+      return userData;
+    } catch (error) {
+      throw exceptions(error.toString());
+    }
+  }
+
+  //delete data form fire base
+  Future<void> deleteDataFromeFirebase({required String itemId}) async {
+    try {
+      await _firebaseCollection
+          .doc(FirebaseAuthServices().curruntUserData.uid)
+          .collection("allData")
+          .doc(itemId)
+          .delete();
+    } catch (error) {}
   }
 }

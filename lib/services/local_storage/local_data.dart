@@ -17,7 +17,8 @@ class LocalData {
   Future<String> getImageData() async {
     try {
       SharedPreferences _pref = await SharedPreferences.getInstance();
-      String imageUrl = _pref.getString("Image")!;
+
+      String? imageUrl = _pref.getString("Image") ?? "";
       return imageUrl;
     } catch (error) {
       print("Get image data error==============");

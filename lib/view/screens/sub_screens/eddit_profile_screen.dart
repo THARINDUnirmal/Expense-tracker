@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +20,7 @@ class EdditProfileScreen extends StatefulWidget {
 class _EdditProfileScreenState extends State<EdditProfileScreen> {
   late User curruntUser;
   String userImage = "";
+  UserModel userData = UserModel(userId: "", name: "", email: "");
 
   //Get user image from local storage
   Future<void> getUserImage() async {
@@ -38,11 +42,23 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
     } catch (error) {}
   }
 
+  //get user data
+  Future<void> getUserData() async {
+    UserModel data = await FirebaseDatabaseServices().getCurrentUserData(
+      userId: curruntUser.uid,
+    );
+
+    setState(() {
+      userData = data;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getCurruntUser();
     getUserImage();
+    getUserData();
   }
 
   @override
@@ -96,7 +112,7 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            "No Name",
+                            userData.name.isEmpty ? "No Name" : userData.name,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -134,7 +150,7 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
                           Icon(Icons.account_circle_outlined, size: 30),
                           SizedBox(width: 20),
                           Text(
-                            "No Name",
+                            userData.name.isEmpty ? "No Name" : userData.name,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -179,6 +195,22 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
                           SizedBox(width: 20),
                           Text(
                             "Sri Lanka",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Icon(Icons.date_range_outlined, size: 30),
+                          SizedBox(width: 20),
+                          Text(
+                            userData.createdAt == null
+                                ? "Date not avilable"
+                                : userData.createdAt.toString(),
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,

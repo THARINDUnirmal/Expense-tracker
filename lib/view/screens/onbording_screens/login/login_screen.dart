@@ -1,3 +1,4 @@
+import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
@@ -282,7 +283,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                 setState(() {
                                   isIconLoad = true;
                                 });
+
                                 await FirebaseAuthServices().logAsAnnonymus();
+
+                                //stroe Annonymus user data
+                                UserModel userData = UserModel(
+                                  userId: FirebaseAuthServices()
+                                      .curruntUserData
+                                      .uid,
+                                  name: "Annonymus User",
+                                  email: "Annonymus",
+                                  createdAt: DateTime.now(),
+                                );
+
+                                await FirebaseDatabaseServices().addUser(
+                                  userData,
+                                );
                               } catch (e) {
                                 AppMessages().appMessage(e.toString(), context);
                               } finally {
