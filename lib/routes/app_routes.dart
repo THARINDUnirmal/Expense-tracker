@@ -1,6 +1,7 @@
 import 'package:expenzes/view/auth_view/auth_view_screen.dart';
 import 'package:expenzes/view/screens/onbording_screens/login/reset_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/all_categeory_screen.dart';
+import 'package:expenzes/view/screens/sub_screens/empty_notifications_Screen.dart';
 import 'package:expenzes/view/screens/sub_screens/finance_mate_screen.dart';
 import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/view/screens/main_screens/add_screen.dart';
@@ -104,6 +105,10 @@ class AppRoutes {
           List<String> allCategeory = state.extra as List<String>;
           return AllCategeoryScreen(categeoryList: allCategeory);
         },
+      ),
+      GoRoute(
+        path: "/NotificationScreen",
+        builder: (context, state) => EmptyNotificationsScreen(),
       ),
     ],
   );

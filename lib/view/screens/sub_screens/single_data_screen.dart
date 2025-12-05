@@ -1,14 +1,8 @@
 import 'package:expenzes/models/data_model.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
-import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
-import 'package:expenzes/view/screens/main_screen.dart';
-import 'package:expenzes/view/screens/main_screens/add_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class SingleDataScreen extends StatelessWidget {
   final DataModel singleData;
@@ -20,7 +14,6 @@ class SingleDataScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // 🌈 BEAUTIFUL GRADIENT BACKGROUND
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -33,11 +26,9 @@ class SingleDataScreen extends StatelessWidget {
             ),
           ),
 
-          // PAGE CONTENT
           SafeArea(
             child: Column(
               children: [
-                // 🟦 MODERN APP BAR
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppConstants.appPadding,
@@ -75,7 +66,6 @@ class SingleDataScreen extends StatelessWidget {
 
                 SizedBox(height: 20),
 
-                // 💰 AMOUNT CARD
                 Container(
                   padding: EdgeInsets.all(25),
                   margin: EdgeInsets.symmetric(horizontal: 25),
@@ -130,7 +120,6 @@ class SingleDataScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // TITLE
                           Text(
                             singleData.title,
                             style: TextStyle(
@@ -141,7 +130,6 @@ class SingleDataScreen extends StatelessWidget {
 
                           SizedBox(height: 20),
 
-                          // DATE & TIME
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -161,7 +149,6 @@ class SingleDataScreen extends StatelessWidget {
 
                           SizedBox(height: 25),
 
-                          // DESCRIPTION
                           Text(
                             "Description",
                             style: TextStyle(
@@ -180,7 +167,6 @@ class SingleDataScreen extends StatelessWidget {
 
                           SizedBox(height: 40),
 
-                          // DELETE BUTTON
                           GestureDetector(
                             onTap: () async {
                               await FirebaseDatabaseServices()
@@ -188,12 +174,7 @@ class SingleDataScreen extends StatelessWidget {
                                     itemId: singleData.id,
                                   );
 
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MainScreen(),
-                                ),
-                              );
+                              Navigator.of(context).pop();
                             },
                             child: Container(
                               width: double.infinity,

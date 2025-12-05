@@ -169,15 +169,8 @@ class _UserScreenState extends State<UserScreen> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: AppConstants.appPadding),
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
           gradient: LinearGradient(
-            colors: [
-              Color(0xFFB3E5FC), // Sky Blue
-              Color(0xFFFFF59D), // Soft Yellow
-            ],
+            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

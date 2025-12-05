@@ -14,7 +14,7 @@ class AllCategeoryScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => AppRoutes.route.go("/MainScreen"),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -51,29 +51,59 @@ class AllCategeoryScreen extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(AppConstants.appPadding),
-          child: GridView.builder(
-            itemCount: categeoryList.toSet().length,
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 10 / 5,
-              crossAxisCount: 2,
-            ),
-            itemBuilder: (context, index) {
-              String indexValue = categeoryList[index];
-              return InkWell(
-                onTap: () {
-                  AppRoutes.route.push(
-                    "/SingleCategeoryScreen",
-                    extra: indexValue,
-                  );
-                },
-                child: CategoryCardWidget(title: indexValue),
-              );
-            },
-          ),
+          child: categeoryList.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.category_outlined,
+                        size: 80,
+                        color: Colors.grey.shade400,
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "No Categories Yet!",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Add a new category to get started.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : GridView.builder(
+                  itemCount: categeoryList.toSet().length,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 10 / 5,
+                    crossAxisCount: 2,
+                  ),
+                  itemBuilder: (context, index) {
+                    String indexValue = categeoryList[index];
+                    return InkWell(
+                      onTap: () {
+                        AppRoutes.route.push(
+                          "/SingleCategeoryScreen",
+                          extra: indexValue,
+                        );
+                      },
+                      child: CategoryCardWidget(title: indexValue),
+                    );
+                  },
+                ),
         ),
       ),
     );

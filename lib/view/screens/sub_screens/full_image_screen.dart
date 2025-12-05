@@ -27,7 +27,7 @@ class FullImageScreen extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => AppRoutes.route.go("/EdditProfileScreen"),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(

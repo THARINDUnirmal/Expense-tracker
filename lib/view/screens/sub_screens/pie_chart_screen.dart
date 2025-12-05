@@ -1,6 +1,9 @@
+import 'package:expenzes/routes/app_routes.dart';
+import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class PieChartScreen extends StatefulWidget {
   final Map<String, double> allTotalData;
@@ -12,12 +15,18 @@ class PieChartScreen extends StatefulWidget {
 
 class _PieChartScreenState extends State<PieChartScreen> {
   int touchedIndex = -1;
+  double totalExp = 0;
+  double totalIncom = 0;
 
   // Automatically calculate percentages
   Map<String, double> calculatePercentages() {
     double totalIncome = widget.allTotalData["TotalIncomes"] ?? 0;
     double totalExpense = widget.allTotalData["TotalExpenses"] ?? 0;
     double total = totalIncome + totalExpense;
+    setState(() {
+      totalExp = totalExpense;
+      totalIncom = totalIncome;
+    });
 
     if (total == 0) return {"income": 0, "expense": 0};
 
@@ -72,7 +81,7 @@ class _PieChartScreenState extends State<PieChartScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => AppRoutes.route.go("/MainScreen"),
                     child: Container(
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -111,106 +120,203 @@ class _PieChartScreenState extends State<PieChartScreen> {
                 padding: EdgeInsets.all(AppConstants.appPadding),
                 width: double.infinity,
                 height: 300,
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: Duration(milliseconds: 800),
-                  builder: (context, value, child) {
-                    return PieChart(
-                      PieChartData(
-                        sectionsSpace: 5,
-                        centerSpaceRadius: 60,
-                        pieTouchData: PieTouchData(
-                          touchCallback: (event, pieTouchResponse) {
-                            if (!event.isInterestedForInteractions ||
-                                pieTouchResponse?.touchedSection == null) {
-                              setState(() {
-                                touchedIndex = -1;
-                              });
-                              return;
-                            }
-                            setState(() {
-                              touchedIndex = pieTouchResponse!
-                                  .touchedSection!
-                                  .touchedSectionIndex;
-                            });
-                          },
+                child: incomePercent == 0 && expensePercent == 0
+                    ? Center(
+                        child: Text(
+                          "No Data",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        sections: [
-                          PieChartSectionData(
-                            color: Colors.green,
-                            value: incomePercent * value, // dynamic percentage
-                            radius: touchedIndex == 0 ? 70 : 55,
-                            title: touchedIndex == 0
-                                ? "${incomePercent.toStringAsFixed(1)}%"
-                                : "Income",
-                            titleStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                      )
+                    : TweenAnimationBuilder<double>(
+                        tween: Tween<double>(begin: 0, end: 1),
+                        duration: Duration(milliseconds: 800),
+                        builder: (context, value, child) {
+                          return PieChart(
+                            PieChartData(
+                              sectionsSpace: 5,
+                              centerSpaceRadius: 60,
+                              pieTouchData: PieTouchData(
+                                touchCallback: (event, pieTouchResponse) {
+                                  if (!event.isInterestedForInteractions ||
+                                      pieTouchResponse?.touchedSection ==
+                                          null) {
+                                    setState(() {
+                                      touchedIndex = -1;
+                                    });
+                                    return;
+                                  }
+                                  setState(() {
+                                    touchedIndex = pieTouchResponse!
+                                        .touchedSection!
+                                        .touchedSectionIndex;
+                                  });
+                                },
+                              ),
+                              sections: [
+                                PieChartSectionData(
+                                  color: Colors.green,
+                                  value:
+                                      incomePercent *
+                                      value, // dynamic percentage
+                                  radius: touchedIndex == 0 ? 70 : 55,
+                                  title: touchedIndex == 0
+                                      ? "${incomePercent.toStringAsFixed(1)}%"
+                                      : "Income",
+                                  titleStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                PieChartSectionData(
+                                  color: Colors.red,
+                                  value: expensePercent * value,
+                                  radius: touchedIndex == 1 ? 70 : 55,
+                                  title: touchedIndex == 1
+                                      ? "${expensePercent.toStringAsFixed(1)}%"
+                                      : "Expense",
+                                  titleStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          PieChartSectionData(
-                            color: Colors.red,
-                            value: expensePercent * value,
-                            radius: touchedIndex == 1 ? 70 : 55,
-                            title: touchedIndex == 1
-                                ? "${expensePercent.toStringAsFixed(1)}%"
-                                : "Expense",
-                            titleStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ),
 
             const SizedBox(height: 30),
 
-            // LEGEND LIST
-            Expanded(
+            Padding(
+              padding: const EdgeInsets.all(AppConstants.appPadding - 5),
               child: Container(
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 15,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withOpacity(0.07),
                       blurRadius: 10,
-                      offset: const Offset(0, 5),
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Category Breakdown",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        // Icon
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: SvgPicture.asset(
+                            "assets/icons/income.svg",
+                            width: 28,
+                            height: 28,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+
+                        // Texts
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Total Incomes",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                " Rs.${totalIncom.toString()}",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.appGreenColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          "${incomePercent.toStringAsFixed(1)}%",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.appGreenColor,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 18),
-                    pieItem(
-                      color: Colors.green,
-                      title: "Income",
-                      amount: "Rs. ${widget.allTotalData["TotalIncomes"] ?? 0}",
-                    ),
-                    const SizedBox(height: 14),
-                    pieItem(
-                      color: Colors.red,
-                      title: "Expense",
-                      amount:
-                          "Rs. ${widget.allTotalData["TotalExpenses"] ?? 0}",
+                    SizedBox(height: 20),
+                    Row(
+                      children: [
+                        // Icon
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: SvgPicture.asset(
+                            "assets/icons/Expeses.svg",
+                            width: 28,
+                            height: 28,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+
+                        // Texts
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Total Expenses",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                " Rs.${totalExp.toString()}",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.appRedColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          "${expensePercent.toStringAsFixed(1)}%",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.appSheetRedColor,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

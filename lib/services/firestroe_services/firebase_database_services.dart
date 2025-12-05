@@ -65,8 +65,26 @@ class FirebaseDatabaseServices {
 
       return listData;
     } catch (error) {
-      print("get data error=============");
+      print("get data error");
       throw exceptions(error.toString());
+    }
+  }
+
+  // get data as stream from firebase
+  Stream<List<DataModel>> getAllDataStream({required String curruntUserId}) {
+    try {
+      return _firebaseCollection
+          .doc(curruntUserId)
+          .collection("allData")
+          .snapshots()
+          .map((snapshot) {
+            return snapshot.docs.map((e) {
+              return DataModel.fromJson(e.data() as Map<String, dynamic>);
+            }).toList();
+          });
+    } catch (error) {
+      print("Stream error");
+      throw Exception(error.toString());
     }
   }
 
@@ -142,6 +160,27 @@ class FirebaseDatabaseServices {
       return categeoryData;
     } catch (error) {
       throw exceptions(error.toString());
+    }
+  }
+
+  //delete data from each categeory
+  Future<void> deleteDataUsingCategeory({required String categeory}) async {
+    try {
+      final userId = FirebaseAuthServices().curruntUserData.uid;
+
+      // get all matching documents
+      QuerySnapshot snapshot = await _firebaseCollection
+          .doc(userId)
+          .collection("allData")
+          .where("category", isEqualTo: categeory)
+          .get();
+
+      // delete each document
+      for (var doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
+    } catch (error) {
+      print("Delete category error: $error");
     }
   }
 }

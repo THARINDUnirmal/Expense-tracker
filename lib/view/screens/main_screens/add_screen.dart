@@ -111,8 +111,8 @@ class _AddScreenState extends State<AddScreen> {
                   Text("Last Added", style: AppTextStyles.mainTopicTextStyle),
                   SizedBox(height: 30),
 
-                  FutureBuilder(
-                    future: FirebaseDatabaseServices().getAllData(
+                  StreamBuilder(
+                    stream: FirebaseDatabaseServices().getAllDataStream(
                       curruntUserId: curruntUser!.uid,
                     ),
                     builder: (context, snapshot) {

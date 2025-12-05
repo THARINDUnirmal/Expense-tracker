@@ -54,9 +54,8 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => AppRoutes.route.go("/MainScreen"),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(

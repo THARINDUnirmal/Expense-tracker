@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late String? userName;
   Map<String, double> allDataMap = {};
   List<String> allCategeory = [];
+  int expensesCount = 0;
 
   //get user name form current user
   Future<void> getUser() async {
@@ -48,6 +49,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     List<String> dataList = [];
+    for (DataModel i in allDataList) {
+      if (i.isExpense) {
+        expensesCount += 1;
+      }
+    }
 
     for (DataModel i in allDataList) {
       if (!allCategeory.contains(i.category)) {
@@ -118,12 +124,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          //todo
+                          AppRoutes.route.push("/NotificationScreen");
                         },
 
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 24,
+                            horizontal: 12,
                             vertical: 12,
                           ),
                           shape: RoundedRectangleBorder(
@@ -147,15 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   bounds.height,
                                 ),
                               ),
-                          child: Text(
-                            "Themes",
-                            style: TextStyle(
-                              color: Colors
-                                  .white, // this is required for ShaderMask
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: Icon(Icons.notifications, size: 20),
                         ),
                       ),
                     ],
@@ -234,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            "10 Expenses Pending",
+                            "$expensesCount Expenses Pending",
                             style: AppTextStyles.subTopicTextStyle,
                           ),
                         ],
@@ -254,6 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       //Summary Card
                       GestureDetector(
                         onTap: () {
+                          setState(() {});
                           AppRoutes.route.push(
                             "/SummaryScreen",
                             extra: allDataMap,
@@ -309,6 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // -------- Chart Card --------
                       GestureDetector(
                         onTap: () {
+                          setState(() {});
                           AppRoutes.route.push(
                             "/PieChartScreen",
                             extra: allDataMap,
@@ -452,6 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    SizedBox(height: 30),
                                     Icon(
                                       Icons.inbox_rounded,
                                       size: 80,
