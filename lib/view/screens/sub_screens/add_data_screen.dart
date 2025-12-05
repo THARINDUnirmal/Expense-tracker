@@ -141,258 +141,279 @@ class _AddDataScreenState extends State<AddDataScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // TOP TITLE
-              Container(
-                padding: EdgeInsets.all(AppConstants.appPadding),
-                width: double.infinity,
-                child: RichText(
-                  text: TextSpan(
-                    text: "Add Your\n",
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: AppColors.appBlackColor,
-                      fontWeight: FontWeight.bold,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+      body: Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 1,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFB3E5FC), // Sky Blue
+              Color(0xFFFFF59D), // Soft Yellow
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(AppConstants.appPadding),
+                  width: double.infinity,
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Add Your\n",
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: AppColors.appBlackColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: widget.isExpense ? "Expenses" : "Incomes",
+                          style: TextStyle(
+                            fontSize: 40,
+                            color: widget.isExpense
+                                ? Colors.red
+                                : AppColors.appGreenColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    children: [
-                      TextSpan(
-                        text: widget.isExpense ? "Expenses" : "Incomes",
-                        style: TextStyle(
-                          fontSize: 40,
-                          color: widget.isExpense
-                              ? Colors.red
-                              : AppColors.appGreenColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
                   ),
                 ),
-              ),
 
-              //MAIN WHITE AREA
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.appCream3Color,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0), // transparent
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                    ),
                   ),
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppConstants.appPadding + 5,
-                  vertical: AppConstants.appPadding * 2,
-                ),
-                width: double.infinity,
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.isExpense
-                            ? "Expenses Details"
-                            : "Income Details",
-                        style: AppTextStyles.mainTopicTextStyle.copyWith(
-                          fontSize: 30,
-                        ),
-                      ),
-                      SizedBox(height: 30),
-
-                      //TITLE
-                      CustomTextForm2(
-                        controller: _titleContraller,
-                        hintText: "Title",
-                        validator: (value) =>
-                            value!.isEmpty ? "Please Enter Title" : null,
-                      ),
-
-                      //DESCRIPTION
-                      CustomTextForm2(
-                        controller: _descriptionContraller,
-                        hintText: "Description",
-                        validator: (value) =>
-                            value!.isEmpty ? "Please Enter Description" : null,
-                      ),
-
-                      // CATEGORY DROPDOWN
-                      DropdownButtonFormField(
-                        value: selectedCategory,
-                        decoration: InputDecoration(
-                          hintText: "Select Category",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppConstants.appPadding + 5,
+                    vertical: AppConstants.appPadding * 2,
+                  ),
+                  width: double.infinity,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.isExpense
+                              ? "Expenses Details"
+                              : "Income Details",
+                          style: AppTextStyles.mainTopicTextStyle.copyWith(
+                            fontSize: 30,
                           ),
                         ),
-                        items: [
-                          ...dropDownDataList.map(
-                            (data) => DropdownMenuItem(
-                              value: data,
-                              child: Text(data),
+                        SizedBox(height: 30),
+
+                        //TITLE
+                        CustomTextForm2(
+                          controller: _titleContraller,
+                          hintText: "Title",
+                          validator: (value) =>
+                              value!.isEmpty ? "Please Enter Title" : null,
+                        ),
+
+                        //DESCRIPTION
+                        CustomTextForm2(
+                          controller: _descriptionContraller,
+                          hintText: "Description",
+                          validator: (value) => value!.isEmpty
+                              ? "Please Enter Description"
+                              : null,
+                        ),
+
+                        // CATEGORY DROPDOWN
+                        DropdownButtonFormField(
+                          value: selectedCategory,
+                          decoration: InputDecoration(
+                            hintText: "Select Category",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          DropdownMenuItem(
-                            value: "add_new",
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Add New Category",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(width: 10),
-                                Icon(Icons.add),
-                              ],
-                            ),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          if (value == "add_new") {
-                            categeoryAddSheet();
-                          } else {
-                            selectedCategory = value;
-                          }
-                        },
-                        validator: (value) =>
-                            value == null ? "Please select a category" : null,
-                      ),
-
-                      SizedBox(height: 20),
-
-                      // AMOUNT
-                      CustomTextForm2(
-                        keyboardType: TextInputType.number,
-                        controller: _amountContraller,
-                        hintText: "Amount",
-                        validator: (value) {
-                          if (value!.isEmpty) return "Please Enter Amount";
-                          final n = int.tryParse(value);
-                          if (n == null || n <= 0) return "Invalid Amount";
-                          return null;
-                        },
-                      ),
-
-                      SizedBox(height: 25),
-
-                      Text(
-                        "Pick Date & Time",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 15),
-
-                      // DATE
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ValueListenableBuilder(
-                            valueListenable: _dateNotifer,
-                            builder: (context, date, child) => Text(
-                              "Date : ${date.toString().split(" ")[0]}",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                          items: [
+                            ...dropDownDataList.map(
+                              (data) => DropdownMenuItem(
+                                value: data,
+                                child: Text(data),
                               ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () => showDate(context),
-                            icon: Icon(Icons.date_range_outlined, size: 30),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 20),
-
-                      // TIME
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ValueListenableBuilder(
-                            valueListenable: _timeNotifer,
-                            builder: (context, time, child) => Text(
-                              "Time : ${time.format(context)}",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () => showtime(context),
-                            icon: Icon(Icons.alarm_add_outlined, size: 30),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 30),
-
-                      //ADD BUTTON
-                      Center(
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (_formKey.currentState!.validate()) {
-                              try {
-                                DataModel sentData = DataModel(
-                                  id: "",
-                                  title: _titleContraller.text.trim(),
-                                  isExpense: widget.isExpense,
-                                  description: _descriptionContraller.text
-                                      .trim(),
-                                  createdDate: _dateNotifer.value,
-                                  createdTime: _timeNotifer.value,
-                                  amount: int.parse(
-                                    _amountContraller.text.trim(),
-                                  ),
-                                  category: selectedCategory,
-                                );
-
-                                await FirebaseDatabaseServices().addData(
-                                  userId: FirebaseAuthServices()
-                                      .curruntUserData
-                                      .uid,
-                                  data: sentData,
-                                );
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "${widget.isExpense ? "Expense" : "Income"} Added",
+                            DropdownMenuItem(
+                              value: "add_new",
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Add New Category",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                );
-
-                                _amountContraller.clear();
-                                _titleContraller.clear();
-                                _descriptionContraller.clear();
-
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MainScreen(),
-                                  ),
-                                );
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Error: $e")),
-                                );
-                              }
+                                  SizedBox(width: 10),
+                                  Icon(Icons.add),
+                                ],
+                              ),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            if (value == "add_new") {
+                              categeoryAddSheet();
+                            } else {
+                              selectedCategory = value;
                             }
                           },
-                          child: CustomButton(title: "Add"),
+                          validator: (value) =>
+                              value == null ? "Please select a category" : null,
                         ),
-                      ),
-                    ],
+
+                        SizedBox(height: 20),
+
+                        // AMOUNT
+                        CustomTextForm2(
+                          keyboardType: TextInputType.number,
+                          controller: _amountContraller,
+                          hintText: "Amount",
+                          validator: (value) {
+                            if (value!.isEmpty) return "Please Enter Amount";
+                            final n = int.tryParse(value);
+                            if (n == null || n <= 0) return "Invalid Amount";
+                            return null;
+                          },
+                        ),
+
+                        SizedBox(height: 25),
+
+                        Text(
+                          "Pick Date & Time",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 15),
+
+                        // DATE
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ValueListenableBuilder(
+                              valueListenable: _dateNotifer,
+                              builder: (context, date, child) => Text(
+                                "Date : ${date.toString().split(" ")[0]}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => showDate(context),
+                              icon: Icon(Icons.date_range_outlined, size: 30),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 20),
+
+                        // TIME
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ValueListenableBuilder(
+                              valueListenable: _timeNotifer,
+                              builder: (context, time, child) => Text(
+                                "Time : ${time.format(context)}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => showtime(context),
+                              icon: Icon(Icons.alarm_add_outlined, size: 30),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 30),
+
+                        //ADD BUTTON
+                        Center(
+                          child: GestureDetector(
+                            onTap: () async {
+                              if (_formKey.currentState!.validate()) {
+                                try {
+                                  DataModel sentData = DataModel(
+                                    id: "",
+                                    title: _titleContraller.text.trim(),
+                                    isExpense: widget.isExpense,
+                                    description: _descriptionContraller.text
+                                        .trim(),
+                                    createdDate: _dateNotifer.value,
+                                    createdTime: _timeNotifer.value,
+                                    amount: int.parse(
+                                      _amountContraller.text.trim(),
+                                    ),
+                                    category: selectedCategory,
+                                  );
+
+                                  await FirebaseDatabaseServices().addData(
+                                    userId: FirebaseAuthServices()
+                                        .curruntUserData
+                                        .uid,
+                                    data: sentData,
+                                  );
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        "${widget.isExpense ? "Expense" : "Income"} Added",
+                                      ),
+                                    ),
+                                  );
+
+                                  _amountContraller.clear();
+                                  _titleContraller.clear();
+                                  _descriptionContraller.clear();
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MainScreen(),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text("Error: $e")),
+                                  );
+                                }
+                              }
+                            },
+                            child: CustomButton(title: "Add"),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

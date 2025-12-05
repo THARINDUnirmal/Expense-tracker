@@ -5,11 +5,9 @@ import 'package:expenzes/provider/provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
-import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
-import 'package:expenzes/view/screens/sub_screens/all_categeory_screen.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -73,507 +71,528 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PreferredSize(
-        preferredSize: const Size.fromHeight(180),
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFB2F2BB), // Mint Green
-                Color(0xFF81E6D9), // Soft Cyan
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+      body: Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 1,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFB3E5FC), // Sky Blue
+              Color(0xFFFFF59D), // Soft Yellow
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(AppConstants.appPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            AppRoutes.route.push("/FinanceMateScreen");
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              text: "Finance",
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Color(0xfffdaa5d),
-                                fontWeight: FontWeight.bold,
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(AppConstants.appPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          AppRoutes.route.push("/FinanceMateScreen");
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            text: "Finance",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Color(0xfffdaa5d),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: "Mate",
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Color(0xff4ab7b6),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          //todo
+                        },
+
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          backgroundColor: Colors.white,
+                          shadowColor: Colors.grey.withOpacity(0.3),
+                          elevation: 4,
+                        ),
+                        child: ShaderMask(
+                          shaderCallback: (bounds) =>
+                              LinearGradient(
+                                colors: [Colors.purple, Colors.blue],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ).createShader(
+                                Rect.fromLTWH(
+                                  0,
+                                  0,
+                                  bounds.width,
+                                  bounds.height,
+                                ),
+                              ),
+                          child: Text(
+                            "Themes",
+                            style: TextStyle(
+                              color: Colors
+                                  .white, // this is required for ShaderMask
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          AppRoutes.route.push("/EdditProfileScreen");
+                        },
+                        child: Consumer(
+                          builder: (context, ProviderServices provider, child) {
+                            return Row(
                               children: [
-                                TextSpan(
-                                  text: "Mate",
+                                Hero(
+                                  tag: 1,
+                                  child: CircleAvatar(
+                                    maxRadius: 40,
+                                    backgroundImage: provider.userImage.isEmpty
+                                        ? NetworkImage(
+                                            "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                          )
+                                        : FileImage(File(provider.userImage)),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Good Evening!",
+                                      style: AppTextStyles.miniTextStyle,
+                                    ),
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width *
+                                          0.55,
+                                      child: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        userName!,
+                                        style: AppTextStyles.mainTopicTextStyle
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+
+                      IconButton(
+                        onPressed: () {
+                          AppRoutes.route.push("/EdditProfileScreen");
+                        },
+                        icon: Icon(Icons.keyboard_double_arrow_right, size: 25),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "My Weekly Expenses",
+                            style: AppTextStyles.mainTopicTextStyle.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            "10 Expenses Pending",
+                            style: AppTextStyles.subTopicTextStyle,
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          AppRoutes.route.push("/AddScreen");
+                        },
+                        icon: Icon(Icons.add, size: 25),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      //Summary Card
+                      GestureDetector(
+                        onTap: () {
+                          AppRoutes.route.push(
+                            "/SummaryScreen",
+                            extra: allDataMap,
+                          );
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.42,
+                          height: 110,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(22),
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFF4A90E2).withOpacity(0.85),
+                                Color(0xFF50C9C3).withOpacity(0.85),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.summarize_rounded,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(height: 6),
+                                Text(
+                                  "Summary",
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 30,
-                                    color: Color(0xff4ab7b6),
-                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        Container(
-                          padding: EdgeInsets.all(10),
+                      ),
+
+                      // -------- Chart Card --------
+                      GestureDetector(
+                        onTap: () {
+                          AppRoutes.route.push(
+                            "/PieChartScreen",
+                            extra: allDataMap,
+                          );
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.42,
+                          height: 110,
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xffe8eff3),
+                            borderRadius: BorderRadius.circular(22),
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFFFFC857).withOpacity(0.95),
+                                Color(0xFFFFA534).withOpacity(0.95),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
                           ),
-                          child: Icon(
-                            Icons.notifications,
-                            size: 25,
-                            color: Color(0xffea7173),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.pie_chart_rounded,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(height: 6),
+                                Text(
+                                  "Charts",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "Category ",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.normal,
                     ),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            AppRoutes.route.push("/EdditProfileScreen");
-                          },
-                          child: Consumer(
-                            builder: (context, ProviderServices provider, child) {
-                              return Row(
-                                children: [
-                                  Hero(
-                                    tag: 1,
-                                    child: CircleAvatar(
-                                      maxRadius: 40,
-                                      backgroundImage:
-                                          provider.userImage.isEmpty
-                                          ? NetworkImage(
-                                              "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                            )
-                                          : FileImage(File(provider.userImage)),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Good Evening!",
-                                        style: AppTextStyles.miniTextStyle,
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                            0.55,
-                                        child: Text(
-                                          overflow: TextOverflow.ellipsis,
-                                          userName!,
-                                          style: AppTextStyles
-                                              .mainTopicTextStyle
-                                              .copyWith(fontSize: 16),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          AppRoutes.route.push(
+                            "/AllCtegeoryScreen",
+                            extra: allCategeory,
+                          );
+                        },
+                        child: Text(
+                          "See All >>",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  allCategeory.isEmpty
+                      ? Center(child: Text("No Category Data"))
+                      : SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.1,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: allCategeory.length,
+                            itemBuilder: (context, index) {
+                              String indexData = allCategeory[index];
+                              return InkWell(
+                                onTap: () {
+                                  AppRoutes.route.push(
+                                    "/SingleCategeoryScreen",
+                                    extra: indexData,
+                                  );
+                                },
+                                child: CategoryCardWidget(title: indexData),
                               );
                             },
                           ),
                         ),
 
-                        IconButton(
-                          onPressed: () {
-                            AppRoutes.route.push("/EdditProfileScreen");
-                          },
-                          icon: Icon(
-                            Icons.keyboard_double_arrow_right,
-                            size: 25,
-                          ),
-                        ),
-                      ],
+                  SizedBox(height: 30),
+                  Text(
+                    "Resent ",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.normal,
                     ),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "My Weekly Expenses",
-                              style: AppTextStyles.mainTopicTextStyle.copyWith(
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                            Text(
-                              "10 Expenses Pending",
-                              style: AppTextStyles.subTopicTextStyle,
-                            ),
-                          ],
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            AppRoutes.route.push("/AddScreen");
-                          },
-                          icon: Icon(Icons.add, size: 25),
-                        ),
-                      ],
+                  ),
+                  SizedBox(height: 20),
+                  FutureBuilder(
+                    future: FirebaseDatabaseServices().getAllData(
+                      curruntUserId: FirebaseAuthServices().curruntUserData.uid,
                     ),
-                    SizedBox(height: 25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        //Summary Card
-                        GestureDetector(
-                          onTap: () {
-                            AppRoutes.route.push(
-                              "/SummaryScreen",
-                              extra: allDataMap,
-                            );
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.42,
-                            height: 110,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(22),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFF4A90E2).withOpacity(0.85),
-                                  Color(0xFF50C9C3).withOpacity(0.85),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
-                                  blurRadius: 10,
-                                  spreadRadius: 1,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(
-                                    Icons.summarize_rounded,
-                                    size: 30,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(height: 6),
-                                  Text(
-                                    "Summary",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // -------- Chart Card --------
-                        GestureDetector(
-                          onTap: () {
-                            AppRoutes.route.push(
-                              "/PieChartScreen",
-                              extra: allDataMap,
-                            );
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.42,
-                            height: 110,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(22),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFFFC857).withOpacity(0.95),
-                                  Color(0xFFFFA534).withOpacity(0.95),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
-                                  blurRadius: 10,
-                                  spreadRadius: 1,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(
-                                    Icons.pie_chart_rounded,
-                                    size: 30,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(height: 6),
-                                  Text(
-                                    "Charts",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      textAlign: TextAlign.center,
-                      "Category ",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            AppRoutes.route.push(
-                              "/AllCtegeoryScreen",
-                              extra: allCategeory,
-                            );
-                          },
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
                           child: Text(
-                            "See All >>",
+                            textAlign: TextAlign.center,
+                            "Error : ${snapshot.error}",
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    allCategeory.isEmpty
-                        ? Center(child: Text("No Category Data"))
-                        : SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: allCategeory.length,
-                              itemBuilder: (context, index) {
-                                String indexData = allCategeory[index];
-                                return InkWell(
-                                  onTap: () {
-                                    AppRoutes.route.push(
-                                      "/SingleCategeoryScreen",
-                                      extra: indexData,
-                                    );
-                                  },
-                                  child: CategoryCardWidget(title: indexData),
-                                );
-                              },
-                            ),
-                          ),
-
-                    SizedBox(height: 30),
-                    Text(
-                      "Resent ",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    FutureBuilder(
-                      future: FirebaseDatabaseServices().getAllData(
-                        curruntUserId:
-                            FirebaseAuthServices().curruntUserData.uid,
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              "Error : ${snapshot.error}",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.inbox_rounded,
+                                size: 80,
+                                color: Colors.grey.shade400,
                               ),
-                            ),
-                          );
-                        } else if (!snapshot.hasData) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.inbox_rounded,
-                                  size: 80,
-                                  color: Colors.grey.shade400,
+
+                              SizedBox(height: 16),
+
+                              Text(
+                                "No Data Found",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
                                 ),
+                              ),
 
-                                SizedBox(height: 16),
+                              SizedBox(height: 8),
 
-                                Text(
-                                  "No Data Found",
-                                  textAlign: TextAlign.center,
+                              Text(
+                                "It looks empty here. Add your first item!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 16,
+                                ),
+                              ),
+
+                              SizedBox(height: 24),
+
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.appBlue2Color,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 28,
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 3,
+                                ),
+                                onPressed: () {
+                                  AppRoutes.route.push("/AddScreen");
+                                },
+                                child: Text(
+                                  "Add Now",
                                   style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black87,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-
-                                SizedBox(height: 8),
-
-                                Text(
-                                  "It looks empty here. Add your first item!",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 16,
-                                  ),
-                                ),
-
-                                SizedBox(height: 24),
-
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.appBlue2Color,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 28,
-                                      vertical: 14,
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        List<DataModel> dataList = snapshot.data ?? [];
+                        return dataList.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.inbox_rounded,
+                                      size: 80,
+                                      color: Colors.grey.shade400,
                                     ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    elevation: 3,
-                                  ),
-                                  onPressed: () {
-                                    AppRoutes.route.push("/AddScreen");
-                                  },
-                                  child: Text(
-                                    "Add Now",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          List<DataModel> dataList = snapshot.data ?? [];
-                          return dataList.isEmpty
-                              ? Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.inbox_rounded,
-                                        size: 80,
-                                        color: Colors.grey.shade400,
+
+                                    SizedBox(height: 16),
+
+                                    Text(
+                                      "No Data Found",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600,
                                       ),
+                                    ),
 
-                                      SizedBox(height: 16),
+                                    SizedBox(height: 8),
 
-                                      Text(
-                                        "No Data Found",
-                                        textAlign: TextAlign.center,
+                                    Text(
+                                      "It looks empty here. Add your first item!",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+
+                                    SizedBox(height: 24),
+
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            AppColors.appBlue2Color,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 28,
+                                          vertical: 14,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        elevation: 3,
+                                      ),
+                                      onPressed: () {
+                                        AppRoutes.route.push("/AddScreen");
+                                      },
+                                      child: Text(
+                                        "Add Now",
                                         style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.black87,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
-
-                                      SizedBox(height: 8),
-
-                                      Text(
-                                        "It looks empty here. Add your first item!",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-
-                                      SizedBox(height: 24),
-
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              AppColors.appBlue2Color,
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 28,
-                                            vertical: 14,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          elevation: 3,
-                                        ),
-                                        onPressed: () {
-                                          AppRoutes.route.push("/AddScreen");
-                                        },
-                                        child: Text(
-                                          "Add Now",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: dataList.length,
-                                  itemBuilder: (context, index) {
-                                    DataModel singleData = dataList[index];
-                                    return SingleDataCard(
-                                      title: singleData.title,
-                                      isExpense: singleData.isExpense,
-                                      cardAmount: singleData.amount,
-                                    );
-                                  },
-                                );
-                        }
-                      },
-                    ),
-                  ],
-                ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: dataList.length,
+                                itemBuilder: (context, index) {
+                                  DataModel singleData = dataList[index];
+                                  return SingleDataCard(
+                                    title: singleData.title,
+                                    isExpense: singleData.isExpense,
+                                    cardAmount: singleData.amount,
+                                  );
+                                },
+                              );
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
           ),

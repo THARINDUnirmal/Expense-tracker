@@ -1,14 +1,11 @@
 import 'package:expenzes/models/data_model.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
-import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/view/screens/sub_screens/add_data_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/single_data_screen.dart';
 import 'package:expenzes/widgets/add_card_modern.dart';
-import 'package:expenzes/widgets/reuseble_widgets/add_card_widget.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -39,158 +36,184 @@ class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
         title: Text("Add", style: AppTextStyles.mainTopicTextStyle),
+        backgroundColor: Colors.transparent, // No color
+        elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstants.appPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 1,
+        padding: const EdgeInsets.symmetric(vertical: 40),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFB3E5FC), // Sky Blue
+              Color(0xFFFFF59D), // Soft Yellow
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(AppConstants.appPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddDataScreen(isExpense: false),
-                        ),
-                      );
-                    },
-                    child: AddCardModern(
-                      title: "Add Income",
-                      svgPath: "assets/icons/income.svg",
-                      isExpense: false,
-                    ),
-                  ),
-
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddDataScreen(isExpense: true),
-                        ),
-                      );
-                    },
-                    child: AddCardModern(
-                      title: "Add Expense",
-                      svgPath: "assets/icons/Expeses.svg",
-                      isExpense: true,
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 30),
-              Text("Last Added", style: AppTextStyles.mainTopicTextStyle),
-              SizedBox(height: 30),
-              FutureBuilder(
-                future: FirebaseDatabaseServices().getAllData(
-                  curruntUserId: curruntUser!.uid,
-                ),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        snapshot.error.toString(),
-                        style: AppTextStyles.subTopicTextStyle,
-                      ),
-                    );
-                  } else if (!snapshot.hasData) {
-                    return Center(
-                      child: Text(
-                        "No Items",
-                        style: AppTextStyles.subTopicTextStyle,
-                      ),
-                    );
-                  } else {
-                    List<DataModel> allData = snapshot.data!;
-                    return allData.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 100),
-                                Icon(
-                                  Icons.inbox_rounded,
-                                  size: 80,
-                                  color: Colors.grey.shade400,
-                                ),
-
-                                SizedBox(height: 16),
-
-                                Text(
-                                  "No Data Found",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-
-                                SizedBox(height: 8),
-
-                                Text(
-                                  "It looks empty here. Add your first item!",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 16,
-                                  ),
-                                ),
-
-                                SizedBox(height: 24),
-
-                                Text(
-                                  "Add Now",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AddDataScreen(isExpense: false),
                             ),
-                          )
-                        : ListView.builder(
-                            itemCount: allData.length,
-                            physics: ScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              DataModel singleData = allData[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SingleDataScreen(
-                                        singleData: singleData,
+                          );
+                        },
+                        child: AddCardModern(
+                          title: "Add Income",
+                          svgPath: "assets/icons/income.svg",
+                          isExpense: false,
+                        ),
+                      ),
+
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AddDataScreen(isExpense: true),
+                            ),
+                          );
+                        },
+                        child: AddCardModern(
+                          title: "Add Expense",
+                          svgPath: "assets/icons/Expeses.svg",
+                          isExpense: true,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 30),
+                  Text("Last Added", style: AppTextStyles.mainTopicTextStyle),
+                  SizedBox(height: 30),
+
+                  FutureBuilder(
+                    future: FirebaseDatabaseServices().getAllData(
+                      curruntUserId: curruntUser!.uid,
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            snapshot.error.toString(),
+                            style: AppTextStyles.subTopicTextStyle,
+                          ),
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Center(
+                          child: Text(
+                            "No Items",
+                            style: AppTextStyles.subTopicTextStyle,
+                          ),
+                        );
+                      } else {
+                        List<DataModel> allData = snapshot.data!;
+                        return allData.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.inbox_rounded,
+                                      size: 80,
+                                      color: Colors.grey.shade400,
+                                    ),
+
+                                    SizedBox(height: 16),
+
+                                    Text(
+                                      "No Data Found",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600,
                                       ),
+                                    ),
+
+                                    SizedBox(height: 8),
+
+                                    Text(
+                                      "It looks empty here. Add your first item!",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+
+                                    SizedBox(height: 24),
+
+                                    Text(
+                                      "Add Now",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: allData.length,
+                                physics: ScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  DataModel singleData = allData[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SingleDataScreen(
+                                                singleData: singleData,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    child: SingleDataCard(
+                                      title: singleData.title,
+                                      isExpense: singleData.isExpense,
+                                      cardAmount: singleData.amount,
                                     ),
                                   );
                                 },
-                                child: SingleDataCard(
-                                  title: singleData.title,
-                                  isExpense: singleData.isExpense,
-                                  cardAmount: singleData.amount,
-                                ),
                               );
-                            },
-                          );
-                  }
-                },
+                      }
+                    },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

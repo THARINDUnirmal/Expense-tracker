@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/provider/provider_services.dart';
+import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +9,6 @@ import 'package:lottie/lottie.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
-import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   late String? userName;
   late User userData;
+  List<String> allCategeory = [];
 
   final ImagePicker pickImager = ImagePicker();
 
@@ -29,6 +31,30 @@ class _UserScreenState extends State<UserScreen> {
   void initState() {
     super.initState();
     getUser();
+    getAllcategeoryList();
+  }
+
+  //get all categeory list
+  Future<void> getAllcategeoryList() async {
+    //get current userId
+    String uId = FirebaseAuthServices().curruntUserData.uid;
+
+    //get all data & add there categeorys in a list
+    List<DataModel> allDataList = await FirebaseDatabaseServices().getAllData(
+      curruntUserId: uId,
+    );
+
+    List<String> dataList = [];
+
+    for (DataModel i in allDataList) {
+      if (!allCategeory.contains(i.category)) {
+        dataList.add(i.category!);
+      }
+    }
+
+    setState(() {
+      allCategeory = dataList;
+    });
   }
 
   Future<void> getUser() async {
@@ -128,122 +154,150 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Colors.black),
         title: const Text(
           "Profile",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstants.appPadding),
-          child: Column(
-            children: [
-              // ---------------- Profile Section ----------------
-              Center(
-                child: Column(
-                  children: [
-                    Consumer(
-                      builder: (context, ProviderServices provider, child) {
-                        return GestureDetector(
-                          onTap: imagePickFunction,
-                          child: Stack(
-                            children: [
-                              // Profile Image with shadow
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.15),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 6),
-                                    ),
-                                  ],
-                                ),
-                                child: CircleAvatar(
-                                  radius: 70,
-                                  backgroundImage: provider.userImage.isEmpty
-                                      ? const NetworkImage(
-                                              "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                            )
-                                            as ImageProvider
-                                      : FileImage(File(provider.userImage)),
-                                ),
-                              ),
-
-                              // Camera icon overlay
-                              const Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: CircleAvatar(
-                                  radius: 22,
-                                  backgroundColor: Colors.white,
-                                  child: Icon(
-                                    Icons.add_a_photo,
-                                    size: 28,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      "Email: ${userName ?? ""}",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      "ID: ${userData.uid}",
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // ---------------- Menu Items ----------------
-              Column(
+      body: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: AppConstants.appPadding),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFB3E5FC), // Sky Blue
+              Color(0xFFFFF59D), // Soft Yellow
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(AppConstants.appPadding),
+              child: Column(
                 children: [
-                  menuCardModern(
-                    svg: "assets/icons/user.svg",
-                    title: "User profile",
-                    subTitle: "Change profile image, name & password",
-                    onTap: () =>
-                        GoRouter.of(context).push("/EdditProfileScreen"),
+                  //Profile Section
+                  Center(
+                    child: Column(
+                      children: [
+                        Consumer(
+                          builder: (context, ProviderServices provider, child) {
+                            return GestureDetector(
+                              onTap: imagePickFunction,
+                              child: Stack(
+                                children: [
+                                  // Profile Image with shadow
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.15),
+                                          blurRadius: 12,
+                                          offset: const Offset(0, 6),
+                                        ),
+                                      ],
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 70,
+                                      backgroundImage:
+                                          provider.userImage.isEmpty
+                                          ? const NetworkImage(
+                                                  "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                                )
+                                                as ImageProvider
+                                          : FileImage(File(provider.userImage)),
+                                    ),
+                                  ),
+
+                                  // Camera icon overlay
+                                  const Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: CircleAvatar(
+                                      radius: 22,
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        Icons.add_a_photo,
+                                        size: 28,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          "Email: ${userName ?? ""}",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          "ID: ${userData.uid}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  menuCardModern(
-                    svg: "assets/icons/menu.svg",
-                    title: "Accounts",
-                    subTitle: "Manage accounts and descriptions",
-                  ),
-                  menuCardModern(
-                    svg: "assets/icons/message-circle-more.svg",
-                    title: "Categories",
-                    subTitle: "Manage categories & sub-categories",
-                  ),
-                  menuCardModern(
-                    svg: "assets/icons/log-out.svg",
-                    title: "Log Out",
-                    subTitle: "Log Out in current account",
-                    onTap: logoutFunction,
+
+                  const SizedBox(height: 30),
+
+                  // Menu Items
+                  Column(
+                    children: [
+                      menuCardModern(
+                        svg: "assets/icons/user.svg",
+                        title: "User profile",
+                        subTitle: "Change profile image, name & password",
+                        onTap: () =>
+                            GoRouter.of(context).push("/EdditProfileScreen"),
+                      ),
+                      menuCardModern(
+                        svg: "assets/icons/menu.svg",
+                        title: "Accounts",
+                        subTitle: "Manage accounts and descriptions",
+                      ),
+                      menuCardModern(
+                        svg: "assets/icons/message-circle-more.svg",
+                        title: "Categories",
+                        subTitle: "Manage categories & sub-categories",
+                        onTap: () => AppRoutes.route.push(
+                          "/AllCtegeoryScreen",
+                          extra: allCategeory,
+                        ),
+                      ),
+                      menuCardModern(
+                        svg: "assets/icons/log-out.svg",
+                        title: "Log Out",
+                        subTitle: "Log Out in current account",
+                        onTap: logoutFunction,
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
