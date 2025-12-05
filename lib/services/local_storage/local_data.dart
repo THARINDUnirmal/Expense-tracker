@@ -33,4 +33,23 @@ class LocalData {
       await _pref.remove("Image");
     } catch (error) {}
   }
+
+  //save color
+  Future<void> saveBackgroundColor({required String colorName}) async {
+    try {
+      SharedPreferences _prif = await SharedPreferences.getInstance();
+      _prif.setString("Color", colorName);
+    } catch (error) {}
+  }
+
+  //get color
+  Future<String> getBackgroundColor() async {
+    try {
+      SharedPreferences _prif = await SharedPreferences.getInstance();
+      String colorName = _prif.getString("Color") ?? "";
+      return colorName;
+    } catch (error) {
+      throw exceptions(error.toString());
+    }
+  }
 }

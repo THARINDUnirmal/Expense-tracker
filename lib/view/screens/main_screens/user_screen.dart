@@ -1,15 +1,14 @@
 import 'dart:io';
-import 'package:expenzes/routes/app_routes.dart';
+import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/local_storage/local_data.dart';
-import 'package:expenzes/utils/app_text_styles.dart';
-import 'package:expenzes/utils/constants/app_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:expenzes/routes/app_routes.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:lottie/lottie.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -29,10 +28,9 @@ class _UserScreenState extends State<UserScreen> {
   void initState() {
     super.initState();
     getUser();
-    getImageFromLocal(); // Load saved profile image
+    getImageFromLocal();
   }
 
-  // Fetch user data
   Future<void> getUser() async {
     User userDataa = FirebaseAuthServices().curruntUserData;
     userName = userDataa.isAnonymous ? "Anonymous User" : userDataa.email;
@@ -40,7 +38,6 @@ class _UserScreenState extends State<UserScreen> {
     setState(() {});
   }
 
-  // Fetch image from SharedPreferences
   Future<void> getImageFromLocal() async {
     String image = await LocalData().getImageData();
     setState(() {
@@ -48,15 +45,11 @@ class _UserScreenState extends State<UserScreen> {
     });
   }
 
-  // Pick image from camera/gallery
   Future<void> pickImage(ImageSource source) async {
     try {
       final picked = await pickImager.pickImage(source: source);
-
       if (picked == null) return;
-
       await LocalData().setImage(imageUrl: picked.path);
-
       setState(() {
         userImageLocal = picked.path;
       });
@@ -65,202 +58,100 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
-  // Bottom sheet for picking image
   void imagePickFunction() {
     showModalBottomSheet(
       context: context,
-      builder: (context) {
-        return Container(
-          height: 350,
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-            color: Colors.white,
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 80,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        height: 300,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 80,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.blueGrey,
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(height: 20),
-              Lottie.asset(
-                "assets/lottei/Face scanning.json",
-                width: 100,
-                repeat: false,
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "Pick image",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // Gallery button
-                  GestureDetector(
-                    onTap: () async {
-                      await pickImage(ImageSource.gallery);
-                      if (context.mounted) Navigator.pop(context);
-                    },
-                    child: Container(
-                      width: 150,
-                      height: 55,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.blue,
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Gallery",
-                          style: AppTextStyles.mainTopicTextStyle.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Camera button
-                  GestureDetector(
-                    onTap: () async {
-                      await pickImage(ImageSource.camera);
-                      if (context.mounted) Navigator.pop(context);
-                    },
-                    child: Container(
-                      width: 150,
-                      height: 55,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.blue,
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Camera",
-                          style: AppTextStyles.mainTopicTextStyle.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
+            ),
+            const SizedBox(height: 20),
+            Lottie.asset(
+              "assets/lottei/Face scanning.json",
+              width: 100,
+              repeat: false,
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "Pick image",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                pickOptionButton("Gallery", ImageSource.gallery),
+                pickOptionButton("Camera", ImageSource.camera),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  // Logout function
-  Future<void> logoutFunction() async {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          height: 350,
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-            color: Colors.white,
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 80,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Lottie.asset(
-                "assets/lottei/Alert 1.json",
-                width: 100,
-                repeat: false,
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Logout",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Are you sure you want to logout?",
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 30),
-
-              // YES & NO buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      await FirebaseAuthServices().logOutAccount();
-                      if (context.mounted) Navigator.pop(context);
-                      AppRoutes.route.go("/");
-                      setState(() {});
-                    },
-                    child: Container(
-                      width: 120,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Yes",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      width: 120,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.red, width: 2),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "No",
-                          style: TextStyle(color: Colors.red, fontSize: 18),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
+  Widget pickOptionButton(String title, ImageSource source) {
+    return GestureDetector(
+      onTap: () async {
+        await pickImage(source);
+        if (context.mounted) Navigator.pop(context);
       },
+      child: Container(
+        width: 140,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade400, Colors.blue.shade600],
+          ),
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text(
+          "Profile",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(AppConstants.appPadding),
           child: Column(
             children: [
+              // ---------------- Profile Section ----------------
               Center(
                 child: Column(
                   children: [
@@ -268,42 +159,58 @@ class _UserScreenState extends State<UserScreen> {
                       onTap: imagePickFunction,
                       child: Stack(
                         children: [
-                          // Profile Image
-                          CircleAvatar(
-                            maxRadius: 70,
-                            backgroundImage: userImageLocal.isEmpty
-                                ? const NetworkImage(
-                                        "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                      )
-                                      as ImageProvider
-                                : FileImage(File(userImageLocal)),
+                          // Profile Image with shadow
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 6),
+                                ),
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              radius: 70,
+                              backgroundImage: userImageLocal.isEmpty
+                                  ? const NetworkImage(
+                                          "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                        )
+                                        as ImageProvider
+                                  : FileImage(File(userImageLocal)),
+                            ),
                           ),
 
+                          // Camera icon overlay
                           const Positioned(
-                            bottom: 1,
-                            right: 1,
-                            child: Icon(
-                              Icons.add_a_photo,
-                              size: 32,
-                              color: Colors.blueGrey,
+                            bottom: 0,
+                            right: 0,
+                            child: CircleAvatar(
+                              radius: 22,
+                              backgroundColor: Colors.white,
+                              child: Icon(
+                                Icons.add_a_photo,
+                                size: 28,
+                                color: Colors.blue,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 20),
-
                     Text(
                       "Email: ${userName ?? ""}",
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
+                    const SizedBox(height: 5),
                     Text(
                       "ID: ${userData.uid}",
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -311,41 +218,34 @@ class _UserScreenState extends State<UserScreen> {
 
               const SizedBox(height: 30),
 
-              GestureDetector(
-                onTap: () => GoRouter.of(context).push("/EdditProfileScreen"),
-                child: userPageWidget(
-                  svg: "assets/icons/user.svg",
-                  title: "User profile",
-                  subTitle: "Change profile image, name & password",
-                ),
+              // ---------------- Menu Items ----------------
+              Column(
+                children: [
+                  menuCardModern(
+                    svg: "assets/icons/user.svg",
+                    title: "User profile",
+                    subTitle: "Change profile image, name & password",
+                    onTap: () =>
+                        GoRouter.of(context).push("/EdditProfileScreen"),
+                  ),
+                  menuCardModern(
+                    svg: "assets/icons/menu.svg",
+                    title: "Accounts",
+                    subTitle: "Manage accounts and descriptions",
+                  ),
+                  menuCardModern(
+                    svg: "assets/icons/message-circle-more.svg",
+                    title: "Categories",
+                    subTitle: "Manage categories & sub-categories",
+                  ),
+                  menuCardModern(
+                    svg: "assets/icons/log-out.svg",
+                    title: "Log Out",
+                    subTitle: "Log Out in current account",
+                    onTap: logoutFunction,
+                  ),
+                ],
               ),
-
-              Divider(indent: 30, endIndent: 30),
-              userPageWidget(
-                svg: "assets/icons/menu.svg",
-                title: "Accounts",
-                subTitle: "Manage accounts and descriptions",
-              ),
-              Divider(indent: 30, endIndent: 30),
-              userPageWidget(
-                svg: "assets/icons/message-circle-more.svg",
-                title: "Categories",
-                subTitle: "Manage categories & sub-categories",
-              ),
-              Divider(indent: 30, endIndent: 30),
-              GestureDetector(
-                onTap: () async {
-                  await logoutFunction();
-                  setState(() {});
-                },
-                child: userPageWidget(
-                  svg: "assets/icons/log-out.svg",
-                  title: "Log Out",
-                  subTitle: "Log Out in current account",
-                ),
-              ),
-
-              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -353,35 +253,220 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  Widget userPageWidget({
+  // ---------------- Modern Menu Card ----------------
+  Widget menuCardModern({
     required String svg,
     required String title,
     required String subTitle,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(15),
-      child: Row(
-        children: [
-          SvgPicture.asset(svg),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.07),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Icon
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(height: 5),
-              Text(
-                subTitle,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              child: SvgPicture.asset(
+                svg,
+                width: 28,
+                height: 28,
+                color: Colors.blue,
               ),
-            ],
+            ),
+            const SizedBox(width: 20),
+
+            // Texts
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subTitle,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey,
+                      height: 1.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget menuCard({
+    required String iconPath,
+    required String title,
+    required String subtitle,
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              iconPath,
+              width: 30,
+              height: 30,
+              color: Colors.blue,
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey,
+                      height: 1.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> logoutFunction() async {
+    // Simple modern alert using bottom sheet
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        height: 250,
+        padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 80,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Lottie.asset(
+              "assets/lottei/Alert 1.json",
+              width: 100,
+              repeat: false,
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "Logout",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "Are you sure you want to logout?",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                logoutButton("Yes", Colors.red, true),
+                logoutButton("No", Colors.white, false),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget logoutButton(String text, Color color, bool isYes) {
+    return GestureDetector(
+      onTap: () async {
+        if (isYes) {
+          await FirebaseAuthServices().logOutAccount();
+          if (context.mounted) Navigator.pop(context);
+          AppRoutes.route.go("/");
+        } else {
+          Navigator.pop(context);
+        }
+      },
+      child: Container(
+        width: 120,
+        height: 50,
+        decoration: BoxDecoration(
+          color: isYes ? color : Colors.white,
+          border: Border.all(color: Colors.red, width: isYes ? 0 : 2),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: isYes ? Colors.white : Colors.red,
+              fontSize: 16,
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

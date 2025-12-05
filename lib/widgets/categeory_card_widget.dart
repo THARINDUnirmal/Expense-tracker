@@ -1,51 +1,81 @@
-import 'package:expenzes/utils/app_colors.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:expenzes/utils/app_colors.dart';
 
-class CategeoryCardWidget extends StatelessWidget {
+class CategoryCardWidget extends StatelessWidget {
   final String title;
-  const CategeoryCardWidget({super.key, required this.title});
+  const CategoryCardWidget({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 10),
-      width: 150,
-      height: 80,
-      decoration: BoxDecoration(
-        color: AppColors.appGreyColor,
+      margin: const EdgeInsets.only(right: 12),
+      width: 160,
+      height: 90,
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              width: 80,
-              height: 40,
+        child: Stack(
+          children: [
+            // Background Blur + Gradient
+            Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.appBlueColor.withOpacity(0.6),
+                    AppColors.appGreyColor.withOpacity(0.4),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                color: AppColors.appYellowColor,
               ),
-              child: Center(child: Icon(Icons.keyboard_arrow_right, size: 30)),
-            ),
-          ),
-          Positioned(
-            top: 10,
-            left: 20,
-            child: Text(
-              title,
-              style: TextStyle(
-                color: const Color.fromARGB(255, 7, 7, 7),
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: Container(),
               ),
             ),
-          ),
-        ],
+
+            // Title
+            Positioned(
+              top: 18,
+              left: 16,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+
+            // Circle Arrow Button
+            Positioned(
+              bottom: 12,
+              right: 12,
+              child: Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.appYellowColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

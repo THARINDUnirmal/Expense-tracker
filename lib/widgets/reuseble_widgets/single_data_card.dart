@@ -1,0 +1,109 @@
+import 'package:flutter/material.dart';
+
+class SingleDataCard extends StatelessWidget {
+  final String title;
+  final bool isExpense;
+  final int cardAmount;
+
+  const SingleDataCard({
+    super.key,
+    required this.title,
+    required this.isExpense,
+    required this.cardAmount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Color typeColor = isExpense ? Colors.redAccent : Colors.teal;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Top colored strip
+          Container(
+            height: 6,
+            decoration: BoxDecoration(
+              color: typeColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(18),
+                topRight: Radius.circular(18),
+              ),
+            ),
+          ),
+
+          // Body
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Text content
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    SizedBox(
+                      width: 220,
+                      child: Text(
+                        title,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey.shade700,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Amount
+                    Text(
+                      "Rs. $cardAmount",
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: typeColor,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Icon with background
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: typeColor.withOpacity(0.15),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      isExpense
+                          ? Icons.trending_up_rounded
+                          : Icons.trending_down_rounded,
+                      color: typeColor,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

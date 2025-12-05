@@ -11,6 +11,7 @@ import 'package:expenzes/view/screens/sub_screens/add_data_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/eddit_profile_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/full_image_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/pie_chart_screen.dart';
+import 'package:expenzes/view/screens/sub_screens/single_categeory_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/summary_screen.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -87,6 +88,13 @@ class AppRoutes {
         builder: (context, state) {
           Map<String, double> allData = state.extra as Map<String, double>;
           return PieChartScreen(allTotalData: allData);
+        },
+      ),
+      GoRoute(
+        path: "/SingleCategeoryScreen",
+        builder: (context, state) {
+          String categeoryName = state.extra as String;
+          return SingleCategeoryScreen(categeoryName: categeoryName);
         },
       ),
     ],

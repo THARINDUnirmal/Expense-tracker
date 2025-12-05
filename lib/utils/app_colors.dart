@@ -19,4 +19,5 @@ class AppColors {
   //card colors
   static const Color appYellowColor = Color(0xffFEEE91);
   static const Color appGreyColor = Color(0xff91C4C3);
+  static const Color appcardBlueColor = Color(0xFF4A90E2);
 }

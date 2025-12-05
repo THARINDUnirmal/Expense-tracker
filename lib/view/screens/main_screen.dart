@@ -41,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         controller: _pageController,
-        children: [UserScreen(), HomeScreen(), AddScreen()],
+        children: [HomeScreen(), AddScreen(), UserScreen()],
       ),
     );
   }

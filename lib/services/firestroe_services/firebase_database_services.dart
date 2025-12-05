@@ -75,14 +75,7 @@ class FirebaseDatabaseServices {
     required String currentUserId,
   }) async {
     try {
-      QuerySnapshot snapData = await _firebaseCollection
-          .doc(currentUserId)
-          .collection("allData")
-          .get();
-
-      List<DataModel> dataList = snapData.docs.map((e) {
-        return DataModel.fromJson(e.data() as Map<String, dynamic>);
-      }).toList();
+      List<DataModel> dataList = await getAllData(curruntUserId: currentUserId);
 
       double allIncomes = 0;
       double allExpenses = 0;
@@ -127,5 +120,28 @@ class FirebaseDatabaseServices {
           .doc(itemId)
           .delete();
     } catch (error) {}
+  }
+
+  //give data form each categeory
+  Future<List<DataModel>> directGetCatgeoryData({
+    required String categeoryName,
+  }) async {
+    try {
+      List<DataModel> dataList = await getAllData(
+        curruntUserId: FirebaseAuthServices().curruntUserData.uid,
+      );
+
+      List<DataModel> categeoryData = [];
+
+      for (DataModel i in dataList) {
+        if (i.category == categeoryName) {
+          categeoryData.add(i);
+        }
+      }
+
+      return categeoryData;
+    } catch (error) {
+      throw exceptions(error.toString());
+    }
   }
 }

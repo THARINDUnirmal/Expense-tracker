@@ -10,6 +10,7 @@ import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/view/screens/sub_screens/home_see_all_screen.dart';
 import 'package:expenzes/widgets/categeory_card_widget.dart';
+import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String userImageLocal = "";
   late String? userName;
   Map<String, double> allDataMap = {};
+  List<String> allCategeory = [];
 
   //get user image from local storage
   Future<void> getUserLocalUserImage() async {
@@ -44,13 +46,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   //get Total Expenses & Incomes values
   Future<void> getAllTotalValues() async {
+    //get current userId
+    String uId = FirebaseAuthServices().curruntUserData.uid;
+
+    //get total values
     Map<String, double> allData = await FirebaseDatabaseServices()
-        .getTotalValues(
-          currentUserId: FirebaseAuthServices().curruntUserData.uid,
-        );
+        .getTotalValues(currentUserId: uId);
+
+    //get all data & add there categeorys in a list
+    List<DataModel> allDataList = await FirebaseDatabaseServices().getAllData(
+      curruntUserId: uId,
+    );
+
+    List<String> dataList = [];
+
+    for (DataModel i in allDataList) {
+      if (!allCategeory.contains(i.category)) {
+        dataList.add(i.category!);
+      }
+    }
 
     setState(() {
       allDataMap = allData;
+      allCategeory = dataList;
     });
   }
 
@@ -65,476 +83,503 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(AppConstants.appPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: PreferredSize(
+        preferredSize: const Size.fromHeight(180),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFB2F2BB), // Mint Green
+                Color(0xFF81E6D9), // Soft Cyan
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(AppConstants.appPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        AppRoutes.route.push("/FinanceMateScreen");
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Finance",
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Color(0xfffdaa5d),
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: "Mate",
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            AppRoutes.route.push("/FinanceMateScreen");
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: "Finance",
                               style: TextStyle(
                                 fontSize: 30,
-                                color: Color(0xff4ab7b6),
+                                color: Color(0xfffdaa5d),
                                 fontWeight: FontWeight.bold,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xffe8eff3),
-                      ),
-                      child: Icon(
-                        Icons.notifications,
-                        size: 25,
-                        color: Color(0xffea7173),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        AppRoutes.route.push("/EdditProfileScreen");
-                      },
-                      child: Row(
-                        children: [
-                          Hero(
-                            tag: 1,
-                            child: CircleAvatar(
-                              maxRadius: 40,
-                              backgroundImage: userImageLocal.isEmpty
-                                  ? NetworkImage(
-                                      "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                    )
-                                  : FileImage(File(userImageLocal)),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Good Evening!",
-                                style: AppTextStyles.miniTextStyle,
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.55,
-                                child: Text(
-                                  overflow: TextOverflow.ellipsis,
-                                  userName!,
-                                  style: AppTextStyles.mainTopicTextStyle
-                                      .copyWith(fontSize: 16),
+                              children: [
+                                TextSpan(
+                                  text: "Mate",
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    color: Color(0xff4ab7b6),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    IconButton(
-                      onPressed: () {
-                        AppRoutes.route.push("/EdditProfileScreen");
-                      },
-                      icon: Icon(Icons.keyboard_double_arrow_right, size: 25),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "My Weekly Expenses",
-                          style: AppTextStyles.mainTopicTextStyle.copyWith(
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal,
+                              ],
+                            ),
                           ),
                         ),
-                        Text(
-                          "10 Expenses Pending",
-                          style: AppTextStyles.subTopicTextStyle,
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xffe8eff3),
+                          ),
+                          child: Icon(
+                            Icons.notifications,
+                            size: 25,
+                            color: Color(0xffea7173),
+                          ),
                         ),
                       ],
                     ),
-                    IconButton(
-                      onPressed: () {
-                        AppRoutes.route.push("/AddScreen");
-                      },
-                      icon: Icon(Icons.add, size: 25),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        AppRoutes.route.push(
-                          "/SummaryScreen",
-                          extra: allDataMap,
-                        );
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: AppColors.appCreamColor,
-                        ),
-                        child: Center(
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            "Total Expenses or\nIncomes",
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        AppRoutes.route.push(
-                          "/PieChartScreen",
-                          extra: allDataMap,
-                        );
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: AppColors.appCreamColor,
-                        ),
-                        child: Center(
-                          child: Text(textAlign: TextAlign.center, "Chart"),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Text(
-                  textAlign: TextAlign.center,
-                  "Category ",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.normal),
-                ),
-                SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomeSeeAllScreen(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "See All >>",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      CategeoryCardWidget(title: "Data 1"),
-                      CategeoryCardWidget(title: "Data 2"),
-                      CategeoryCardWidget(title: "Data 3"),
-                      CategeoryCardWidget(title: "Data 4"),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 30),
-                Text(
-                  "Resent ",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.normal),
-                ),
-                SizedBox(height: 20),
-                FutureBuilder(
-                  future: FirebaseDatabaseServices().getAllData(
-                    curruntUserId: FirebaseAuthServices().curruntUserData.uid,
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          "Error : ${snapshot.error}",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      );
-                    } else if (!snapshot.hasData) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.inbox_rounded,
-                              size: 80,
-                              color: Colors.grey.shade400,
-                            ),
-
-                            SizedBox(height: 16),
-
-                            Text(
-                              "No Data Found",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-
-                            SizedBox(height: 8),
-
-                            Text(
-                              "It looks empty here. Add your first item!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                              ),
-                            ),
-
-                            SizedBox(height: 24),
-
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.appBlue2Color,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 28,
-                                  vertical: 14,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                elevation: 3,
-                              ),
-                              onPressed: () {
-                                AppRoutes.route.push("/AddScreen");
-                              },
-                              child: Text(
-                                "Add Now",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                    SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            AppRoutes.route.push("/EdditProfileScreen");
+                          },
+                          child: Row(
+                            children: [
+                              Hero(
+                                tag: 1,
+                                child: CircleAvatar(
+                                  maxRadius: 40,
+                                  backgroundImage: userImageLocal.isEmpty
+                                      ? NetworkImage(
+                                          "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                        )
+                                      : FileImage(File(userImageLocal)),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      List<DataModel> dataList = snapshot.data ?? [];
-                      return dataList.isEmpty
-                          ? Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.inbox_rounded,
-                                    size: 80,
-                                    color: Colors.grey.shade400,
-                                  ),
-
-                                  SizedBox(height: 16),
-
                                   Text(
-                                    "No Data Found",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    "Good Evening!",
+                                    style: AppTextStyles.miniTextStyle,
                                   ),
-
-                                  SizedBox(height: 8),
-
-                                  Text(
-                                    "It looks empty here. Add your first item!",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-
-                                  SizedBox(height: 24),
-
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.appBlue2Color,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 28,
-                                        vertical: 14,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      elevation: 3,
-                                    ),
-                                    onPressed: () {
-                                      AppRoutes.route.push("/AddScreen");
-                                    },
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width *
+                                        0.55,
                                     child: Text(
-                                      "Add Now",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
-                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      userName!,
+                                      style: AppTextStyles.mainTopicTextStyle
+                                          .copyWith(fontSize: 16),
                                     ),
                                   ),
                                 ],
                               ),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: dataList.length,
-                              itemBuilder: (context, index) {
-                                DataModel singleData = dataList[index];
-                                return Container(
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  padding: EdgeInsets.all(15),
-                                  height: 100,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      right: BorderSide(
-                                        width: 8,
-                                        color: singleData.isExpense
-                                            ? AppColors.appRedColor
-                                            : AppColors.appGreenColor,
-                                      ),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 2,
-                                        offset: Offset(3, 2),
-                                        color: const Color.fromARGB(
-                                          255,
-                                          236,
-                                          236,
-                                          237,
-                                        ),
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(15),
+                            ],
+                          ),
+                        ),
+
+                        IconButton(
+                          onPressed: () {
+                            AppRoutes.route.push("/EdditProfileScreen");
+                          },
+                          icon: Icon(
+                            Icons.keyboard_double_arrow_right,
+                            size: 25,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "My Weekly Expenses",
+                              style: AppTextStyles.mainTopicTextStyle.copyWith(
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            Text(
+                              "10 Expenses Pending",
+                              style: AppTextStyles.subTopicTextStyle,
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            AppRoutes.route.push("/AddScreen");
+                          },
+                          icon: Icon(Icons.add, size: 25),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // -------- Summary Card --------
+                        GestureDetector(
+                          onTap: () {
+                            AppRoutes.route.push(
+                              "/SummaryScreen",
+                              extra: allDataMap,
+                            );
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.42,
+                            height: 110,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(22),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFF4A90E2).withOpacity(0.85),
+                                  Color(0xFF50C9C3).withOpacity(0.85),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  blurRadius: 10,
+                                  spreadRadius: 1,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(
+                                    Icons.summarize_rounded,
+                                    size: 30,
                                     color: Colors.white,
                                   ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  SizedBox(height: 6),
+                                  Text(
+                                    "Summary",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // -------- Chart Card --------
+                        GestureDetector(
+                          onTap: () {
+                            AppRoutes.route.push(
+                              "/PieChartScreen",
+                              extra: allDataMap,
+                            );
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.42,
+                            height: 110,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(22),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFFFC857).withOpacity(0.95),
+                                  Color(0xFFFFA534).withOpacity(0.95),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  blurRadius: 10,
+                                  spreadRadius: 1,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(
+                                    Icons.pie_chart_rounded,
+                                    size: 30,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    "Charts",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      textAlign: TextAlign.center,
+                      "Category ",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeSeeAllScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "See All >>",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    allCategeory.isEmpty
+                        ? Center(child: Text("No Category Data"))
+                        : SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: allCategeory.length,
+                              itemBuilder: (context, index) {
+                                String indexData = allCategeory[index];
+                                return InkWell(
+                                  onTap: () {
+                                    AppRoutes.route.push(
+                                      "/SingleCategeoryScreen",
+                                      extra: indexData,
+                                    );
+                                  },
+                                  child: CategoryCardWidget(title: indexData),
+                                );
+                              },
+                            ),
+                          ),
+
+                    SizedBox(height: 30),
+                    Text(
+                      "Resent ",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    FutureBuilder(
+                      future: FirebaseDatabaseServices().getAllData(
+                        curruntUserId:
+                            FirebaseAuthServices().curruntUserData.uid,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              "Error : ${snapshot.error}",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          );
+                        } else if (!snapshot.hasData) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.inbox_rounded,
+                                  size: 80,
+                                  color: Colors.grey.shade400,
+                                ),
+
+                                SizedBox(height: 16),
+
+                                Text(
+                                  "No Data Found",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+
+                                SizedBox(height: 8),
+
+                                Text(
+                                  "It looks empty here. Add your first item!",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                  ),
+                                ),
+
+                                SizedBox(height: 24),
+
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.appBlue2Color,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 28,
+                                      vertical: 14,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    elevation: 3,
+                                  ),
+                                  onPressed: () {
+                                    AppRoutes.route.push("/AddScreen");
+                                  },
+                                  child: Text(
+                                    "Add Now",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          List<DataModel> dataList = snapshot.data ?? [];
+                          return dataList.isEmpty
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 250,
-                                            child: Text(
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              singleData.title,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 10),
-                                          SizedBox(
-                                            width: 250,
-                                            child: Text(
-                                              overflow: TextOverflow.ellipsis,
-                                              "Rs.${singleData.amount}",
-                                              style: TextStyle(
-                                                fontSize: 23,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                      Icon(
+                                        Icons.inbox_rounded,
+                                        size: 80,
+                                        color: Colors.grey.shade400,
                                       ),
-                                      Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
+
+                                      SizedBox(height: 16),
+
+                                      Text(
+                                        "No Data Found",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                        child: Center(
-                                          child: Icon(
-                                            singleData.isExpense
-                                                ? Icons.arrow_circle_up_outlined
-                                                : Icons
-                                                      .arrow_circle_down_outlined,
-                                            color: singleData.isExpense
-                                                ? AppColors.appRedColor
-                                                : AppColors.appGreenColor,
-                                            size: 30,
+                                      ),
+
+                                      SizedBox(height: 8),
+
+                                      Text(
+                                        "It looks empty here. Add your first item!",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 24),
+
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColors.appBlue2Color,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 28,
+                                            vertical: 14,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          elevation: 3,
+                                        ),
+                                        onPressed: () {
+                                          AppRoutes.route.push("/AddScreen");
+                                        },
+                                        child: Text(
+                                          "Add Now",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
+                                )
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: dataList.length,
+                                  itemBuilder: (context, index) {
+                                    DataModel singleData = dataList[index];
+                                    return SingleDataCard(
+                                      title: singleData.title,
+                                      isExpense: singleData.isExpense,
+                                      cardAmount: singleData.amount,
+                                    );
+                                  },
                                 );
-                              },
-                            );
-                    }
-                  },
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
