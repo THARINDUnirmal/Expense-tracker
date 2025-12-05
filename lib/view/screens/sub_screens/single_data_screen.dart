@@ -16,191 +16,255 @@ class SingleDataScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // void deletComfirmation() {
-    //   showModalBottomSheet(
-    //     context: context,
-    //     builder: (context) {
-    //       return Container(
-    //         height: 400,
-    //         width: double.infinity,
-    //         padding: EdgeInsets.only(
-    //           bottom: AppConstants.appPadding,
-    //           left: AppConstants.appPadding,
-    //           right: AppConstants.appPadding,
-    //           top: 5,
-    //         ),
-    //         decoration: BoxDecoration(
-    //           borderRadius: BorderRadius.only(
-    //             topLeft: Radius.circular(30),
-    //             topRight: Radius.circular(30),
-    //           ),
-    //           color: Color.fromARGB(255, 255, 255, 255),
-    //         ),
-    //         child: Column(
-    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //           children: [
-    //             Center(
-    //               child: Container(
-    //                 width: 80,
-    //                 height: 5,
-    //                 decoration: BoxDecoration(
-    //                   color: AppColors.appSheetBlueColor,
-    //                   borderRadius: BorderRadius.circular(100),
-    //                 ),
-    //               ),
-    //             ),
-    //             Column(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               children: [
-    //                 Lottie.asset(
-    //                   repeat: false,
-    //                   "assets/lottei/Alert 1.json",
-    //                   width: 100,
-    //                 ),
-    //                 SizedBox(height: 10),
-    //                 Text(
-    //                   textAlign: TextAlign.center,
-    //                   "Delete",
-    //                   style: TextStyle(
-    //                     fontSize: 30,
-    //                     fontWeight: FontWeight.bold,
-    //                   ),
-    //                 ),
-    //                 SizedBox(height: 5),
-    //                 Text(
-    //                   textAlign: TextAlign.center,
-    //                   "Are you sure you want to\nDelete?",
-    //                   style: AppTextStyles.mainTopicTextStyle.copyWith(
-    //                     fontWeight: FontWeight.normal,
-    //                   ),
-    //                 ),
-    //                 SizedBox(height: 30),
-    //                 Row(
-    //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                   children: [
-    //                     GestureDetector(
-    //                       onTap: () async {
-    //                         // await FirebaseAuthServices().logOutAccount();
-    //                         Navigator.pop(context);
-    //                       },
-    //                       child: Container(
-    //                         width: 150,
-    //                         height: 55,
-    //                         decoration: BoxDecoration(
-    //                           borderRadius: BorderRadius.circular(20),
-    //                           color: AppColors.appSheetBlueColor,
-    //                         ),
-    //                         child: Center(
-    //                           child: Text(
-    //                             "Yes",
-    //                             style: AppTextStyles.mainTopicTextStyle
-    //                                 .copyWith(color: AppColors.appWhiteColor),
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     SizedBox(width: 10),
-    //                     GestureDetector(
-    //                       onTap: () {
-    //                         Navigator.pop(context);
-    //                       },
-    //                       child: Container(
-    //                         width: 150,
-    //                         height: 55,
-    //                         decoration: BoxDecoration(
-    //                           border: Border.all(
-    //                             color: AppColors.appSheetRedColor,
-    //                             width: 2,
-    //                           ),
-    //                           borderRadius: BorderRadius.circular(20),
-    //                           color: Colors.white,
-    //                         ),
-    //                         child: Center(
-    //                           child: Text(
-    //                             "No",
-    //                             style: AppTextStyles.mainTopicTextStyle
-    //                                 .copyWith(
-    //                                   color: AppColors.appSheetRedColor,
-    //                                 ),
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //                 SizedBox(height: 40),
-    //               ],
-    //             ),
-    //           ],
-    //         ),
-    //       );
-    //     },
-    //   );
-    // }
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Single Data Screen",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          // 🌈 BEAUTIFUL GRADIENT BACKGROUND
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.appBlueColor!, AppColors.appBlue2Color!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+
+          // PAGE CONTENT
+          SafeArea(
+            child: Column(
+              children: [
+                // 🟦 MODERN APP BAR
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppConstants.appPadding,
+                    vertical: 10,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "Transaction Details",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 40),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 20),
+
+                // 💰 AMOUNT CARD
+                Container(
+                  padding: EdgeInsets.all(25),
+                  margin: EdgeInsets.symmetric(horizontal: 25),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white.withOpacity(0.2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        singleData.isExpense ? "Expense" : "Income",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Rs. ${singleData.amount}",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 25),
+
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(AppConstants.appPadding),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(35),
+                        topRight: Radius.circular(35),
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // TITLE
+                          Text(
+                            singleData.title,
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          SizedBox(height: 20),
+
+                          // DATE & TIME
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _infoTile(
+                                icon: Icons.calendar_month,
+                                title: "Date",
+                                value:
+                                    "${singleData.createdDate.day}-${singleData.createdDate.month}-${singleData.createdDate.year}",
+                              ),
+                              _infoTile(
+                                icon: Icons.access_time,
+                                title: "Time",
+                                value: singleData.createdTime.format(context),
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: 25),
+
+                          // DESCRIPTION
+                          Text(
+                            "Description",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            singleData.description,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+
+                          SizedBox(height: 40),
+
+                          // DELETE BUTTON
+                          GestureDetector(
+                            onTap: () async {
+                              await FirebaseDatabaseServices()
+                                  .deleteDataFromeFirebase(
+                                    itemId: singleData.id,
+                                  );
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainScreen(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(vertical: 18),
+                              decoration: BoxDecoration(
+                                color: Colors.red.shade500,
+                                borderRadius: BorderRadius.circular(18),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.red.withOpacity(0.3),
+                                    blurRadius: 10,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Delete Entry",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(AppConstants.appPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              maxLines: 2,
-              "Title : ${singleData.title}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            SizedBox(height: 10),
-            Text(
-              maxLines: 2,
-              "Time : ${singleData.createdTime.format(context)}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            SizedBox(height: 10),
-            Text(
-              maxLines: 2,
-              "Date : ${singleData.createdDate}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Amount : Rs.${singleData.amount}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Description : ${singleData.description}",
-              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
-            ),
-            SizedBox(height: 30),
-            Divider(),
-            SizedBox(height: 10),
-            TextButton(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.all(10),
-                backgroundColor: const Color.fromARGB(255, 255, 116, 116),
+    );
+  }
+
+  Widget _infoTile({
+    required IconData icon,
+    required String title,
+    required String value,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.black54),
+          SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(fontSize: 12, color: Colors.black54),
               ),
-              onPressed: () async {
-                await FirebaseDatabaseServices().deleteDataFromeFirebase(
-                  itemId: singleData.id,
-                );
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainScreen()),
-                );
-              },
-              child: Text(
-                "Delete Data",
-                style: TextStyle(color: Colors.white, fontSize: 18),
+              Text(
+                value,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

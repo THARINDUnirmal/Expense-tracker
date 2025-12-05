@@ -76,10 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
         height: MediaQuery.of(context).size.height * 1,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFFB3E5FC), // Sky Blue
-              Color(0xFFFFF59D), // Soft Yellow
-            ],
+            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -366,67 +363,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  Text(
-                    textAlign: TextAlign.center,
-                    "Category ",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          AppRoutes.route.push(
-                            "/AllCtegeoryScreen",
-                            extra: allCategeory,
-                          );
-                        },
-                        child: Text(
-                          "See All >>",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  allCategeory.isEmpty
-                      ? Center(child: Text("No Category Data"))
-                      : SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: allCategeory.length,
-                            itemBuilder: (context, index) {
-                              String indexData = allCategeory[index];
-                              return InkWell(
-                                onTap: () {
-                                  AppRoutes.route.push(
-                                    "/SingleCategeoryScreen",
-                                    extra: indexData,
-                                  );
-                                },
-                                child: CategoryCardWidget(title: indexData),
-                              );
-                            },
-                          ),
-                        ),
 
-                  SizedBox(height: 30),
-                  Text(
-                    "Resent ",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  SizedBox(height: 20),
                   FutureBuilder(
                     future: FirebaseDatabaseServices().getAllData(
                       curruntUserId: FirebaseAuthServices().curruntUserData.uid,
@@ -576,18 +513,88 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                               )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: dataList.length,
-                                itemBuilder: (context, index) {
-                                  DataModel singleData = dataList[index];
-                                  return SingleDataCard(
-                                    title: singleData.title,
-                                    isExpense: singleData.isExpense,
-                                    cardAmount: singleData.amount,
-                                  );
-                                },
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 15),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        textAlign: TextAlign.center,
+                                        "Category",
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          AppRoutes.route.push(
+                                            "/AllCtegeoryScreen",
+                                            extra: allCategeory,
+                                          );
+                                        },
+                                        child: Text(
+                                          "See All >>",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
+
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height *
+                                        0.1,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: allCategeory.length,
+                                      itemBuilder: (context, index) {
+                                        String indexData = allCategeory[index];
+                                        return InkWell(
+                                          onTap: () {
+                                            AppRoutes.route.push(
+                                              "/SingleCategeoryScreen",
+                                              extra: indexData,
+                                            );
+                                          },
+                                          child: CategoryCardWidget(
+                                            title: indexData,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "Resent ",
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: dataList.length,
+                                    itemBuilder: (context, index) {
+                                      DataModel singleData = dataList[index];
+                                      return SingleDataCard(
+                                        title: singleData.title,
+                                        isExpense: singleData.isExpense,
+                                        cardAmount: singleData.amount,
+                                      );
+                                    },
+                                  ),
+                                ],
                               );
                       }
                     },

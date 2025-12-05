@@ -46,8 +46,23 @@ class SummaryScreen extends StatelessWidget {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 20),
+
                   Text(
                     "Summary",
                     style: TextStyle(

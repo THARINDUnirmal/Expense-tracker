@@ -26,11 +26,16 @@ class FullImageScreen extends StatelessWidget {
           ),
         ),
         automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {
-            AppRoutes.route.go("/EdditProfileScreen");
-          },
-          icon: Icon(Icons.arrow_back_ios, size: 30, color: Colors.white),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          ),
         ),
       ),
       body: Padding(

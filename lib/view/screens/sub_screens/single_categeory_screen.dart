@@ -37,6 +37,18 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
         title: Text(widget.categeoryName),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.arrow_back_ios_rounded, color: Colors.black),
+          ),
+        ),
       ),
       body: Container(
         width: double.infinity,
