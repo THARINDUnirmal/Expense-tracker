@@ -52,7 +52,7 @@ class AllCategeoryScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(AppConstants.appPadding),
           child: GridView.builder(
-            itemCount: categeoryList.length,
+            itemCount: categeoryList.toSet().length,
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

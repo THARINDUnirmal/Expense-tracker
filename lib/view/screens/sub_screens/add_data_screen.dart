@@ -382,7 +382,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                         .trim(),
                                     createdDate: _dateNotifer.value,
                                     createdTime: _timeNotifer.value,
-                                    amount: int.parse(
+                                    amount: double.parse(
                                       _amountContraller.text.trim(),
                                     ),
                                     category: selectedCategory,

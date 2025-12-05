@@ -9,6 +9,13 @@ class SummaryScreen extends StatelessWidget {
     double totalEx = allTotalData["TotalExpenses"] ?? 0;
     double totalIn = allTotalData["TotalIncomes"] ?? 0;
     double totalBalance = totalIn - totalEx;
+
+    // Calculate percentage of income spent
+    double expensePercentage = 0;
+    if (totalIn > 0) {
+      expensePercentage = (totalEx / totalIn);
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: Container(
@@ -62,7 +69,6 @@ class SummaryScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-
                   Text(
                     "Summary",
                     style: TextStyle(
@@ -217,15 +223,15 @@ class SummaryScreen extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: LinearProgressIndicator(
-                      value: 0.45,
+                      value: expensePercentage, // automatically calculated
                       minHeight: 10,
                       backgroundColor: Colors.grey[300],
                       color: Colors.blue,
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    "45% of income spent",
+                  Text(
+                    "${(expensePercentage * 100).toStringAsFixed(1)}% of income spent",
                     style: TextStyle(color: Colors.black54),
                   ),
                 ],

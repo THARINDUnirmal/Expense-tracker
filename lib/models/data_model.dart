@@ -8,7 +8,7 @@ class DataModel {
   final String description;
   final DateTime createdDate;
   final TimeOfDay createdTime;
-  final int amount;
+  final double amount;
   final String? category; // <-- ADD THIS FIELD
 
   DataModel({
@@ -37,7 +37,7 @@ class DataModel {
         hour: int.parse(parts[0]),
         minute: int.parse(parts[1]),
       ),
-      amount: json["amount"] ?? 0,
+      amount: json["amount"].toDouble(),
       category: json["category"],
     );
   }

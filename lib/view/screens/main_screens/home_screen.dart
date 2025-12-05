@@ -554,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         0.1,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: allCategeory.length,
+                                      itemCount: allCategeory.toSet().length,
                                       itemBuilder: (context, index) {
                                         String indexData = allCategeory[index];
                                         return InkWell(

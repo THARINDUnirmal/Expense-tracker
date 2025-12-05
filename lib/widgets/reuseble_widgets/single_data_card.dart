@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SingleDataCard extends StatelessWidget {
   final String title;
   final bool isExpense;
-  final int cardAmount;
+  final double cardAmount;
 
   const SingleDataCard({
     super.key,

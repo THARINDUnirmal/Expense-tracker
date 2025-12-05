@@ -1,16 +1,41 @@
+import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class PieChartScreen extends StatelessWidget {
+class PieChartScreen extends StatefulWidget {
   final Map<String, double> allTotalData;
   const PieChartScreen({super.key, required this.allTotalData});
 
   @override
+  State<PieChartScreen> createState() => _PieChartScreenState();
+}
+
+class _PieChartScreenState extends State<PieChartScreen> {
+  int touchedIndex = -1;
+
+  // Automatically calculate percentages
+  Map<String, double> calculatePercentages() {
+    double totalIncome = widget.allTotalData["TotalIncomes"] ?? 0;
+    double totalExpense = widget.allTotalData["TotalExpenses"] ?? 0;
+    double total = totalIncome + totalExpense;
+
+    if (total == 0) return {"income": 0, "expense": 0};
+
+    return {
+      "income": (totalIncome / total) * 100,
+      "expense": (totalExpense / total) * 100,
+    };
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final percentages = calculatePercentages();
+    double incomePercent = percentages["income"]!;
+    double expensePercent = percentages["expense"]!;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
-
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(30),
@@ -28,6 +53,7 @@ class PieChartScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // HEADER
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 24),
@@ -60,7 +86,6 @@ class PieChartScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-
                   Text(
                     "Statistics",
                     style: TextStyle(
@@ -80,61 +105,74 @@ class PieChartScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            //PIE CHART
+            // PIE CHART
             Center(
               child: Container(
-                height: 260,
-                width: 260,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: PieChart(
-                  PieChartData(
-                    sectionsSpace: 4,
-                    centerSpaceRadius: 45,
-                    sections: [
-                      PieChartSectionData(
-                        showTitle: true,
-                        color: Colors.green,
-                        value: allTotalData["TotalIncomes"] ?? 0,
-                        radius: 55,
-                        title: "Income",
-                        titleStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                padding: EdgeInsets.all(AppConstants.appPadding),
+                width: double.infinity,
+                height: 300,
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: 1),
+                  duration: Duration(milliseconds: 800),
+                  builder: (context, value, child) {
+                    return PieChart(
+                      PieChartData(
+                        sectionsSpace: 5,
+                        centerSpaceRadius: 60,
+                        pieTouchData: PieTouchData(
+                          touchCallback: (event, pieTouchResponse) {
+                            if (!event.isInterestedForInteractions ||
+                                pieTouchResponse?.touchedSection == null) {
+                              setState(() {
+                                touchedIndex = -1;
+                              });
+                              return;
+                            }
+                            setState(() {
+                              touchedIndex = pieTouchResponse!
+                                  .touchedSection!
+                                  .touchedSectionIndex;
+                            });
+                          },
                         ),
+                        sections: [
+                          PieChartSectionData(
+                            color: Colors.green,
+                            value: incomePercent * value, // dynamic percentage
+                            radius: touchedIndex == 0 ? 70 : 55,
+                            title: touchedIndex == 0
+                                ? "${incomePercent.toStringAsFixed(1)}%"
+                                : "Income",
+                            titleStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          PieChartSectionData(
+                            color: Colors.red,
+                            value: expensePercent * value,
+                            radius: touchedIndex == 1 ? 70 : 55,
+                            title: touchedIndex == 1
+                                ? "${expensePercent.toStringAsFixed(1)}%"
+                                : "Expense",
+                            titleStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      PieChartSectionData(
-                        showTitle: true,
-                        color: Colors.red,
-                        value: allTotalData["TotalExpenses"] ?? 0,
-                        radius: 55,
-                        title: "Expense",
-                        titleStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             ),
 
             const SizedBox(height: 30),
 
-            //LEGEND LIST
+            // LEGEND LIST
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -161,20 +199,18 @@ class PieChartScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     const SizedBox(height: 18),
-
-                    // CATEGORY ITEMS
                     pieItem(
                       color: Colors.green,
                       title: "Income",
-                      amount: "Rs. ${allTotalData["TotalIncomes"] ?? 0}",
+                      amount: "Rs. ${widget.allTotalData["TotalIncomes"] ?? 0}",
                     ),
                     const SizedBox(height: 14),
                     pieItem(
                       color: Colors.red,
                       title: "Expense",
-                      amount: "Rs. ${allTotalData["TotalExpenses"] ?? 0}",
+                      amount:
+                          "Rs. ${widget.allTotalData["TotalExpenses"] ?? 0}",
                     ),
                   ],
                 ),
@@ -186,7 +222,7 @@ class PieChartScreen extends StatelessWidget {
     );
   }
 
-  //CATEGORY ROW
+  // CATEGORY ROW
   Widget pieItem({
     required Color color,
     required String title,
