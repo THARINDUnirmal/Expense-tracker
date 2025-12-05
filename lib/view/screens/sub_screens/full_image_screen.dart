@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:expenzes/provider/provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
-import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FullImageScreen extends StatelessWidget {
   final String imageUrl;
@@ -59,8 +60,11 @@ class FullImageScreen extends StatelessWidget {
             imageUrl.isEmpty
                 ? SizedBox()
                 : TextButton(
-                    onPressed: () async {
-                      await LocalData().deleteUserImage();
+                    onPressed: () {
+                      Provider.of<ProviderServices>(
+                        context,
+                        listen: false,
+                      ).deleteUserImageFromLocal();
                       AppRoutes.route.go("/EdditProfileScreen");
                     },
                     child: Text(

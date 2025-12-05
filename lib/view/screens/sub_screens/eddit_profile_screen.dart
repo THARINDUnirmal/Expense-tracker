@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/models/user_model.dart';
+import 'package:expenzes/provider/provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
@@ -9,6 +9,7 @@ import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EdditProfileScreen extends StatefulWidget {
   const EdditProfileScreen({super.key});
@@ -19,18 +20,8 @@ class EdditProfileScreen extends StatefulWidget {
 
 class _EdditProfileScreenState extends State<EdditProfileScreen> {
   late User curruntUser;
-  String userImage = "";
-  UserModel userData = UserModel(userId: "", name: "", email: "");
 
-  //Get user image from local storage
-  Future<void> getUserImage() async {
-    try {
-      String userImageLocal = await LocalData().getImageData();
-      setState(() {
-        userImage = userImageLocal;
-      });
-    } catch (error) {}
-  }
+  UserModel userData = UserModel(userId: "", name: "", email: "");
 
   //get currunt user Data from firebase auth
   Future<void> getCurruntUser() async {
@@ -57,7 +48,6 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
   void initState() {
     super.initState();
     getCurruntUser();
-    getUserImage();
     getUserData();
   }
 
@@ -65,13 +55,6 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {
-            AppRoutes.route.go("/MainScreen");
-          },
-          icon: Icon(Icons.arrow_back_ios, size: 30),
-        ),
         title: Text(
           "User Profile",
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
@@ -89,47 +72,53 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
                   Column(
                     children: [
                       SizedBox(height: 20),
-                      Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              AppRoutes.route.go(
-                                "/FullImageScreen",
-                                extra: userImage,
-                              );
-                            },
-                            child: Hero(
-                              tag: 1,
-                              child: CircleAvatar(
-                                radius: 60,
-                                backgroundImage: userImage.isEmpty
-                                    ? NetworkImage(
-                                        "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                      )
-                                    : FileImage(File(userImage)),
+                      Consumer(
+                        builder: (context, ProviderServices provider, child) {
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  AppRoutes.route.go(
+                                    "/FullImageScreen",
+                                    extra: provider.userImage,
+                                  );
+                                },
+                                child: Hero(
+                                  tag: 1,
+                                  child: CircleAvatar(
+                                    radius: 60,
+                                    backgroundImage: provider.userImage.isEmpty
+                                        ? NetworkImage(
+                                            "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                          )
+                                        : FileImage(File(provider.userImage)),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            userData.name.isEmpty ? "No Name" : userData.name,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            curruntUser.isAnonymous
-                                ? "Anonymous User"
-                                : curruntUser.email!,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                        ],
+                              SizedBox(height: 10),
+                              Text(
+                                userData.name.isEmpty
+                                    ? "No Name"
+                                    : userData.name,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                curruntUser.isAnonymous
+                                    ? "Anonymous User"
+                                    : curruntUser.email!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),

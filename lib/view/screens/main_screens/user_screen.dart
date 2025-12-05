@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:expenzes/provider/provider_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +10,7 @@ import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -20,7 +22,6 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   late String? userName;
   late User userData;
-  String userImageLocal = "";
 
   final ImagePicker pickImager = ImagePicker();
 
@@ -28,7 +29,6 @@ class _UserScreenState extends State<UserScreen> {
   void initState() {
     super.initState();
     getUser();
-    getImageFromLocal();
   }
 
   Future<void> getUser() async {
@@ -38,21 +38,14 @@ class _UserScreenState extends State<UserScreen> {
     setState(() {});
   }
 
-  Future<void> getImageFromLocal() async {
-    String image = await LocalData().getImageData();
-    setState(() {
-      userImageLocal = image;
-    });
-  }
-
   Future<void> pickImage(ImageSource source) async {
     try {
       final picked = await pickImager.pickImage(source: source);
       if (picked == null) return;
-      await LocalData().setImage(imageUrl: picked.path);
-      setState(() {
-        userImageLocal = picked.path;
-      });
+      await Provider.of<ProviderServices>(
+        context,
+        listen: false,
+      ).setUserImage(imageUrl: picked.path);
     } catch (error) {
       print("Image picker error: $error");
     }
@@ -63,7 +56,7 @@ class _UserScreenState extends State<UserScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        height: 300,
+        height: 350,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -155,49 +148,53 @@ class _UserScreenState extends State<UserScreen> {
               Center(
                 child: Column(
                   children: [
-                    GestureDetector(
-                      onTap: imagePickFunction,
-                      child: Stack(
-                        children: [
-                          // Profile Image with shadow
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 6),
+                    Consumer(
+                      builder: (context, ProviderServices provider, child) {
+                        return GestureDetector(
+                          onTap: imagePickFunction,
+                          child: Stack(
+                            children: [
+                              // Profile Image with shadow
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.15),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 6),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              radius: 70,
-                              backgroundImage: userImageLocal.isEmpty
-                                  ? const NetworkImage(
-                                          "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                        )
-                                        as ImageProvider
-                                  : FileImage(File(userImageLocal)),
-                            ),
-                          ),
-
-                          // Camera icon overlay
-                          const Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: CircleAvatar(
-                              radius: 22,
-                              backgroundColor: Colors.white,
-                              child: Icon(
-                                Icons.add_a_photo,
-                                size: 28,
-                                color: Colors.blue,
+                                child: CircleAvatar(
+                                  radius: 70,
+                                  backgroundImage: provider.userImage.isEmpty
+                                      ? const NetworkImage(
+                                              "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                            )
+                                            as ImageProvider
+                                      : FileImage(File(provider.userImage)),
+                                ),
                               ),
-                            ),
+
+                              // Camera icon overlay
+                              const Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: CircleAvatar(
+                                  radius: 22,
+                                  backgroundColor: Colors.white,
+                                  child: Icon(
+                                    Icons.add_a_photo,
+                                    size: 28,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 20),
                     Text(
@@ -253,7 +250,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  // ---------------- Modern Menu Card ----------------
+  // Modern Menu Card
   Widget menuCardModern({
     required String svg,
     required String title,
@@ -392,7 +389,7 @@ class _UserScreenState extends State<UserScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        height: 250,
+        height: 370,
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
           color: Colors.white,

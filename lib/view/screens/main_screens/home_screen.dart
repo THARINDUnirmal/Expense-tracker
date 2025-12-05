@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/provider/provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
@@ -8,11 +9,12 @@ import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
-import 'package:expenzes/view/screens/sub_screens/home_see_all_screen.dart';
-import 'package:expenzes/widgets/categeory_card_widget.dart';
+import 'package:expenzes/view/screens/sub_screens/all_categeory_screen.dart';
+import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,20 +25,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //All veriables
-  String userImageLocal = "";
   late String? userName;
   Map<String, double> allDataMap = {};
   List<String> allCategeory = [];
-
-  //get user image from local storage
-  Future<void> getUserLocalUserImage() async {
-    try {
-      String userImage = await LocalData().getImageData();
-      setState(() {
-        userImageLocal = userImage;
-      });
-    } catch (error) {}
-  }
 
   //get user name form current user
   Future<void> getUser() async {
@@ -76,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getUser();
-    getUserLocalUserImage();
     getAllTotalValues();
   }
 
@@ -153,42 +143,49 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             AppRoutes.route.push("/EdditProfileScreen");
                           },
-                          child: Row(
-                            children: [
-                              Hero(
-                                tag: 1,
-                                child: CircleAvatar(
-                                  maxRadius: 40,
-                                  backgroundImage: userImageLocal.isEmpty
-                                      ? NetworkImage(
-                                          "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                        )
-                                      : FileImage(File(userImageLocal)),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
+                          child: Consumer(
+                            builder: (context, ProviderServices provider, child) {
+                              return Row(
                                 children: [
-                                  Text(
-                                    "Good Evening!",
-                                    style: AppTextStyles.miniTextStyle,
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width *
-                                        0.55,
-                                    child: Text(
-                                      overflow: TextOverflow.ellipsis,
-                                      userName!,
-                                      style: AppTextStyles.mainTopicTextStyle
-                                          .copyWith(fontSize: 16),
+                                  Hero(
+                                    tag: 1,
+                                    child: CircleAvatar(
+                                      maxRadius: 40,
+                                      backgroundImage:
+                                          provider.userImage.isEmpty
+                                          ? NetworkImage(
+                                              "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                            )
+                                          : FileImage(File(provider.userImage)),
                                     ),
                                   ),
+                                  SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Good Evening!",
+                                        style: AppTextStyles.miniTextStyle,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                            0.55,
+                                        child: Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          userName!,
+                                          style: AppTextStyles
+                                              .mainTopicTextStyle
+                                              .copyWith(fontSize: 16),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         ),
 
@@ -235,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        // -------- Summary Card --------
+                        //Summary Card
                         GestureDetector(
                           onTap: () {
                             AppRoutes.route.push(
@@ -361,11 +358,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeSeeAllScreen(),
-                              ),
+                            AppRoutes.route.push(
+                              "/AllCtegeoryScreen",
+                              extra: allCategeory,
                             );
                           },
                           child: Text(
