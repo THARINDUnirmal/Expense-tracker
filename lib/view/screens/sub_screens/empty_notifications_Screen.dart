@@ -61,8 +61,10 @@ class EmptyNotificationsScreen extends StatelessWidget {
                   description:
                       "It looks like you don't have any notifications right now. We'll let you know when there's something new.",
                   // button: you can pass your custom button,
-                  btnText: "Check again",
-                  press: () {},
+                  btnText: "Go Home",
+                  press: () {
+                    AppRoutes.route.go("/MainScreen");
+                  },
                 ),
               ],
             ),

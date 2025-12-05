@@ -130,64 +130,71 @@ class _PieChartScreenState extends State<PieChartScreen> {
                           ),
                         ),
                       )
-                    : TweenAnimationBuilder<double>(
-                        tween: Tween<double>(begin: 0, end: 1),
-                        duration: Duration(milliseconds: 800),
-                        builder: (context, value, child) {
-                          return PieChart(
-                            PieChartData(
-                              sectionsSpace: 5,
-                              centerSpaceRadius: 60,
-                              pieTouchData: PieTouchData(
-                                touchCallback: (event, pieTouchResponse) {
-                                  if (!event.isInterestedForInteractions ||
-                                      pieTouchResponse?.touchedSection ==
-                                          null) {
+                    : Container(
+                        padding: EdgeInsets.all(50),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween<double>(begin: 0, end: 1),
+                          duration: Duration(milliseconds: 800),
+                          builder: (context, value, child) {
+                            return PieChart(
+                              PieChartData(
+                                sectionsSpace: 5,
+                                centerSpaceRadius: 60,
+                                pieTouchData: PieTouchData(
+                                  touchCallback: (event, pieTouchResponse) {
+                                    if (!event.isInterestedForInteractions ||
+                                        pieTouchResponse?.touchedSection ==
+                                            null) {
+                                      setState(() {
+                                        touchedIndex = -1;
+                                      });
+                                      return;
+                                    }
                                     setState(() {
-                                      touchedIndex = -1;
+                                      touchedIndex = pieTouchResponse!
+                                          .touchedSection!
+                                          .touchedSectionIndex;
                                     });
-                                    return;
-                                  }
-                                  setState(() {
-                                    touchedIndex = pieTouchResponse!
-                                        .touchedSection!
-                                        .touchedSectionIndex;
-                                  });
-                                },
+                                  },
+                                ),
+                                sections: [
+                                  PieChartSectionData(
+                                    color: Colors.green,
+                                    value:
+                                        incomePercent *
+                                        value, // dynamic percentage
+                                    radius: touchedIndex == 0 ? 70 : 55,
+                                    title: touchedIndex == 0
+                                        ? "${incomePercent.toStringAsFixed(1)}%"
+                                        : "Income",
+                                    titleStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  PieChartSectionData(
+                                    color: Colors.red,
+                                    value: expensePercent * value,
+                                    radius: touchedIndex == 1 ? 70 : 55,
+                                    title: touchedIndex == 1
+                                        ? "${expensePercent.toStringAsFixed(1)}%"
+                                        : "Expense",
+                                    titleStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              sections: [
-                                PieChartSectionData(
-                                  color: Colors.green,
-                                  value:
-                                      incomePercent *
-                                      value, // dynamic percentage
-                                  radius: touchedIndex == 0 ? 70 : 55,
-                                  title: touchedIndex == 0
-                                      ? "${incomePercent.toStringAsFixed(1)}%"
-                                      : "Income",
-                                  titleStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                PieChartSectionData(
-                                  color: Colors.red,
-                                  value: expensePercent * value,
-                                  radius: touchedIndex == 1 ? 70 : 55,
-                                  title: touchedIndex == 1
-                                      ? "${expensePercent.toStringAsFixed(1)}%"
-                                      : "Expense",
-                                  titleStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
               ),
             ),
