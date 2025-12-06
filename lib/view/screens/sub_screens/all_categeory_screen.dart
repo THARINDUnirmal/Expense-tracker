@@ -3,10 +3,15 @@ import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
 import 'package:flutter/material.dart';
 
-class AllCategeoryScreen extends StatelessWidget {
+class AllCategeoryScreen extends StatefulWidget {
   final List<String> categeoryList;
   const AllCategeoryScreen({super.key, required this.categeoryList});
 
+  @override
+  State<AllCategeoryScreen> createState() => _AllCategeoryScreenState();
+}
+
+class _AllCategeoryScreenState extends State<AllCategeoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +56,7 @@ class AllCategeoryScreen extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(AppConstants.appPadding),
-          child: categeoryList.isEmpty
+          child: widget.categeoryList.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -82,7 +87,7 @@ class AllCategeoryScreen extends StatelessWidget {
                   ),
                 )
               : GridView.builder(
-                  itemCount: categeoryList.toSet().length,
+                  itemCount: widget.categeoryList.toSet().toList().length,
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -92,7 +97,9 @@ class AllCategeoryScreen extends StatelessWidget {
                     crossAxisCount: 2,
                   ),
                   itemBuilder: (context, index) {
-                    String indexValue = categeoryList[index];
+                    String indexValue = widget.categeoryList
+                        .toSet()
+                        .toList()[index];
                     return InkWell(
                       onTap: () {
                         AppRoutes.route.push(

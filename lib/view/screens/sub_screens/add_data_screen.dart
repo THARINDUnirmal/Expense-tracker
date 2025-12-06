@@ -423,12 +423,13 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                       ),
                                     ),
                                   );
-
+                                  _categeoryContraller.clear();
                                   _amountContraller.clear();
                                   _titleContraller.clear();
                                   _descriptionContraller.clear();
 
                                   AppRoutes.route.go("/MainScreen");
+                                  setState(() {});
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text("Error: $e")),

@@ -290,7 +290,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               setState(() {
                                 anonymusLoad = true;
                               });
-                              await FirebaseAuthServices().logAsAnnonymus();
+                              await FirebaseAuthServices().logAsAnnonymus(
+                                context: context,
+                              );
                               if (context.mounted) {
                                 AppMessages().showSnackBarMessage(
                                   context: context,

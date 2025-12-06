@@ -74,6 +74,12 @@ class FirebaseAuthServices {
       );
     } on FirebaseAuthException catch (e) {
       print(FirebaseAuthException(code: e.code));
+      AppMessages().showSnackBarMessage(
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        context: context,
+        message: "Login failed",
+      );
     } catch (error) {
       print(error.toString());
     }
@@ -89,6 +95,12 @@ class FirebaseAuthServices {
       );
     } on FirebaseAuthException catch (error) {
       print(FirebaseAuthException(code: error.code));
+      AppMessages().showSnackBarMessage(
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        context: context,
+        message: "Sign out failed. Please try again",
+      );
     } catch (e) {
       print(e.toString());
     }
@@ -111,6 +123,12 @@ class FirebaseAuthServices {
       );
     } on FirebaseAuthException catch (error) {
       print(FirebaseAuthException(code: error.code));
+      AppMessages().showSnackBarMessage(
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        context: context,
+        message: "Registration failed. Please try again",
+      );
       throw exceptions(error.code);
     } catch (e) {
       print(e.toString());
@@ -118,7 +136,7 @@ class FirebaseAuthServices {
   }
 
   //login as a annonymus
-  Future<void> logAsAnnonymus() async {
+  Future<void> logAsAnnonymus({required BuildContext context}) async {
     try {
       await firebaseAuth.signInAnonymously();
     } on FirebaseAuthException catch (error) {
@@ -126,6 +144,12 @@ class FirebaseAuthServices {
       throw exceptions(error.code);
     } catch (e) {
       print(e.toString());
+      AppMessages().showSnackBarMessage(
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        context: context,
+        message: "Anonymous sign-in failed",
+      );
     }
   }
 }
