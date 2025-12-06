@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/provider/provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -86,12 +89,39 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  ////////////////////////////////////////////////////////
+  ///
+  ///
+  late StreamSubscription<bool> _subscription;
+  bool isConnected = true;
+
   @override
   void initState() {
     super.initState();
     getUser();
     getAllTotalValues();
-    timeTracker();
+    timeTracker(); // Subscribe to connection changes
+    _subscription = ConnectionService().connectionStream.listen((status) {
+      setState(() {
+        isConnected = status;
+      });
+
+      // Show snackbar on change
+      isConnected
+          ? ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Back Online!"),
+                duration: const Duration(seconds: 2),
+              ),
+            )
+          : AppMessages().appAlertMessage("No Internet ", context);
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -193,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Hero(
                                   tag: 1,
                                   child: CircleAvatar(
-                                    maxRadius: 40,
+                                    maxRadius: 35,
                                     backgroundImage: provider.userImage.isEmpty
                                         ? NetworkImage(
                                             "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",

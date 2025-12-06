@@ -46,10 +46,6 @@ class _PieChartScreenState extends State<PieChartScreen> {
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
           gradient: LinearGradient(
             colors: [
               Color(0xFFB3E5FC), // Sky Blue
@@ -59,277 +55,282 @@ class _PieChartScreenState extends State<PieChartScreen> {
             end: Alignment.bottomRight,
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // HEADER
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 24),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () => AppRoutes.route.go("/MainScreen"),
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Statistics",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    "Pie chart for income & expenses",
-                    style: TextStyle(color: Colors.white70, fontSize: 15),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // PIE CHART
-            Center(
-              child: Container(
-                padding: EdgeInsets.all(AppConstants.appPadding),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // HEADER
+              Container(
                 width: double.infinity,
-                height: 300,
-                child: incomePercent == 0 && expensePercent == 0
-                    ? Center(
-                        child: Text(
-                          "No Data",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
-                    : Container(
-                        padding: EdgeInsets.all(50),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: TweenAnimationBuilder<double>(
-                          tween: Tween<double>(begin: 0, end: 1),
-                          duration: Duration(milliseconds: 800),
-                          builder: (context, value, child) {
-                            return PieChart(
-                              PieChartData(
-                                sectionsSpace: 5,
-                                centerSpaceRadius: 60,
-                                pieTouchData: PieTouchData(
-                                  touchCallback: (event, pieTouchResponse) {
-                                    if (!event.isInterestedForInteractions ||
-                                        pieTouchResponse?.touchedSection ==
-                                            null) {
-                                      setState(() {
-                                        touchedIndex = -1;
-                                      });
-                                      return;
-                                    }
-                                    setState(() {
-                                      touchedIndex = pieTouchResponse!
-                                          .touchedSection!
-                                          .touchedSectionIndex;
-                                    });
-                                  },
-                                ),
-                                sections: [
-                                  PieChartSectionData(
-                                    color: Colors.green,
-                                    value:
-                                        incomePercent *
-                                        value, // dynamic percentage
-                                    radius: touchedIndex == 0 ? 70 : 55,
-                                    title: touchedIndex == 0
-                                        ? "${incomePercent.toStringAsFixed(1)}%"
-                                        : "Income",
-                                    titleStyle: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  PieChartSectionData(
-                                    color: Colors.red,
-                                    value: expensePercent * value,
-                                    radius: touchedIndex == 1 ? 70 : 55,
-                                    title: touchedIndex == 1
-                                        ? "${expensePercent.toStringAsFixed(1)}%"
-                                        : "Expense",
-                                    titleStyle: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            Padding(
-              padding: const EdgeInsets.all(AppConstants.appPadding - 5),
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 15,
+                  vertical: 50,
+                  horizontal: 24,
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.07),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        // Icon
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: SvgPicture.asset(
-                            "assets/icons/income.svg",
-                            width: 28,
-                            height: 28,
-                            color: Colors.blue,
-                          ),
+                    GestureDetector(
+                      onTap: () => AppRoutes.route.go("/MainScreen"),
+                      child: Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
                         ),
-                        const SizedBox(width: 20),
-
-                        // Texts
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Total Incomes",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                " Rs.${totalIncom.toString()}",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.appGreenColor,
-                                ),
-                              ),
-                            ],
-                          ),
+                        child: Icon(
+                          Icons.arrow_back_ios_rounded,
+                          color: Colors.white,
                         ),
-                        Text(
-                          "${incomePercent.toStringAsFixed(1)}%",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: AppColors.appGreenColor,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     SizedBox(height: 20),
-                    Row(
-                      children: [
-                        // Icon
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: SvgPicture.asset(
-                            "assets/icons/Expeses.svg",
-                            width: 28,
-                            height: 28,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-
-                        // Texts
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Total Expenses",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                " Rs.${totalExp.toString()}",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.appRedColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          "${expensePercent.toStringAsFixed(1)}%",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: AppColors.appSheetRedColor,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "Statistics",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      "Pie chart for income & expenses",
+                      style: TextStyle(color: Colors.white70, fontSize: 15),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 20),
+
+              // PIE CHART
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(AppConstants.appPadding),
+                  width: double.infinity,
+                  height: 300,
+                  child: incomePercent == 0 && expensePercent == 0
+                      ? Center(
+                          child: Text(
+                            "No Data",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : Container(
+                          padding: EdgeInsets.all(50),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween<double>(begin: 0, end: 1),
+                            duration: Duration(milliseconds: 800),
+                            builder: (context, value, child) {
+                              return PieChart(
+                                PieChartData(
+                                  sectionsSpace: 5,
+                                  centerSpaceRadius: 60,
+                                  pieTouchData: PieTouchData(
+                                    touchCallback: (event, pieTouchResponse) {
+                                      if (!event.isInterestedForInteractions ||
+                                          pieTouchResponse?.touchedSection ==
+                                              null) {
+                                        setState(() {
+                                          touchedIndex = -1;
+                                        });
+                                        return;
+                                      }
+                                      setState(() {
+                                        touchedIndex = pieTouchResponse!
+                                            .touchedSection!
+                                            .touchedSectionIndex;
+                                      });
+                                    },
+                                  ),
+                                  sections: [
+                                    PieChartSectionData(
+                                      color: Colors.green,
+                                      value:
+                                          incomePercent *
+                                          value, // dynamic percentage
+                                      radius: touchedIndex == 0 ? 70 : 55,
+                                      title: touchedIndex == 0
+                                          ? "${incomePercent.toStringAsFixed(1)}%"
+                                          : "Income",
+                                      titleStyle: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    PieChartSectionData(
+                                      color: Colors.red,
+                                      value: expensePercent * value,
+                                      radius: touchedIndex == 1 ? 70 : 55,
+                                      title: touchedIndex == 1
+                                          ? "${expensePercent.toStringAsFixed(1)}%"
+                                          : "Expense",
+                                      titleStyle: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              Padding(
+                padding: const EdgeInsets.all(AppConstants.appPadding - 5),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.07),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          // Icon
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: SvgPicture.asset(
+                              "assets/icons/income.svg",
+                              width: 28,
+                              height: 28,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+
+                          // Texts
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Total Incomes",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  " Rs.${totalIncom.toString()}",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.appGreenColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            "${incomePercent.toStringAsFixed(1)}%",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.appGreenColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        children: [
+                          // Icon
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: SvgPicture.asset(
+                              "assets/icons/Expeses.svg",
+                              width: 28,
+                              height: 28,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+
+                          // Texts
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Total Expenses",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  " Rs.${totalExp.toString()}",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.appRedColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            "${expensePercent.toStringAsFixed(1)}%",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.appSheetRedColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

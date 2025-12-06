@@ -48,10 +48,6 @@ class _AddScreenState extends State<AddScreen> {
         height: MediaQuery.of(context).size.height * 1,
         padding: const EdgeInsets.only(top: 30),
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
           gradient: LinearGradient(
             colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
             begin: Alignment.topLeft,

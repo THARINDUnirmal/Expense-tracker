@@ -41,10 +41,6 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen> {
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 1,
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
           gradient: LinearGradient(
             colors: [
               Color(0xFFB3E5FC), // Sky Blue

@@ -21,10 +21,6 @@ class SummaryScreen extends StatelessWidget {
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
           gradient: LinearGradient(
             colors: [
               Color(0xFFB3E5FC), // Sky Blue
