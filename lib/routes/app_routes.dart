@@ -1,9 +1,9 @@
 import 'package:expenzes/view/auth_view/auth_view_screen.dart';
 import 'package:expenzes/view/screens/onbording_screens/login/reset_screen.dart';
+import 'package:expenzes/view/screens/sub_screens/about_me_image_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/all_categeory_screen.dart';
-import 'package:expenzes/view/screens/sub_screens/eddit_profile_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/empty_notifications_Screen.dart';
-import 'package:expenzes/view/screens/sub_screens/finance_mate_screen.dart';
+import 'package:expenzes/view/screens/sub_screens/about_me_screen.dart';
 import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/view/screens/main_screens/add_screen.dart';
 import 'package:expenzes/view/screens/main_screens/home_screen.dart';
@@ -69,8 +69,8 @@ class AppRoutes {
         builder: (context, state) => UserProfileScreen(),
       ),
       GoRoute(
-        path: "/FinanceMateScreen",
-        builder: (context, state) => FinanceMateScreen(),
+        path: "/AboutMeSreen",
+        builder: (context, state) => AboutMeScreen(),
       ),
       GoRoute(
         path: "/FullImageScreen",
@@ -112,9 +112,14 @@ class AppRoutes {
         builder: (context, state) => EmptyNotificationsScreen(),
       ),
       GoRoute(
-        path: "/EdditUserProfileScreen",
+        path: "/AboutMeScreen",
+        builder: (context, state) => AboutMeScreen(),
+      ),
+      GoRoute(
+        path: "/AboutMeImageScreen",
         builder: (context, state) {
-          return EdditProfileScreen();
+          String image = state.extra as String;
+          return AboutMeImageScreen(imageUrl: image);
         },
       ),
     ],

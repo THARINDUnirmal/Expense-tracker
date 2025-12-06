@@ -79,7 +79,7 @@ class FirebaseDatabaseServices {
           .snapshots()
           .map((snapshot) {
             return snapshot.docs.map((e) {
-              return DataModel.fromJson(e.data() as Map<String, dynamic>);
+              return DataModel.fromJson(e.data());
             }).toList();
           });
     } catch (error) {

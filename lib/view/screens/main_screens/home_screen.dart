@@ -23,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //All veriables
+  String currentCodition = "";
   late String? userName;
   Map<String, double> allDataMap = {};
   List<String> allCategeory = [];
@@ -67,11 +68,30 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void timeTracker() {
+    DateTime now = DateTime.now(); // current time
+    String timeOfDay;
+
+    if (now.hour >= 5 && now.hour < 12) {
+      timeOfDay = "Good Morning";
+    } else if (now.hour >= 12 && now.hour < 17) {
+      timeOfDay = "Good Afternoon";
+    } else if (now.hour >= 17 && now.hour < 20) {
+      timeOfDay = "Good Evening";
+    } else {
+      timeOfDay = "Good Night";
+    }
+    setState(() {
+      currentCodition = timeOfDay;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getUser();
     getAllTotalValues();
+    timeTracker();
   }
 
   @override
@@ -98,8 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          AppRoutes.route.push("/FinanceMateScreen");
+                        onLongPress: () {
+                          AppRoutes.route.push("/AboutMeSreen");
                         },
                         child: RichText(
                           text: TextSpan(
@@ -187,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Good Evening!",
+                                      currentCodition,
                                       style: AppTextStyles.miniTextStyle,
                                     ),
                                     SizedBox(
@@ -364,8 +384,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 20),
 
-                  FutureBuilder(
-                    future: FirebaseDatabaseServices().getAllData(
+                  StreamBuilder(
+                    stream: FirebaseDatabaseServices().getAllDataStream(
                       curruntUserId: FirebaseAuthServices().curruntUserData.uid,
                     ),
                     builder: (context, snapshot) {

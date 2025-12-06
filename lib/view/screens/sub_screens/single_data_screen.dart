@@ -192,7 +192,7 @@ class SingleDataScreen extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  "Delete Entry",
+                                  "Delete",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,

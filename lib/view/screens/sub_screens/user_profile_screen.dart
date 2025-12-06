@@ -242,29 +242,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  InkWell(
-                    onTap: () {
-                      AppRoutes.route.push("/EdditUserProfileScreen");
-                    },
-                    child: Container(
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Color(0xff398bd3),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Edit Profile",
-                          style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
