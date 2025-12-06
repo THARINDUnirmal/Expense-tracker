@@ -1,9 +1,8 @@
 import 'package:expenzes/models/user_model.dart';
+import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
-import 'package:expenzes/utils/app_text_styles.dart';
-import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_field.dart';
 import 'package:expenzes/widgets/reuseble_widgets/small_card_widget.dart';
@@ -18,32 +17,36 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  //Loading state
   bool isLoading = false;
   bool isIconLoad = false;
-  //form key
+  bool anonymusLoad = false;
+
   final _formKey = GlobalKey<FormState>();
-  //TextEditingControllers
   final TextEditingController _emailContraller = TextEditingController();
   final TextEditingController _nameContraller = TextEditingController();
   final TextEditingController _passwordContraller = TextEditingController();
+  final TextEditingController _confirmpasswordContraller =
+      TextEditingController();
 
-  //googleSign
+  //GOOGLE SIGN
   Future<void> googleSign() async {
     try {
-      await FirebaseAuthServices().googleSignInMethord();
+      await FirebaseAuthServices().googleSignInMethord(context);
     } catch (error) {
       if (context.mounted) {
-        AppMessages().appMessage(error.toString(), context);
+        AppMessages().appAlertMessage(error.toString(), context);
       }
     }
   }
 
-  //Email login
-  Future<void> registerUser(String userEmail, String userPassword) async {
+  //EMAIL REGISTER
+  Future<void> registerUser({
+    required String email,
+    required String password,
+  }) async {
     await FirebaseAuthServices().registerEmail(
-      email: userEmail,
-      password: userPassword,
+      email: email,
+      password: password,
     );
   }
 
@@ -52,95 +55,94 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailContraller.dispose();
     _passwordContraller.dispose();
     _nameContraller.dispose();
+    _confirmpasswordContraller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.appWhiteColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(AppConstants.appPadding),
+      backgroundColor: Colors.transparent,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: AppConstants.appPadding * 1.5),
+                const SizedBox(height: 50),
+
+                Text(
+                  "FinanceMate",
+                  style: TextStyle(
+                    fontSize: 38,
+                    fontWeight: FontWeight.bold,
+                    foreground: Paint()
+                      ..shader = const LinearGradient(
+                        colors: [Color(0xfffdaa5d), Color(0xff4ab7b6)],
+                      ).createShader(Rect.fromLTWH(0, 0, 200, 70)),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
                 Container(
-                  padding: EdgeInsets.all(AppConstants.appPadding + 5),
                   width: double.infinity,
+                  padding: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
-                    color: AppColors.appCreamColor,
-                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(22),
                     boxShadow: [
                       BoxShadow(
-                        blurRadius: 20,
-                        // ignore: deprecated_member_use
-                        color: Colors.grey.withOpacity(0.5),
-                        offset: Offset(15, 15),
-                      ),
-                      BoxShadow(
                         blurRadius: 10,
-                        color: Colors.white,
-                        offset: Offset(-15, -12),
+                        spreadRadius: 1,
+                        color: Colors.black.withOpacity(0.05),
                       ),
                     ],
+                    border: Border.all(color: Colors.white.withOpacity(0.4)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: AppConstants.appPadding),
-                      Center(
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Finance",
-                            style: TextStyle(
-                              fontSize: 40,
-                              color: Color(0xfffdaa5d),
-                              fontWeight: FontWeight.bold,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: "Mate",
-                                style: TextStyle(
-                                  fontSize: 40,
-                                  color: Color(0xff4ab7b6),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
+                      Text(
+                        "Create Your Account",
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: AppConstants.appPadding + 10),
+                      const SizedBox(height: 5),
                       Text(
-                        "Sign Up For Free",
-                        style: AppTextStyles.mainTopicTextStyle,
+                        "Sign Up to continue",
+                        style: TextStyle(fontSize: 15, color: Colors.black54),
                       ),
-                      Text(
-                        "Sign Up to your account",
-                        style: AppTextStyles.subTopicTextStyle,
-                      ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Form(
                         key: _formKey,
                         child: Column(
                           children: [
                             CustomTextField(
-                              issecurText: false,
+                              issecurText: true,
                               controller: _nameContraller,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return "Please enter User name";
+                                  return "Please enter your username";
                                 } else {
                                   return null;
                                 }
                               },
-                              labaleTexts: "User name",
-                              icon: Icons.people,
+                              labaleTexts: "User Name",
+                              icon: Icons.person,
                             ),
-                            SizedBox(height: AppConstants.appPadding),
+                            const SizedBox(height: 20),
                             CustomTextField(
                               issecurText: false,
                               controller: _emailContraller,
@@ -151,14 +153,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   r'^[^@]+@[^@]+\.[^@]+',
                                 ).hasMatch(value)) {
                                   return "Please enter valid email";
-                                } else {
-                                  return null;
                                 }
+                                return null;
                               },
                               labaleTexts: "Email",
                               icon: Icons.email_outlined,
                             ),
-                            SizedBox(height: AppConstants.appPadding),
+                            const SizedBox(height: 20),
+
                             CustomTextField(
                               issecurText: true,
                               controller: _passwordContraller,
@@ -166,96 +168,115 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 if (value!.isEmpty) {
                                   return "Please enter password!";
                                 } else if (value.length < 6) {
-                                  return "Password mus have 7 or more char!";
-                                } else {
-                                  return null;
+                                  return "Password must have 6+ characters!";
                                 }
+                                return null;
                               },
                               labaleTexts: "Password",
                               icon: Icons.lock_outline,
                             ),
-                            SizedBox(height: AppConstants.appPadding * 2),
-                            Container(
+                            const SizedBox(height: 20),
+
+                            CustomTextField(
+                              issecurText: true,
+                              controller: _confirmpasswordContraller,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Please enter password!";
+                                } else if (value != _passwordContraller.text) {
+                                  return "Passwords don’t match";
+                                }
+                                return null;
+                              },
+                              labaleTexts: "Confirm your password",
+                              icon: Icons.lock_outline,
+                            ),
+
+                            const SizedBox(height: 25),
+
+                            SizedBox(
                               width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.07,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 8,
-                                    color: Colors.grey.withOpacity(0.5),
-                                    offset: Offset(15, 15),
+                              height: 52,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
                                   ),
-                                  BoxShadow(
-                                    blurRadius: 1,
-                                    color: Colors.white,
-                                    offset: Offset(-1, 0),
-                                  ),
-                                ],
-                              ),
-                              child: TextButton(
-                                style: TextButton.styleFrom(),
+                                  backgroundColor: const Color(0xff4ab7b6),
+                                ),
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
+                                    setState(() => isLoading = true);
                                     try {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
                                       await registerUser(
-                                        _emailContraller.text,
-                                        _passwordContraller.text,
+                                        email: _emailContraller.text.trim(),
+                                        password: _passwordContraller.text
+                                            .trim(),
                                       );
-                                      UserModel emailUser = UserModel(
-                                        userId: "",
-                                        name: "",
-                                        email: FirebaseAuthServices()
+
+                                      UserModel userData = UserModel(
+                                        userId: FirebaseAuthServices()
                                             .curruntUserData
-                                            .email!,
+                                            .uid,
+                                        name: _nameContraller.text.trim(),
+                                        email: _emailContraller.text.trim(),
                                         createdAt: DateTime.now(),
                                         updatedAt: DateTime.now(),
                                       );
+
                                       await FirebaseDatabaseServices().addUser(
-                                        emailUser,
+                                        userData,
                                       );
-                                      print(
-                                        "=============================Submit button pressed!=====================",
+
+                                      await Future.delayed(
+                                        Duration(seconds: 1),
                                       );
-                                      if (context.mounted) {
-                                        GoRouter.of(context).go("/");
-                                      }
-                                    } catch (error) {
-                                      print(error.toString());
+                                      AppRoutes.route.go("/");
+                                      setState(() {});
                                     } finally {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
+                                      setState(() => isLoading = false);
                                     }
                                   }
                                 },
                                 child: isLoading
-                                    ? CircularProgressIndicator()
-                                    : Text(
-                                        "Register",
-                                        style: AppTextStyles.mainTopicTextStyle,
+                                    ? const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      )
+                                    : const Text(
+                                        "Create Account",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                               ),
                             ),
-                            SizedBox(height: AppConstants.appPadding + 5),
+
+                            const SizedBox(height: 25),
+
                             Text(
                               "Or continue with",
-                              style: AppTextStyles.subTopicTextStyle,
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14,
+                              ),
                             ),
-                            SizedBox(height: AppConstants.appPadding + 5),
+
+                            const SizedBox(height: 20),
                           ],
                         ),
                       ),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
-                              AppMessages().appMessage(
-                                "This function not valid this time!",
+                              AppMessages().appAlertMessage(
+                                "Apple sign-in is only available on iOS",
                                 context,
                               );
                             },
@@ -268,8 +289,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onTap: () async {
                               await googleSign();
                               UserModel googleUser = UserModel(
-                                userId: "",
-                                name: "",
+                                userId:
+                                    FirebaseAuthServices().curruntUserData.uid,
+                                name: _nameContraller.text.trim(),
                                 email: FirebaseAuthServices()
                                     .curruntUserData
                                     .email!,
@@ -279,74 +301,69 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               await FirebaseDatabaseServices().addUser(
                                 googleUser,
                               );
+                              AppRoutes.route.go("/");
+                              setState(() {});
                             },
                             child: SmallCardWidget(
                               isLoading: false,
                               svgImage: "assets/icons/icons8-google.svg",
                             ),
                           ),
-                          GestureDetector(
+                          InkWell(
                             onTap: () async {
-                              try {
-                                setState(() {
-                                  isIconLoad = true;
-                                });
-                                await FirebaseAuthServices().logAsAnnonymus();
-
-                                //stroe Annonymus user data
-                                UserModel userData = UserModel(
-                                  userId: FirebaseAuthServices()
-                                      .curruntUserData
-                                      .uid,
-                                  name: "Annonymus User",
-                                  email: "Annonymus",
-                                  createdAt: DateTime.now(),
+                              setState(() {
+                                anonymusLoad = true;
+                              });
+                              await FirebaseAuthServices().logAsAnnonymus();
+                              if (context.mounted) {
+                                AppMessages().showSnackBarMessage(
+                                  context: context,
+                                  message: "Logged in anonymously!",
                                 );
-
-                                await FirebaseDatabaseServices().addUser(
-                                  userData,
-                                );
-                              } catch (e) {
-                                AppMessages().appMessage(e.toString(), context);
-                              } finally {
-                                setState(() {
-                                  isIconLoad = false;
-                                });
-                                GoRouter.of(context).go("/");
                               }
+                              setState(() {
+                                anonymusLoad = false;
+                              });
+                              AppRoutes.route.go("/");
+                              setState(() {});
                             },
                             child: SmallCardWidget(
-                              isLoading: isIconLoad,
+                              isLoading: anonymusLoad,
                               svgImage: "assets/icons/annonymus.svg",
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: AppConstants.appPadding + 5),
-                      GestureDetector(
-                        onTap: () {
-                          GoRouter.of(context).go("/LoginScreen");
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Already have an account? ",
-                              style: AppTextStyles.subTopicTextStyle,
+
+                      const SizedBox(height: 20),
+
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            GoRouter.of(context).go("/LoginScreen");
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: "Already have an account? ",
+                              style: TextStyle(color: Colors.black87),
+                              children: [
+                                TextSpan(
+                                  text: "Login",
+                                  style: TextStyle(
+                                    color: AppColors.appBlueColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              "Sign In",
-                              style: AppTextStyles.subTopicTextStyle.copyWith(
-                                color: AppColors.appBlueColor,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                      SizedBox(height: AppConstants.appPadding),
                     ],
                   ),
                 ),
+
+                const SizedBox(height: 40),
               ],
             ),
           ),

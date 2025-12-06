@@ -1,12 +1,16 @@
 import 'dart:io';
+
 import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/provider/provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/widgets/reuseble_widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class EdditProfileScreen extends StatefulWidget {
@@ -42,6 +46,101 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
     });
   }
 
+  //Text Editing Controllers
+  final TextEditingController _nameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  //image piker instanse
+  final ImagePicker pickImager = ImagePicker();
+
+  //iamge pick function
+  Future<void> pickImage(ImageSource source) async {
+    try {
+      final picked = await pickImager.pickImage(source: source);
+      if (picked == null) return;
+      await Provider.of<ProviderServices>(
+        context,
+        listen: false,
+      ).setUserImage(imageUrl: picked.path);
+    } catch (error) {
+      print("Image picker error: $error");
+    }
+  }
+
+  void imagePickFunction() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        height: 350,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 80,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.blueGrey,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Lottie.asset(
+              "assets/lottei/Face scanning.json",
+              width: 100,
+              repeat: false,
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "Pick image",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                pickOptionButton("Gallery", ImageSource.gallery),
+                pickOptionButton("Camera", ImageSource.camera),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget pickOptionButton(String title, ImageSource source) {
+    return GestureDetector(
+      onTap: () async {
+        await pickImage(source);
+        if (context.mounted) Navigator.pop(context);
+      },
+      child: Container(
+        width: 140,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade400, Colors.blue.shade600],
+          ),
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,8 +153,16 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          "Eddit User Profile",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+        ),
+        automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/MainScreen"),
+          onTap: () => AppRoutes.route.go("/UserProfileScreen"),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -65,218 +172,218 @@ class _EdditProfileScreenState extends State<EdditProfileScreen> {
             child: Icon(Icons.arrow_back_ios_rounded, color: Colors.black),
           ),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          "User Profile",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-        ),
       ),
       body: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 40),
+        padding: const EdgeInsets.all(AppConstants.appPadding),
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
           gradient: LinearGradient(
-            colors: [
-              Color(0xFFB3E5FC), // Sky Blue
-              Color(0xFFFFF59D), // Soft Yellow
-            ],
+            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(AppConstants.appPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  cardWidget(
-                    Column(
-                      children: [
-                        SizedBox(height: 20),
-                        Consumer(
-                          builder: (context, ProviderServices provider, child) {
-                            return Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    AppRoutes.route.go(
-                                      "/FullImageScreen",
-                                      extra: provider.userImage,
-                                    );
-                                  },
-                                  child: Hero(
-                                    tag: 1,
-                                    child: CircleAvatar(
-                                      radius: 60,
-                                      backgroundImage:
-                                          provider.userImage.isEmpty
-                                          ? NetworkImage(
-                                              "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                            )
-                                          : FileImage(File(provider.userImage)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                textAlign: TextAlign.center,
+                "Add Your Details",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 20),
+              menuCard(
+                childWidget: Column(
+                  children: [
+                    Center(
+                      child: Column(
+                        children: [
+                          Consumer(
+                            builder: (context, ProviderServices provider, child) {
+                              return Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: imagePickFunction,
+                                    child: Stack(
+                                      children: [
+                                        // Profile Image with shadow
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                  0.15,
+                                                ),
+                                                blurRadius: 12,
+                                                offset: const Offset(0, 6),
+                                              ),
+                                            ],
+                                          ),
+                                          child: CircleAvatar(
+                                            radius: 70,
+                                            backgroundImage:
+                                                provider.userImage.isEmpty
+                                                ? const NetworkImage(
+                                                        "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                                      )
+                                                      as ImageProvider
+                                                : FileImage(
+                                                    File(provider.userImage),
+                                                  ),
+                                          ),
+                                        ),
+
+                                        // Camera icon overlay
+                                        const Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: CircleAvatar(
+                                            radius: 22,
+                                            backgroundColor: Colors.white,
+                                            child: Icon(
+                                              Icons.add_a_photo,
+                                              size: 28,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  userData.name.isEmpty
-                                      ? "No Name"
-                                      : userData.name,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                  SizedBox(height: 20),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Provider.of<ProviderServices>(
+                                        context,
+                                        listen: false,
+                                      ).deleteUserImageFromLocal();
+                                      AppRoutes.route.go("/UserProfileScreen");
+                                    },
+                                    child: Text(
+                                      "Delete Photo",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  curruntUser.isAnonymous
-                                      ? "Anonymous User"
-                                      : curruntUser.email!,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                              ],
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Account Details",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 20),
-                  cardWidget(
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Icon(Icons.account_circle_outlined, size: 30),
-                            SizedBox(width: 20),
-                            Text(
-                              userData.name.isEmpty ? "No Name" : userData.name,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 15),
-                        Row(
-                          children: [
-                            Icon(Icons.email_outlined, size: 30),
-                            SizedBox(width: 20),
-                            Text(
-                              curruntUser.isAnonymous
-                                  ? "No Email (Anonymous User)"
-                                  : curruntUser.email!,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 15),
-                        Row(
-                          children: [
-                            Icon(Icons.language_outlined, size: 30),
-                            SizedBox(width: 20),
-                            Text(
-                              "English",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 15),
-                        Row(
-                          children: [
-                            Icon(Icons.location_on_outlined, size: 30),
-                            SizedBox(width: 20),
-                            Text(
-                              "Sri Lanka",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 15),
-                        Row(
-                          children: [
-                            Icon(Icons.date_range_outlined, size: 30),
-                            SizedBox(width: 20),
-                            Text(
-                              userData.createdAt == null
-                                  ? "Date not avilable"
-                                  : userData.createdAt.toString(),
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    height: 60,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Color(0xff398bd3),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                          fontSize: 23,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white,
-                        ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+              SizedBox(height: 20),
+              menuCard(
+                childWidget: Form(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Icon(Icons.account_circle_outlined, size: 30),
+                          SizedBox(width: 20),
+                          Text(
+                            userData.name.isEmpty ? "No Name" : userData.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Icon(Icons.email_outlined, size: 30),
+                          SizedBox(width: 20),
+                          Text(
+                            curruntUser.isAnonymous
+                                ? "No Email (Anonymous User)"
+                                : curruntUser.email!,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Icon(Icons.language_outlined, size: 30),
+                          SizedBox(width: 20),
+                          Text(
+                            "English",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on_outlined, size: 30),
+                          SizedBox(width: 20),
+                          Text(
+                            "Sri Lanka",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Icon(Icons.date_range_outlined, size: 30),
+                          SizedBox(width: 20),
+                          Text(
+                            userData.createdAt == null
+                                ? "Date not avilable"
+                                : userData.createdAt.toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget cardWidget(Widget childWidget) {
+  Widget menuCard({required Widget childWidget}) {
     return Container(
-      padding: EdgeInsets.all(AppConstants.appPadding),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Color(0xfff0f5f6),
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      width: double.infinity,
       child: childWidget,
     );
   }

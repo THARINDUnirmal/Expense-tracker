@@ -1,5 +1,7 @@
 import 'package:expenzes/utils/exceptions/app_exceptions.dart';
+import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthServices {
@@ -7,7 +9,7 @@ class FirebaseAuthServices {
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   //google sign in method
-  Future<void> googleSignInMethord() async {
+  Future<void> googleSignInMethord(BuildContext context) async {
     try {
       final GoogleSignInAccount? account = await googleSignIn.signIn();
 
@@ -23,6 +25,11 @@ class FirebaseAuthServices {
       );
 
       await firebaseAuth.signInWithCredential(credential);
+
+      AppMessages().showSnackBarMessage(
+        context: context,
+        message: "Signed in with Google successfully!",
+      );
     } on FirebaseAuthException catch (e) {
       print(exceptions(e.code));
     } catch (error) {

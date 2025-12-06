@@ -264,7 +264,7 @@ class _UserScreenState extends State<UserScreen> {
                         title: "User profile",
                         subTitle: "Change profile image, name & password",
                         onTap: () =>
-                            GoRouter.of(context).push("/EdditProfileScreen"),
+                            GoRouter.of(context).push("/UserProfileScreen"),
                       ),
                       menuCardModern(
                         svg: "assets/icons/menu.svg",

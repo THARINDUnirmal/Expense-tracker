@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       IconButton(
                         onPressed: () {
-                          AppRoutes.route.push("/EdditProfileScreen");
+                          AppRoutes.route.push("/UserProfileScreen");
                         },
                         icon: Icon(Icons.keyboard_double_arrow_right, size: 25),
                       ),

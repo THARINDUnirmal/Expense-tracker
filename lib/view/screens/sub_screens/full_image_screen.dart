@@ -27,7 +27,7 @@ class FullImageScreen extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/EdditProfileScreen"),
+          onTap: () => AppRoutes.route.go("/UserProfileScreen"),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -70,7 +70,7 @@ class FullImageScreen extends StatelessWidget {
                         context,
                         listen: false,
                       ).deleteUserImageFromLocal();
-                      AppRoutes.route.go("/EdditProfileScreen");
+                      AppRoutes.route.go("/UserProfileScreen");
                     },
                     child: Text(
                       "Delete Photo",
