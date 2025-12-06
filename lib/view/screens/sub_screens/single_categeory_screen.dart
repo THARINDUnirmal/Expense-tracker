@@ -408,6 +408,7 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
       onTap: () async {
         if (isYes) {
           await FirebaseDatabaseServices().deleteDataUsingCategeory(
+            context: context,
             categeory: categeory,
           );
           if (context.mounted) Navigator.pop(context);

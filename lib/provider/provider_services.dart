@@ -18,15 +18,18 @@ class ProviderServices extends ChangeNotifier {
   }
 
   //set user Image
-  Future<void> setUserImage({required String imageUrl}) async {
-    await LocalData().setImage(imageUrl: imageUrl);
+  Future<void> setUserImage({
+    required String imageUrl,
+    required BuildContext context,
+  }) async {
+    await LocalData().setImage(imageUrl: imageUrl, context: context);
     await getUserImageFromLocal();
     notifyListeners();
   }
 
   //delete image
-  Future<void> deleteUserImageFromLocal() async {
-    await LocalData().deleteUserImage();
+  Future<void> deleteUserImageFromLocal({required BuildContext context}) async {
+    await LocalData().deleteUserImage(context: context);
     _userImage = "";
     notifyListeners();
   }

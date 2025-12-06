@@ -1,13 +1,22 @@
 import 'package:expenzes/utils/exceptions/app_exceptions.dart';
+import 'package:expenzes/utils/messages/app_messages.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalData {
   //set value
-  Future<void> setImage({required String imageUrl}) async {
+  Future<void> setImage({
+    required String imageUrl,
+    required BuildContext context,
+  }) async {
     try {
       SharedPreferences _pref = await SharedPreferences.getInstance();
 
       await _pref.setString("Image", imageUrl);
+      AppMessages().showSnackBarMessage(
+        context: context,
+        message: "Your image has been updated!",
+      );
     } catch (error) {
       print("Image store error=============");
     }
@@ -27,29 +36,15 @@ class LocalData {
   }
 
   //delete image
-  Future<void> deleteUserImage() async {
+  Future<void> deleteUserImage({required BuildContext context}) async {
     try {
       SharedPreferences _pref = await SharedPreferences.getInstance();
       await _pref.remove("Image");
-    } catch (error) {}
-  }
 
-  //save color
-  Future<void> saveBackgroundColor({required String colorName}) async {
-    try {
-      SharedPreferences _prif = await SharedPreferences.getInstance();
-      _prif.setString("Color", colorName);
+      AppMessages().showSnackBarMessage(
+        context: context,
+        message: "Image deleted successfully!",
+      );
     } catch (error) {}
-  }
-
-  //get color
-  Future<String> getBackgroundColor() async {
-    try {
-      SharedPreferences _prif = await SharedPreferences.getInstance();
-      String colorName = _prif.getString("Color") ?? "";
-      return colorName;
-    } catch (error) {
-      throw exceptions(error.toString());
-    }
   }
 }

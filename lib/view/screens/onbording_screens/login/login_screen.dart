@@ -42,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
   //Email login
   Future<void> emailSign(String userEmail, String userPassword) async {
     await FirebaseAuthServices().loginWIthEmail(
+      context: context,
       email: userEmail,
       password: userPassword,
     );

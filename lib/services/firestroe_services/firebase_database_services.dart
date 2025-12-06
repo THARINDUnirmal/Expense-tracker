@@ -3,7 +3,9 @@ import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/utils/exceptions/app_exceptions.dart';
+import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class FirebaseDatabaseServices {
   final CollectionReference _firebaseCollection = FirebaseFirestore.instance
@@ -130,13 +132,21 @@ class FirebaseDatabaseServices {
   }
 
   //delete data form fire base
-  Future<void> deleteDataFromeFirebase({required String itemId}) async {
+  Future<void> deleteDataFromeFirebase({
+    required String itemId,
+    required BuildContext context,
+  }) async {
     try {
       await _firebaseCollection
           .doc(FirebaseAuthServices().curruntUserData.uid)
           .collection("allData")
           .doc(itemId)
           .delete();
+
+      AppMessages().showSnackBarMessage(
+        context: context,
+        message: "Your data has been removed 🗑️",
+      );
     } catch (error) {}
   }
 
@@ -164,7 +174,10 @@ class FirebaseDatabaseServices {
   }
 
   //delete data from each categeory
-  Future<void> deleteDataUsingCategeory({required String categeory}) async {
+  Future<void> deleteDataUsingCategeory({
+    required String categeory,
+    required BuildContext context,
+  }) async {
     try {
       final userId = FirebaseAuthServices().curruntUserData.uid;
 
@@ -175,10 +188,14 @@ class FirebaseDatabaseServices {
           .where("category", isEqualTo: categeory)
           .get();
 
-      // delete each document
       for (var doc in snapshot.docs) {
         await doc.reference.delete();
       }
+
+      AppMessages().showSnackBarMessage(
+        context: context,
+        message: "All your category data has been removed 🗑️",
+      );
     } catch (error) {
       print("Delete category error: $error");
     }

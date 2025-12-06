@@ -171,6 +171,7 @@ class SingleDataScreen extends StatelessWidget {
                             onTap: () async {
                               await FirebaseDatabaseServices()
                                   .deleteDataFromeFirebase(
+                                    context: context,
                                     itemId: singleData.id,
                                   );
 

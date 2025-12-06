@@ -69,7 +69,7 @@ class FullImageScreen extends StatelessWidget {
                       Provider.of<ProviderServices>(
                         context,
                         listen: false,
-                      ).deleteUserImageFromLocal();
+                      ).deleteUserImageFromLocal(context: context);
                       AppRoutes.route.go("/UserProfileScreen");
                     },
                     child: Text(

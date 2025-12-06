@@ -42,6 +42,7 @@ class FirebaseAuthServices {
 
   //login using email and password
   Future<void> loginWIthEmail({
+    required BuildContext context,
     required String email,
     required String password,
   }) async {
@@ -49,6 +50,11 @@ class FirebaseAuthServices {
       await firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
+      );
+
+      AppMessages().showSnackBarMessage(
+        context: context,
+        message: "Welcome back 👋 Login successful!",
       );
     } on FirebaseAuthException catch (e) {
       print(FirebaseAuthException(code: e.code));
@@ -58,9 +64,13 @@ class FirebaseAuthServices {
   }
 
   //log out
-  Future<void> logOutAccount() async {
+  Future<void> logOutAccount({required BuildContext context}) async {
     try {
       await firebaseAuth.signOut();
+      AppMessages().showSnackBarMessage(
+        context: context,
+        message: "You are now signed out",
+      );
     } on FirebaseAuthException catch (error) {
       print(FirebaseAuthException(code: error.code));
     } catch (e) {
@@ -70,6 +80,7 @@ class FirebaseAuthServices {
 
   //Register user with email & password
   Future<void> registerEmail({
+    required BuildContext context,
     required String email,
     required String password,
   }) async {
@@ -77,6 +88,10 @@ class FirebaseAuthServices {
       await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
+      );
+      AppMessages().showSnackBarMessage(
+        context: context,
+        message: "Welcome aboard! Your registration is complete",
       );
     } on FirebaseAuthException catch (error) {
       print(FirebaseAuthException(code: error.code));
@@ -96,12 +111,5 @@ class FirebaseAuthServices {
     } catch (e) {
       print(e.toString());
     }
-  }
-
-  //reset password
-  Future<void> resetPassword({required String userEmail}) async {
-    try {
-      await firebaseAuth.sendPasswordResetEmail(email: userEmail);
-    } catch (error) {}
   }
 }

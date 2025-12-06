@@ -45,6 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     required String password,
   }) async {
     await FirebaseAuthServices().registerEmail(
+      context: context,
       email: email,
       password: password,
     );

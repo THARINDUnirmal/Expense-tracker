@@ -3,6 +3,7 @@ import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/provider/provider_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
@@ -64,14 +65,14 @@ class _UserScreenState extends State<UserScreen> {
     setState(() {});
   }
 
-  Future<void> pickImage(ImageSource source) async {
+  Future<void> pickImage(ImageSource source, BuildContext context) async {
     try {
       final picked = await pickImager.pickImage(source: source);
       if (picked == null) return;
       await Provider.of<ProviderServices>(
         context,
         listen: false,
-      ).setUserImage(imageUrl: picked.path);
+      ).setUserImage(imageUrl: picked.path, context: context);
     } catch (error) {
       print("Image picker error: $error");
     }
@@ -126,7 +127,7 @@ class _UserScreenState extends State<UserScreen> {
   Widget pickOptionButton(String title, ImageSource source) {
     return GestureDetector(
       onTap: () async {
-        await pickImage(source);
+        await pickImage(source, context);
         if (context.mounted) Navigator.pop(context);
       },
       child: Container(
@@ -270,6 +271,13 @@ class _UserScreenState extends State<UserScreen> {
                         svg: "assets/icons/menu.svg",
                         title: "Accounts",
                         subTitle: "Manage accounts and descriptions",
+                        onTap: () {
+                          AppMessages().showSnackBarMessage(
+                            context: context,
+                            message:
+                                "Sorry, this link isn’t available right now.",
+                          );
+                        },
                       ),
                       menuCardModern(
                         svg: "assets/icons/message-circle-more.svg",
@@ -487,7 +495,7 @@ class _UserScreenState extends State<UserScreen> {
     return GestureDetector(
       onTap: () async {
         if (isYes) {
-          await FirebaseAuthServices().logOutAccount();
+          await FirebaseAuthServices().logOutAccount(context: context);
           if (context.mounted) Navigator.pop(context);
           AppRoutes.route.go("/");
         } else {

@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          AppRoutes.route.push("/EdditProfileScreen");
+                          AppRoutes.route.push("/UserProfileScreen");
                         },
                         child: Consumer(
                           builder: (context, ProviderServices provider, child) {
