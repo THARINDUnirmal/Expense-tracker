@@ -78,14 +78,19 @@ class FirebaseDatabaseServices {
       return _firebaseCollection
           .doc(curruntUserId)
           .collection("allData")
+          .orderBy("createdDate", descending: false)
           .snapshots()
           .map((snapshot) {
-            return snapshot.docs.map((e) {
-              return DataModel.fromJson(e.data());
-            }).toList();
+            return snapshot.docs
+                .map((e) {
+                  return DataModel.fromJson(e.data());
+                })
+                .toList()
+                .reversed
+                .toList();
           });
     } catch (error) {
-      print("Stream error");
+      print("Stream error: $error");
       throw Exception(error.toString());
     }
   }

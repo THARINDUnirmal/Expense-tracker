@@ -14,6 +14,12 @@ class FirebaseAuthServices {
       final GoogleSignInAccount? account = await googleSignIn.signIn();
 
       if (account == null) {
+        AppMessages().showSnackBarMessage(
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          context: context,
+          message: "Signed in with Google unsuccessfully!",
+        );
         return;
       }
 
@@ -31,9 +37,19 @@ class FirebaseAuthServices {
         message: "Signed in with Google successfully!",
       );
     } on FirebaseAuthException catch (e) {
-      print(exceptions(e.code));
+      AppMessages().showSnackBarMessage(
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        context: context,
+        message: "Signed in with Google unsuccessfully!",
+      );
     } catch (error) {
-      print(error.toString());
+      AppMessages().showSnackBarMessage(
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        context: context,
+        message: "Signed in with Google unsuccessfully!",
+      );
     }
   }
 

@@ -4,10 +4,12 @@ import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/view/screens/sub_screens/single_data_screen.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 class SingleCategeoryScreen extends StatefulWidget {
@@ -334,10 +336,21 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       DataModel indexData = allData[index];
-                      return SingleDataCard(
-                        title: indexData.title,
-                        isExpense: indexData.isExpense,
-                        cardAmount: indexData.amount,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SingleDataScreen(singleData: indexData),
+                            ),
+                          );
+                        },
+                        child: SingleDataCard(
+                          title: indexData.title,
+                          isExpense: indexData.isExpense,
+                          cardAmount: indexData.amount,
+                        ),
                       );
                     },
                   ),

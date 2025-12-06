@@ -577,7 +577,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       scrollDirection: Axis.horizontal,
                                       itemCount: allCategeory.toSet().length,
                                       itemBuilder: (context, index) {
-                                        String indexData = allCategeory[index];
+                                        String indexData = allCategeory
+                                            .toSet()
+                                            .toList()[index];
                                         return InkWell(
                                           onTap: () {
                                             AppRoutes.route.push(

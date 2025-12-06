@@ -1,10 +1,10 @@
 import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
-import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_form2.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +18,12 @@ class AddDataScreen extends StatefulWidget {
 }
 
 class _AddDataScreenState extends State<AddDataScreen> {
+  @override
+  void initState() {
+    super.initState();
+    listUpdate();
+  }
+
   //form key
   final _formKey = GlobalKey<FormState>();
   final _sheetFormKey = GlobalKey<FormState>();
@@ -31,6 +37,18 @@ class _AddDataScreenState extends State<AddDataScreen> {
   //dropdown list
   List<String> dropDownDataList = ["Food", "Travel", "Bills"];
   String? selectedCategory;
+
+  Future<void> listUpdate() async {
+    List<DataModel> allData = await FirebaseDatabaseServices().getAllData(
+      curruntUserId: FirebaseAuthServices().curruntUserData.uid,
+    );
+    for (DataModel i in allData) {
+      if (!dropDownDataList.contains(i.category)) {
+        dropDownDataList.add(i.category!);
+      }
+    }
+    setState(() {});
+  }
 
   //Value Notifiers
   final ValueNotifier<DateTime> _dateNotifer = ValueNotifier(DateTime.now());
@@ -288,8 +306,15 @@ class _AddDataScreenState extends State<AddDataScreen> {
                               selectedCategory = value;
                             }
                           },
-                          validator: (value) =>
-                              value == null ? "Please select a category" : null,
+                          validator: (value) {
+                            if (value == null) {
+                              return "Please select a category";
+                            } else if (value == "add_new") {
+                              return "Now select the newly added category";
+                            } else {
+                              return null;
+                            }
+                          },
                         ),
 
                         SizedBox(height: 20),
@@ -403,12 +428,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                   _titleContraller.clear();
                                   _descriptionContraller.clear();
 
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MainScreen(),
-                                    ),
-                                  );
+                                  AppRoutes.route.go("/MainScreen");
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text("Error: $e")),

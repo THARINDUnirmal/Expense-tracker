@@ -19,7 +19,7 @@ class SingleDataScreen extends StatelessWidget {
             height: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppColors.appBlueColor!, AppColors.appBlue2Color!],
+                colors: [AppColors.appBlueColor, AppColors.appBlue2Color],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

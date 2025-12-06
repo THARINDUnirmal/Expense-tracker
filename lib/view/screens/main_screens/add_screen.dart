@@ -46,17 +46,14 @@ class _AddScreenState extends State<AddScreen> {
       body: Container(
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 1,
-        padding: const EdgeInsets.symmetric(vertical: 40),
+        padding: const EdgeInsets.only(top: 30),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(30),
             bottomRight: Radius.circular(30),
           ),
           gradient: LinearGradient(
-            colors: [
-              Color(0xFFB3E5FC), // Sky Blue
-              Color(0xFFFFF59D), // Soft Yellow
-            ],
+            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -135,6 +132,7 @@ class _AddScreenState extends State<AddScreen> {
                         );
                       } else {
                         List<DataModel> allData = snapshot.data!;
+
                         return allData.isEmpty
                             ? Center(
                                 child: Column(
@@ -182,31 +180,39 @@ class _AddScreenState extends State<AddScreen> {
                                   ],
                                 ),
                               )
-                            : ListView.builder(
-                                itemCount: allData.length,
-                                physics: ScrollPhysics(),
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  DataModel singleData = allData[index];
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SingleDataScreen(
-                                                singleData: singleData,
-                                              ),
+                            : SizedBox(
+                                width: double.infinity,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.52,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: ListView.builder(
+                                    itemCount: allData.length,
+                                    physics: ScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      DataModel singleData = allData[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SingleDataScreen(
+                                                    singleData: singleData,
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                        child: SingleDataCard(
+                                          title: singleData.title,
+                                          isExpense: singleData.isExpense,
+                                          cardAmount: singleData.amount,
                                         ),
                                       );
                                     },
-                                    child: SingleDataCard(
-                                      title: singleData.title,
-                                      isExpense: singleData.isExpense,
-                                      cardAmount: singleData.amount,
-                                    ),
-                                  );
-                                },
+                                  ),
+                                ),
                               );
                       }
                     },
