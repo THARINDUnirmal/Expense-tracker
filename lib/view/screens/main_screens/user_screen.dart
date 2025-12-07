@@ -42,6 +42,7 @@ class _UserScreenState extends State<UserScreen> {
 
     //get all data & add there categeorys in a list
     List<DataModel> allDataList = await FirebaseDatabaseServices().getAllData(
+      context: context,
       curruntUserId: uId,
     );
 

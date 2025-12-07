@@ -40,6 +40,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
 
   Future<void> listUpdate() async {
     List<DataModel> allData = await FirebaseDatabaseServices().getAllData(
+      context: context,
       curruntUserId: FirebaseAuthServices().curruntUserData.uid,
     );
     for (DataModel i in allData) {
@@ -410,6 +411,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                   );
 
                                   await FirebaseDatabaseServices().addData(
+                                    context: context,
                                     userId: FirebaseAuthServices()
                                         .curruntUserData
                                         .uid,

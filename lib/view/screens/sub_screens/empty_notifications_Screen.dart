@@ -2,8 +2,29 @@ import 'package:expenzes/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class EmptyNotificationsScreen extends StatelessWidget {
+class EmptyNotificationsScreen extends StatefulWidget {
   const EmptyNotificationsScreen({super.key});
+
+  @override
+  State<EmptyNotificationsScreen> createState() =>
+      _EmptyNotificationsScreenState();
+}
+
+class _EmptyNotificationsScreenState extends State<EmptyNotificationsScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _controller.forward();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,44 +46,47 @@ class EmptyNotificationsScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 40),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      body: FadeTransition(
+        opacity: _animation,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 40),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                const Spacer(flex: 2),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: SvgPicture.string(
-                      noNotificationIllistration,
-                      fit: BoxFit.scaleDown,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  const Spacer(flex: 2),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: SvgPicture.string(
+                        noNotificationIllistration,
+                        fit: BoxFit.scaleDown,
+                      ),
                     ),
                   ),
-                ),
-                const Spacer(flex: 2),
-                ErrorInfo(
-                  title: "Empty Notifications",
-                  description:
-                      "It looks like you don't have any notifications right now. We'll let you know when there's something new.",
-                  // button: you can pass your custom button,
-                  btnText: "Go Home",
-                  press: () {
-                    AppRoutes.route.go("/MainScreen");
-                  },
-                ),
-              ],
+                  const Spacer(flex: 2),
+                  ErrorInfo(
+                    title: "Empty Notifications",
+                    description:
+                        "It looks like you don't have any notifications right now. We'll let you know when there's something new.",
+                    // button: you can pass your custom button,
+                    btnText: "Go Home",
+                    press: () {
+                      AppRoutes.route.go("/MainScreen");
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

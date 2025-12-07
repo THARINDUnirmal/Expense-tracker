@@ -1,6 +1,5 @@
 import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/routes/app_routes.dart';
-import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
@@ -9,7 +8,6 @@ import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 class SingleCategeoryScreen extends StatefulWidget {
@@ -34,7 +32,10 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
 
   Future<void> getCategeoryData() async {
     List<DataModel> data = await FirebaseDatabaseServices()
-        .directGetCatgeoryData(categeoryName: widget.categeoryName);
+        .directGetCatgeoryData(
+          categeoryName: widget.categeoryName,
+          context: context,
+        );
     setState(() {
       allData = data;
     });

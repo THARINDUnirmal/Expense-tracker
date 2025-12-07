@@ -12,12 +12,11 @@ class FirebaseDatabaseServices {
       .collection("users");
 
   //add user
-  Future<void> addUser(UserModel userData) async {
+  Future<void> addUser(UserModel userData, BuildContext context) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
 
       if (user == null) {
-        print("No user logged in");
         return;
       }
 
@@ -28,10 +27,10 @@ class FirebaseDatabaseServices {
         "createdAt": FieldValue.serverTimestamp(),
         "updatedAt": FieldValue.serverTimestamp(),
       });
-
-      print("User saved successfully!");
     } catch (error) {
-      print("USER SAVE ERROR: $error");
+      if (context.mounted) {
+        AppMessages().appAlertMessage("Error adding user", context);
+      }
     }
   }
 
@@ -39,6 +38,7 @@ class FirebaseDatabaseServices {
   Future<void> addData({
     required DataModel data,
     required String userId,
+    required BuildContext context,
   }) async {
     try {
       final Map<String, dynamic> firebaseData = data.toJson();
@@ -48,13 +48,18 @@ class FirebaseDatabaseServices {
           .add(firebaseData);
 
       await docRef.update({"id": docRef.id});
-    } on FirebaseAuthException catch (error) {
-      print(error.toString());
-    } catch (e) {}
+    } catch (e) {
+      if (context.mounted) {
+        AppMessages().appAlertMessage("Error adding data", context);
+      }
+    }
   }
 
   //get data from firebase
-  Future<List<DataModel>> getAllData({required String curruntUserId}) async {
+  Future<List<DataModel>> getAllData({
+    required String curruntUserId,
+    required BuildContext context,
+  }) async {
     try {
       QuerySnapshot snapshotData = await _firebaseCollection
           .doc(curruntUserId)
@@ -67,8 +72,10 @@ class FirebaseDatabaseServices {
 
       return listData;
     } catch (error) {
-      print("get data error");
-      throw exceptions(error.toString());
+      if (context.mounted) {
+        AppMessages().appAlertMessage("Error geting data", context);
+      }
+      throw Exception(error.toString());
     }
   }
 
@@ -90,17 +97,20 @@ class FirebaseDatabaseServices {
                 .toList();
           });
     } catch (error) {
-      print("Stream error: $error");
       throw Exception(error.toString());
     }
   }
 
   //get Total Incomes & Expenses
   Future<Map<String, double>> getTotalValues({
+    required BuildContext context,
     required String currentUserId,
   }) async {
     try {
-      List<DataModel> dataList = await getAllData(curruntUserId: currentUserId);
+      List<DataModel> dataList = await getAllData(
+        curruntUserId: currentUserId,
+        context: context,
+      );
 
       double allIncomes = 0;
       double allExpenses = 0;
@@ -148,19 +158,27 @@ class FirebaseDatabaseServices {
           .doc(itemId)
           .delete();
 
-      AppMessages().showSnackBarMessage(
-        context: context,
-        message: "Your data has been removed 🗑️",
-      );
-    } catch (error) {}
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          context: context,
+          message: "Your data has been removed 🗑️",
+        );
+      }
+    } catch (error) {
+      if (context.mounted) {
+        AppMessages().appAlertMessage("Error removing data", context);
+      }
+    }
   }
 
   //give data form each categeory
   Future<List<DataModel>> directGetCatgeoryData({
+    required BuildContext context,
     required String categeoryName,
   }) async {
     try {
       List<DataModel> dataList = await getAllData(
+        context: context,
         curruntUserId: FirebaseAuthServices().curruntUserData.uid,
       );
 
@@ -197,12 +215,16 @@ class FirebaseDatabaseServices {
         await doc.reference.delete();
       }
 
-      AppMessages().showSnackBarMessage(
-        context: context,
-        message: "All your category data has been removed 🗑️",
-      );
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          context: context,
+          message: "All your category data has been removed 🗑️",
+        );
+      }
     } catch (error) {
-      print("Delete category error: $error");
+      if (context.mounted) {
+        AppMessages().appAlertMessage("Error removing data", context);
+      }
     }
   }
 }

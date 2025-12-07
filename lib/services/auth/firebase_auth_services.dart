@@ -14,12 +14,15 @@ class FirebaseAuthServices {
       final GoogleSignInAccount? account = await googleSignIn.signIn();
 
       if (account == null) {
-        AppMessages().showSnackBarMessage(
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          context: context,
-          message: "Signed in with Google unsuccessfully!",
-        );
+        if (context.mounted) {
+          AppMessages().showSnackBarMessage(
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            context: context,
+            message: "Signed in with Google unsuccessfully!",
+          );
+        }
+
         return;
       }
 
@@ -32,24 +35,25 @@ class FirebaseAuthServices {
 
       await firebaseAuth.signInWithCredential(credential);
 
-      AppMessages().showSnackBarMessage(
-        context: context,
-        message: "Signed in with Google successfully!",
-      );
-    } on FirebaseAuthException catch (e) {
-      AppMessages().showSnackBarMessage(
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        context: context,
-        message: "Signed in with Google unsuccessfully!",
-      );
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          context: context,
+          message: "Signed in with Google successfully!",
+        );
+      }
+    } on FirebaseAuthException catch (error) {
+      if (context.mounted) {
+        AppMessages().appAlertMessage(exceptions(error.code), context);
+      }
     } catch (error) {
-      AppMessages().showSnackBarMessage(
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        context: context,
-        message: "Signed in with Google unsuccessfully!",
-      );
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          context: context,
+          message: "Signed in with Google unsuccessfully!",
+        );
+      }
     }
   }
 
@@ -68,20 +72,25 @@ class FirebaseAuthServices {
         password: password,
       );
 
-      AppMessages().showSnackBarMessage(
-        context: context,
-        message: "Welcome back 👋 Login successful!",
-      );
-    } on FirebaseAuthException catch (e) {
-      print(FirebaseAuthException(code: e.code));
-      AppMessages().showSnackBarMessage(
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        context: context,
-        message: "Login failed",
-      );
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          context: context,
+          message: "Welcome back 👋 Login successful!",
+        );
+      }
+    } on FirebaseAuthException catch (error) {
+      if (context.mounted) {
+        AppMessages().appAlertMessage(exceptions(error.code), context);
+      }
     } catch (error) {
-      print(error.toString());
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          context: context,
+          message: "Login failed",
+        );
+      }
     }
   }
 
@@ -89,20 +98,26 @@ class FirebaseAuthServices {
   Future<void> logOutAccount({required BuildContext context}) async {
     try {
       await firebaseAuth.signOut();
-      AppMessages().showSnackBarMessage(
-        context: context,
-        message: "You are now signed out",
-      );
+
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          context: context,
+          message: "You are now signed out",
+        );
+      }
     } on FirebaseAuthException catch (error) {
-      print(FirebaseAuthException(code: error.code));
-      AppMessages().showSnackBarMessage(
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        context: context,
-        message: "Sign out failed. Please try again",
-      );
+      if (context.mounted) {
+        AppMessages().appAlertMessage(exceptions(error.code), context);
+      }
     } catch (e) {
-      print(e.toString());
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          context: context,
+          message: "Sign out failed. Please try again",
+        );
+      }
     }
   }
 
@@ -117,21 +132,26 @@ class FirebaseAuthServices {
         email: email,
         password: password,
       );
-      AppMessages().showSnackBarMessage(
-        context: context,
-        message: "Welcome aboard! Your registration is complete",
-      );
+
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          context: context,
+          message: "Welcome aboard! Your registration is complete",
+        );
+      }
     } on FirebaseAuthException catch (error) {
-      print(FirebaseAuthException(code: error.code));
-      AppMessages().showSnackBarMessage(
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        context: context,
-        message: "Registration failed. Please try again",
-      );
-      throw exceptions(error.code);
+      if (context.mounted) {
+        AppMessages().appAlertMessage(exceptions(error.code), context);
+      }
     } catch (e) {
-      print(e.toString());
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          context: context,
+          message: "Registration failed. Please try again",
+        );
+      }
     }
   }
 
@@ -139,17 +159,25 @@ class FirebaseAuthServices {
   Future<void> logAsAnnonymus({required BuildContext context}) async {
     try {
       await firebaseAuth.signInAnonymously();
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          context: context,
+          message: "Logged in anonymously!",
+        );
+      }
     } on FirebaseAuthException catch (error) {
-      print(FirebaseAuthException(code: error.code));
-      throw exceptions(error.code);
+      if (context.mounted) {
+        AppMessages().appAlertMessage(exceptions(error.code), context);
+      }
     } catch (e) {
-      print(e.toString());
-      AppMessages().showSnackBarMessage(
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        context: context,
-        message: "Anonymous sign-in failed",
-      );
+      if (context.mounted) {
+        AppMessages().showSnackBarMessage(
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          context: context,
+          message: "Anonymous sign-in failed",
+        );
+      }
     }
   }
 }
