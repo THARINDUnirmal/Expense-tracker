@@ -3,7 +3,6 @@ import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
-import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_form2.dart';
@@ -243,9 +242,8 @@ class _AddDataScreenState extends State<AddDataScreen> {
                           widget.isExpense
                               ? "Expenses Details"
                               : "Income Details",
-                          style: AppTextStyles.mainTopicTextStyle.copyWith(
-                            fontSize: 30,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 30),
 

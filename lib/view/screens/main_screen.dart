@@ -3,7 +3,7 @@ import 'package:expenzes/view/screens/main_screens/home_screen.dart';
 import 'package:expenzes/view/screens/main_screens/user_screen.dart';
 import 'package:expenzes/view/screens/main_screens/add_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainScreen extends StatefulWidget {
   final int? index;
@@ -18,9 +18,17 @@ class _MainScreenState extends State<MainScreen> {
   final PageController _pageController = PageController();
 
   @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
+        animationCurve: Curves.ease,
+        height: 65,
         index: _curruntIndex,
         backgroundColor: Color(0xff73EC8B),
         onTap: (value) {
@@ -29,9 +37,9 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         items: [
-          SvgPicture.asset("assets/icons/house.svg"),
-          SvgPicture.asset("assets/icons/circle-plus.svg"),
-          SvgPicture.asset("assets/icons/user.svg"),
+          Icon(FontAwesomeIcons.house, size: 22),
+          Icon(FontAwesomeIcons.circlePlus, size: 22),
+          Icon(FontAwesomeIcons.user, size: 22),
         ],
       ),
       body: PageView(

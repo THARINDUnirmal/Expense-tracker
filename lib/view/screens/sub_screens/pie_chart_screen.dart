@@ -52,6 +52,12 @@ class _PieChartScreenState extends State<PieChartScreen>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final percentages = calculatePercentages();
     double incomePercent = percentages["income"]!;

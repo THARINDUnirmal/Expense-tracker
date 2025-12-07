@@ -1,5 +1,4 @@
 import 'package:expenzes/utils/app_colors.dart';
-import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -32,10 +31,9 @@ class AppMessages {
                 Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.subTopicTextStyle.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 25),
                 SizedBox(

@@ -25,6 +25,12 @@ class _SummaryScreenState extends State<SummaryScreen>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double totalEx = widget.allTotalData["TotalExpenses"] ?? 0;
     double totalIn = widget.allTotalData["TotalIncomes"] ?? 0;

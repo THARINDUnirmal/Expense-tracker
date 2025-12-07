@@ -27,6 +27,12 @@ class _EmptyNotificationsScreenState extends State<EmptyNotificationsScreen>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,

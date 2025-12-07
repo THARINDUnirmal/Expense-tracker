@@ -1,5 +1,3 @@
-import 'package:expenzes/utils/app_colors.dart';
-import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -31,9 +29,9 @@ class AddCardWidget extends StatelessWidget {
           SizedBox(height: 5),
           Text(
             cardTitle,
-            style: AppTextStyles.subTopicTextStyle.copyWith(
-              color: AppColors.appBlackColor,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.normal),
           ),
         ],
       ),

@@ -46,10 +46,8 @@ class SingleDataCard extends StatelessWidget {
                       child: Text(
                         title,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey.shade700,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -57,11 +55,11 @@ class SingleDataCard extends StatelessWidget {
 
                     Text(
                       "Rs. $cardAmount",
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        color: typeColor,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall!
+                          .copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: typeColor,
+                          ),
                     ),
                   ],
                 ),

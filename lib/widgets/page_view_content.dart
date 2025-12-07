@@ -1,4 +1,3 @@
-import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -22,11 +21,18 @@ class PageViewContent extends StatelessWidget {
       children: [
         SizedBox(height: 150),
         Lottie.asset(lottieAnimation),
-        Text(title, style: AppTextStyles.mainTopicTextStyle),
+        Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+        ),
         Text(
           textAlign: TextAlign.center,
           content,
-          style: AppTextStyles.subTopicTextStyle,
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.normal),
         ),
       ],
     );

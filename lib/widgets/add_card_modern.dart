@@ -16,8 +16,8 @@ class AddCardModern extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.42,
-      height: 110,
+      width: MediaQuery.of(context).size.width * 0.41,
+      height: 105,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
         gradient: LinearGradient(
@@ -56,10 +56,9 @@ class AddCardModern extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.bold,
                 color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
               ),
             ),
           ],

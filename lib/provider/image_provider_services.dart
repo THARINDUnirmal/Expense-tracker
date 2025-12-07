@@ -1,10 +1,10 @@
 import 'package:expenzes/services/local_storage/local_data.dart';
 import 'package:flutter/material.dart';
 
-class ProviderServices extends ChangeNotifier {
+class ImageProviderServices extends ChangeNotifier {
   String _userImage = "";
 
-  ProviderServices() {
+  ImageProviderServices() {
     getUserImageFromLocal();
   }
 

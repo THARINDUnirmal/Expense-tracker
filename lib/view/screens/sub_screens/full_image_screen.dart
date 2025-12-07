@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:expenzes/provider/provider_services.dart';
+import 'package:expenzes/provider/image_provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +19,8 @@ class FullImageScreen extends StatelessWidget {
 
         title: Text(
           "Preview",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.normal,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
@@ -38,50 +37,52 @@ class FullImageScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(AppConstants.appPadding),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Hero(
-                tag: 1,
-                child: ClipRRect(
-                  borderRadius: BorderRadiusGeometry.circular(10),
-                  child: imageUrl.isEmpty
-                      ? Text(
-                          "No Photo",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : Image.file(File(imageUrl), fit: BoxFit.cover),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(AppConstants.appPadding),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Hero(
+                  tag: 1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadiusGeometry.circular(10),
+                    child: imageUrl.isEmpty
+                        ? Text(
+                            "No Photo",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : Image.file(File(imageUrl), fit: BoxFit.cover),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 50),
-            imageUrl.isEmpty
-                ? SizedBox()
-                : TextButton(
-                    onPressed: () {
-                      Provider.of<ProviderServices>(
-                        context,
-                        listen: false,
-                      ).deleteUserImageFromLocal(context: context);
-                      AppRoutes.route.go("/UserProfileScreen");
-                    },
-                    child: Text(
-                      "Delete Photo",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+              SizedBox(height: 30),
+              imageUrl.isEmpty
+                  ? SizedBox()
+                  : TextButton(
+                      onPressed: () {
+                        Provider.of<ImageProviderServices>(
+                          context,
+                          listen: false,
+                        ).deleteUserImageFromLocal(context: context);
+                        AppRoutes.route.go("/UserProfileScreen");
+                      },
+                      child: Text(
+                        "Delete Photo",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-          ],
+            ],
+          ),
         ),
       ),
     );

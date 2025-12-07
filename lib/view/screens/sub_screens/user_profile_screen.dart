@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:expenzes/models/user_model.dart';
-import 'package:expenzes/provider/provider_services.dart';
+import 'package:expenzes/provider/image_provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
@@ -60,6 +60,12 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -79,20 +85,19 @@ class _UserProfileScreenState extends State<UserProfileScreen>
         elevation: 0,
         title: Text(
           "User Profile",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
       body: FadeTransition(
         opacity: _animation,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 40),
+
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Color(0xFFB3E5FC), // Sky Blue
-                Color(0xFFFFF59D), // Soft Yellow
-              ],
+              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -110,55 +115,80 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                         children: [
                           SizedBox(height: 20),
                           Consumer(
-                            builder: (context, ProviderServices provider, child) {
-                              return Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      AppRoutes.route.go(
-                                        "/FullImageScreen",
-                                        extra: provider.userImage,
-                                      );
-                                    },
-                                    child: Hero(
-                                      tag: 1,
-                                      child: CircleAvatar(
-                                        radius: 60,
-                                        backgroundImage:
-                                            provider.userImage.isEmpty
-                                            ? NetworkImage(
-                                                "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                              )
-                                            : FileImage(
-                                                File(provider.userImage),
-                                              ),
+                            builder:
+                                (
+                                  context,
+                                  ImageProviderServices provider,
+                                  child,
+                                ) {
+                                  return Column(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          AppRoutes.route.push(
+                                            "/FullImageScreen",
+                                            extra: provider.userImage,
+                                          );
+                                        },
+                                        child: Hero(
+                                          tag: 1,
+                                          child: CircleAvatar(
+                                            radius: 60,
+                                            backgroundImage:
+                                                provider.userImage.isEmpty
+                                                ? NetworkImage(
+                                                    "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                                  )
+                                                : FileImage(
+                                                    File(provider.userImage),
+                                                  ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    userData.name.isEmpty
-                                        ? "No Name"
-                                        : userData.name,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    curruntUser.isAnonymous
-                                        ? "Anonymous User"
-                                        : curruntUser.email!,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                  SizedBox(height: 20),
-                                ],
-                              );
-                            },
+                                      SizedBox(height: 10),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                            0.7,
+                                        child: Text(
+                                          maxLines: 2,
+                                          textAlign: TextAlign.center,
+                                          overflow: TextOverflow.ellipsis,
+                                          userData.name.isEmpty
+                                              ? "No Name"
+                                              : userData.name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                            0.7,
+                                        child: Text(
+                                          maxLines: 2,
+                                          textAlign: TextAlign.center,
+                                          overflow: TextOverflow.ellipsis,
+                                          curruntUser.isAnonymous
+                                              ? "Anonymous User"
+                                              : curruntUser.email!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 20),
+                                    ],
+                                  );
+                                },
                           ),
                         ],
                       ),
@@ -166,9 +196,8 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                     SizedBox(height: 20),
                     Text(
                       "Account Details",
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -177,80 +206,35 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Icon(Icons.account_circle_outlined, size: 30),
-                              SizedBox(width: 20),
-                              Text(
-                                userData.name.isEmpty
-                                    ? "No Name"
-                                    : userData.name,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
+                          rowWidget(
+                            title: userData.name.isEmpty
+                                ? "No Name"
+                                : userData.name,
+                            icon: Icons.account_circle_outlined,
                           ),
                           SizedBox(height: 15),
-                          Row(
-                            children: [
-                              Icon(Icons.email_outlined, size: 30),
-                              SizedBox(width: 20),
-                              Text(
-                                curruntUser.isAnonymous
-                                    ? "No Email (Anonymous User)"
-                                    : curruntUser.email!,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
+                          rowWidget(
+                            title: curruntUser.isAnonymous
+                                ? "No Email (Anonymous User)"
+                                : curruntUser.email!,
+                            icon: Icons.email_outlined,
                           ),
                           SizedBox(height: 15),
-                          Row(
-                            children: [
-                              Icon(Icons.language_outlined, size: 30),
-                              SizedBox(width: 20),
-                              Text(
-                                "English",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
+                          rowWidget(
+                            title: "English",
+                            icon: Icons.language_outlined,
                           ),
                           SizedBox(height: 15),
-                          Row(
-                            children: [
-                              Icon(Icons.location_on_outlined, size: 30),
-                              SizedBox(width: 20),
-                              Text(
-                                "Sri Lanka",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
+                          rowWidget(
+                            title: "Sri Lanka",
+                            icon: Icons.location_on_outlined,
                           ),
                           SizedBox(height: 15),
-                          Row(
-                            children: [
-                              Icon(Icons.date_range_outlined, size: 30),
-                              SizedBox(width: 20),
-                              Text(
-                                userData.createdAt == null
-                                    ? "Date not avilable"
-                                    : userData.createdAt.toString(),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
+                          rowWidget(
+                            title: userData.createdAt == null
+                                ? "Date not avilable"
+                                : userData.createdAt.toString(),
+                            icon: Icons.date_range_outlined,
                           ),
                           SizedBox(height: 20),
                         ],
@@ -264,6 +248,26 @@ class _UserProfileScreenState extends State<UserProfileScreen>
           ),
         ),
       ),
+    );
+  }
+
+  Widget rowWidget({required String title, required IconData icon}) {
+    return Row(
+      children: [
+        Icon(icon, size: 30),
+        SizedBox(width: 20),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: Text(
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            title,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
     );
   }
 

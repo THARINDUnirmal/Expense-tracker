@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:expenzes/models/data_model.dart';
-import 'package:expenzes/provider/provider_services.dart';
+import 'package:expenzes/provider/image_provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
-import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
+import 'package:expenzes/widgets/reuseble_widgets/modern_gredient_card.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -134,6 +133,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     _subscription.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -232,48 +232,70 @@ class _HomeScreenState extends State<HomeScreen>
                             AppRoutes.route.push("/UserProfileScreen");
                           },
                           child: Consumer(
-                            builder: (context, ProviderServices provider, child) {
-                              return Row(
-                                children: [
-                                  Hero(
-                                    tag: 1,
-                                    child: CircleAvatar(
-                                      maxRadius: 35,
-                                      backgroundImage:
-                                          provider.userImage.isEmpty
-                                          ? NetworkImage(
-                                              "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                            )
-                                          : FileImage(File(provider.userImage)),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                            builder:
+                                (
+                                  context,
+                                  ImageProviderServices provider,
+                                  child,
+                                ) {
+                                  return Row(
                                     children: [
-                                      Text(
-                                        currentCodition,
-                                        style: AppTextStyles.miniTextStyle,
+                                      Hero(
+                                        tag: 1,
+                                        child: CircleAvatar(
+                                          maxRadius: 35,
+                                          backgroundImage:
+                                              provider.userImage.isEmpty
+                                              ? NetworkImage(
+                                                  "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                                )
+                                              : FileImage(
+                                                  File(provider.userImage),
+                                                ),
+                                        ),
                                       ),
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
-                                            0.55,
-                                        child: Text(
-                                          overflow: TextOverflow.ellipsis,
-                                          userName!,
-                                          style: AppTextStyles
-                                              .mainTopicTextStyle
-                                              .copyWith(fontSize: 16),
-                                        ),
+                                            0.02,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            currentCodition,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                          ),
+                                          SizedBox(
+                                            width:
+                                                MediaQuery.of(
+                                                  context,
+                                                ).size.width *
+                                                0.5,
+                                            child: Text(
+                                              overflow: TextOverflow.ellipsis,
+                                              userName!,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
-                                  ),
-                                ],
-                              );
-                            },
+                                  );
+                                },
                           ),
                         ),
 
@@ -297,14 +319,13 @@ class _HomeScreenState extends State<HomeScreen>
                           children: [
                             Text(
                               "My Weekly Expenses",
-                              style: AppTextStyles.mainTopicTextStyle.copyWith(
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal,
-                              ),
+                              style: Theme.of(context).textTheme.bodyLarge!
+                                  .copyWith(fontWeight: FontWeight.bold),
                             ),
                             Text(
                               "$expensesCount Expenses Pending",
-                              style: AppTextStyles.subTopicTextStyle,
+                              style: Theme.of(context).textTheme.bodySmall!
+                                  .copyWith(fontWeight: FontWeight.normal),
                             ),
                           ],
                         ),
@@ -329,50 +350,17 @@ class _HomeScreenState extends State<HomeScreen>
                               extra: allDataMap,
                             );
                           },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.42,
-                            height: 110,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(22),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFF4A90E2).withOpacity(0.85),
-                                  Color(0xFF50C9C3).withOpacity(0.85),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
-                                  blurRadius: 10,
-                                  spreadRadius: 1,
-                                  offset: Offset(0, 4),
-                                ),
+                          child: ModernGredientCard(
+                            cardGradient: LinearGradient(
+                              colors: [
+                                Color(0xFF4A90E2).withOpacity(0.85),
+                                Color(0xFF50C9C3).withOpacity(0.85),
                               ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(
-                                    Icons.summarize_rounded,
-                                    size: 30,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(height: 6),
-                                  Text(
-                                    "Summary",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            cardIcon: Icons.summarize_rounded,
+                            cardTitle: "Summary",
                           ),
                         ),
 
@@ -385,50 +373,17 @@ class _HomeScreenState extends State<HomeScreen>
                               extra: allDataMap,
                             );
                           },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.42,
-                            height: 110,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(22),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFFFC857).withOpacity(0.95),
-                                  Color(0xFFFFA534).withOpacity(0.95),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
-                                  blurRadius: 10,
-                                  spreadRadius: 1,
-                                  offset: Offset(0, 4),
-                                ),
+                          child: ModernGredientCard(
+                            cardGradient: LinearGradient(
+                              colors: [
+                                Color(0xFFFFC857).withOpacity(0.95),
+                                Color(0xFFFFA534).withOpacity(0.95),
                               ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(
-                                    Icons.pie_chart_rounded,
-                                    size: 30,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(height: 6),
-                                  Text(
-                                    "Charts",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            cardIcon: Icons.pie_chart_rounded,
+                            cardTitle: "Charts",
                           ),
                         ),
                       ],
@@ -460,6 +415,7 @@ class _HomeScreenState extends State<HomeScreen>
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                SizedBox(height: 10),
                                 Icon(
                                   Icons.inbox_rounded,
                                   size: 80,
@@ -471,11 +427,8 @@ class _HomeScreenState extends State<HomeScreen>
                                 Text(
                                   "No Data Found",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(fontWeight: FontWeight.bold),
                                 ),
 
                                 SizedBox(height: 8),
@@ -483,10 +436,8 @@ class _HomeScreenState extends State<HomeScreen>
                                 Text(
                                   "It looks empty here. Add your first item!",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 16,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(fontWeight: FontWeight.normal),
                                 ),
 
                                 SizedBox(height: 24),
@@ -508,11 +459,10 @@ class _HomeScreenState extends State<HomeScreen>
                                   },
                                   child: Text(
                                     "Add Now",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -525,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      SizedBox(height: 30),
+                                      SizedBox(height: 10),
                                       Icon(
                                         Icons.inbox_rounded,
                                         size: 80,
@@ -537,11 +487,12 @@ class _HomeScreenState extends State<HomeScreen>
                                       Text(
                                         "No Data Found",
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
 
                                       SizedBox(height: 8),
@@ -549,10 +500,12 @@ class _HomeScreenState extends State<HomeScreen>
                                       Text(
                                         "It looks empty here. Add your first item!",
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 16,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(
+                                              fontWeight: FontWeight.normal,
+                                            ),
                                       ),
 
                                       SizedBox(height: 24),
@@ -577,11 +530,12 @@ class _HomeScreenState extends State<HomeScreen>
                                         },
                                         child: Text(
                                           "Add Now",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
                                       ),
                                     ],
@@ -598,10 +552,12 @@ class _HomeScreenState extends State<HomeScreen>
                                         Text(
                                           textAlign: TextAlign.center,
                                           "Category",
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
                                         GestureDetector(
                                           onTap: () {
@@ -612,10 +568,12 @@ class _HomeScreenState extends State<HomeScreen>
                                           },
                                           child: Text(
                                             "See All >>",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.normal,
+                                                ),
                                           ),
                                         ),
                                       ],
@@ -651,10 +609,12 @@ class _HomeScreenState extends State<HomeScreen>
                                     SizedBox(height: 20),
                                     Text(
                                       "Resent ",
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                     SizedBox(height: 20),
                                     ListView.builder(

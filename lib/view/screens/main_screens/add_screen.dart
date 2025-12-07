@@ -1,7 +1,6 @@
 import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
-import 'package:expenzes/utils/app_text_styles.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/view/screens/sub_screens/add_data_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/single_data_screen.dart';
@@ -39,8 +38,13 @@ class _AddScreenState extends State<AddScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Add", style: AppTextStyles.mainTopicTextStyle),
-        backgroundColor: Colors.transparent, // No color
+        title: Text(
+          "Add",
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: Container(
@@ -101,7 +105,12 @@ class _AddScreenState extends State<AddScreen> {
                   ),
 
                   SizedBox(height: 30),
-                  Text("Last Added", style: AppTextStyles.mainTopicTextStyle),
+                  Text(
+                    "Last Added",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   SizedBox(height: 30),
 
                   StreamBuilder(
@@ -116,14 +125,47 @@ class _AddScreenState extends State<AddScreen> {
                           child: Text(
                             textAlign: TextAlign.center,
                             snapshot.error.toString(),
-                            style: AppTextStyles.subTopicTextStyle,
+                            style: Theme.of(context).textTheme.bodyMedium!
+                                .copyWith(fontWeight: FontWeight.normal),
                           ),
                         );
                       } else if (!snapshot.hasData) {
                         return Center(
-                          child: Text(
-                            "No Items",
-                            style: AppTextStyles.subTopicTextStyle,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.inbox_rounded,
+                                size: 80,
+                                color: Colors.grey.shade400,
+                              ),
+
+                              SizedBox(height: 16),
+
+                              Text(
+                                "No Data Found",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+
+                              SizedBox(height: 8),
+
+                              Text(
+                                "It looks empty here. Add your first item!",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(fontWeight: FontWeight.normal),
+                              ),
+
+                              SizedBox(height: 24),
+
+                              Text(
+                                "Add Now",
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
                         );
                       } else {
@@ -145,11 +187,12 @@ class _AddScreenState extends State<AddScreen> {
                                     Text(
                                       "No Data Found",
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
 
                                     SizedBox(height: 8),
@@ -157,21 +200,24 @@ class _AddScreenState extends State<AddScreen> {
                                     Text(
                                       "It looks empty here. Add your first item!",
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: 16,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                     ),
 
                                     SizedBox(height: 24),
 
                                     Text(
                                       "Add Now",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                   ],
                                 ),

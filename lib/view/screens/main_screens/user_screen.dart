@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:expenzes/models/data_model.dart';
-import 'package:expenzes/provider/provider_services.dart';
+import 'package:expenzes/provider/image_provider_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -70,7 +71,7 @@ class _UserScreenState extends State<UserScreen> {
     try {
       final picked = await pickImager.pickImage(source: source);
       if (picked == null) return;
-      await Provider.of<ProviderServices>(
+      await Provider.of<ImageProviderServices>(
         context,
         listen: false,
       ).setUserImage(imageUrl: picked.path, context: context);
@@ -161,9 +162,11 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: const Text(
+        title: Text(
           "Profile",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -188,69 +191,70 @@ class _UserScreenState extends State<UserScreen> {
                     child: Column(
                       children: [
                         Consumer(
-                          builder: (context, ProviderServices provider, child) {
-                            return GestureDetector(
-                              onTap: imagePickFunction,
-                              child: Stack(
-                                children: [
-                                  // Profile Image with shadow
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.15),
-                                          blurRadius: 12,
-                                          offset: const Offset(0, 6),
+                          builder:
+                              (context, ImageProviderServices provider, child) {
+                                return GestureDetector(
+                                  onTap: imagePickFunction,
+                                  child: Stack(
+                                    children: [
+                                      // Profile Image with shadow
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                0.15,
+                                              ),
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 6),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                    child: CircleAvatar(
-                                      radius: 70,
-                                      backgroundImage:
-                                          provider.userImage.isEmpty
-                                          ? const NetworkImage(
-                                                  "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                                )
-                                                as ImageProvider
-                                          : FileImage(File(provider.userImage)),
-                                    ),
-                                  ),
-
-                                  // Camera icon overlay
-                                  const Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: CircleAvatar(
-                                      radius: 22,
-                                      backgroundColor: Colors.white,
-                                      child: Icon(
-                                        Icons.add_a_photo,
-                                        size: 28,
-                                        color: Colors.blue,
+                                        child: CircleAvatar(
+                                          radius: 60,
+                                          backgroundImage:
+                                              provider.userImage.isEmpty
+                                              ? const NetworkImage(
+                                                      "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                                    )
+                                                    as ImageProvider
+                                              : FileImage(
+                                                  File(provider.userImage),
+                                                ),
+                                        ),
                                       ),
-                                    ),
+
+                                      // Camera icon overlay
+                                      const Positioned(
+                                        bottom: 0,
+                                        right: 0,
+                                        child: CircleAvatar(
+                                          radius: 22,
+                                          backgroundColor: Colors.white,
+                                          child: Icon(
+                                            Icons.add_a_photo,
+                                            size: 28,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          },
+                                );
+                              },
                         ),
                         const SizedBox(height: 20),
                         Text(
                           "Email: ${userName ?? ""}",
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 5),
                         Text(
                           "ID: ${userData.uid}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall!
+                              .copyWith(fontWeight: FontWeight.normal),
                         ),
                       ],
                     ),
@@ -262,14 +266,14 @@ class _UserScreenState extends State<UserScreen> {
                   Column(
                     children: [
                       menuCardModern(
-                        svg: "assets/icons/user.svg",
+                        icon: FontAwesomeIcons.user,
                         title: "User profile",
                         subTitle: "Change profile image, name & password",
                         onTap: () =>
                             GoRouter.of(context).push("/UserProfileScreen"),
                       ),
                       menuCardModern(
-                        svg: "assets/icons/menu.svg",
+                        icon: FontAwesomeIcons.bank,
                         title: "Accounts",
                         subTitle: "Manage accounts and descriptions",
                         onTap: () {
@@ -281,7 +285,7 @@ class _UserScreenState extends State<UserScreen> {
                         },
                       ),
                       menuCardModern(
-                        svg: "assets/icons/message-circle-more.svg",
+                        icon: FontAwesomeIcons.message,
                         title: "Categories",
                         subTitle: "Manage categories & sub-categories",
                         onTap: () => AppRoutes.route.push(
@@ -290,7 +294,7 @@ class _UserScreenState extends State<UserScreen> {
                         ),
                       ),
                       menuCardModern(
-                        svg: "assets/icons/log-out.svg",
+                        icon: FontAwesomeIcons.signOut,
                         title: "Log Out",
                         subTitle: "Log Out in current account",
                         onTap: logoutFunction,
@@ -308,7 +312,7 @@ class _UserScreenState extends State<UserScreen> {
 
   // Modern Menu Card
   Widget menuCardModern({
-    required String svg,
+    required IconData icon,
     required String title,
     required String subTitle,
     VoidCallback? onTap,
@@ -338,12 +342,7 @@ class _UserScreenState extends State<UserScreen> {
                 color: Colors.blue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: SvgPicture.asset(
-                svg,
-                width: 28,
-                height: 28,
-                color: Colors.blue,
-              ),
+              child: Icon(icon, color: Colors.blue),
             ),
             const SizedBox(width: 20),
 
@@ -354,18 +353,16 @@ class _UserScreenState extends State<UserScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subTitle,
-                    style: const TextStyle(
-                      fontSize: 13,
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.normal,
                       color: Colors.grey,
-                      height: 1.2,
                     ),
                   ),
                 ],

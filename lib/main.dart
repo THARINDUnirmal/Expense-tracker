@@ -1,5 +1,5 @@
 import 'package:expenzes/firebase_options.dart';
-import 'package:expenzes/provider/provider_services.dart';
+import 'package:expenzes/provider/image_provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     ChangeNotifierProvider(
-      create: (context) => ProviderServices(),
+      create: (context) => ImageProviderServices(),
       child: MyApp(),
     ),
   );
