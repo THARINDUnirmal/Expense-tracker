@@ -246,10 +246,15 @@ class _UserScreenState extends State<UserScreen> {
                               },
                         ),
                         const SizedBox(height: 20),
-                        Text(
-                          "Email: ${userName ?? ""}",
-                          style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Text(
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            "Email: ${userName ?? ""}",
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
                         ),
                         const SizedBox(height: 5),
                         Text(

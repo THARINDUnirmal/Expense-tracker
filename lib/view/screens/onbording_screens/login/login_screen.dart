@@ -246,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen>
                                           await Future.delayed(
                                             Duration(seconds: 1),
                                           );
-                                          AppRoutes.route.go("/");
+
                                           setState(() {});
                                         } finally {
                                           setState(() => isLoading = false);

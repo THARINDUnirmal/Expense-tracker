@@ -43,6 +43,7 @@ class FullImageScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 50),
               Center(
                 child: Hero(
                   tag: 1,

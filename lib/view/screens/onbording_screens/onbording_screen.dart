@@ -5,6 +5,7 @@ import 'package:expenzes/widgets/page_view_content.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnbordingScreen extends StatefulWidget {
   const OnbordingScreen({super.key});
@@ -127,13 +128,27 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
         ),
 
         GestureDetector(
-          onTap: () {
-            isLastPage
-                ? GoRouter.of(context).go("/LoginScreen")
-                : _contraller.nextPage(
-                    duration: Duration(seconds: 1),
-                    curve: Curves.easeInOut,
-                  );
+          onTap: () async {
+            // isLastPage
+            //     ? GoRouter.of(context).go("/LoginScreen")
+            //     : _contraller.nextPage(
+            //         duration: Duration(seconds: 1),
+            //         curve: Curves.easeInOut,
+            //       );
+
+            if (isLastPage) {
+              // Mark onboarding as completed
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setBool('seenOnboarding', true);
+
+              // Navigate to login screen
+              GoRouter.of(context).go("/LoginScreen");
+            } else {
+              _contraller.nextPage(
+                duration: const Duration(seconds: 1),
+                curve: Curves.easeInOut,
+              );
+            }
           },
           child: CustomButton(title: isLastPage ? "GetStared" : "Next"),
         ),

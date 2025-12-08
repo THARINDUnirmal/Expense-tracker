@@ -18,7 +18,12 @@ class LocalData {
         message: "Your image has been updated!",
       );
     } catch (error) {
-      print("Image store error=============");
+      AppMessages().showSnackBarMessage(
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        context: context,
+        message: "Your image hasn't been updated!",
+      );
     }
   }
 
@@ -30,7 +35,6 @@ class LocalData {
       String? imageUrl = _pref.getString("Image") ?? "";
       return imageUrl;
     } catch (error) {
-      print("Get image data error==============");
       throw exceptions(error.toString());
     }
   }
@@ -45,6 +49,13 @@ class LocalData {
         context: context,
         message: "Image deleted successfully!",
       );
-    } catch (error) {}
+    } catch (error) {
+      AppMessages().showSnackBarMessage(
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        context: context,
+        message: "Image deleted unsuccessfully!",
+      );
+    }
   }
 }

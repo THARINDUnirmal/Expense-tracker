@@ -60,7 +60,6 @@ class FirebaseAuthServices {
   // get currunt user
   User get curruntUserData => firebaseAuth.currentUser!;
 
-  //login using email and password
   Future<void> loginWIthEmail({
     required BuildContext context,
     required String email,
@@ -76,11 +75,18 @@ class FirebaseAuthServices {
         AppMessages().showSnackBarMessage(
           context: context,
           message: "Welcome back 👋 Login successful!",
+          duration: const Duration(seconds: 4),
         );
       }
     } on FirebaseAuthException catch (error) {
       if (context.mounted) {
-        AppMessages().appAlertMessage(exceptions(error.code), context);
+        AppMessages().showSnackBarMessage(
+          context: context,
+          message: exceptions(error.code),
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          duration: const Duration(seconds: 4),
+        );
       }
     } catch (error) {
       if (context.mounted) {
@@ -89,6 +95,7 @@ class FirebaseAuthServices {
           textColor: Colors.white,
           context: context,
           message: "Login failed",
+          duration: const Duration(seconds: 4),
         );
       }
     }
