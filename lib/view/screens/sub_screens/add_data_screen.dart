@@ -8,6 +8,7 @@ import 'package:expenzes/services/firestroe_services/firebase_database_services.
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
+import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_form2.dart';
 import 'package:flutter/material.dart';
@@ -282,9 +283,6 @@ class _AddDataScreenState extends State<AddDataScreen> {
                         CustomTextForm2(
                           controller: _descriptionContraller,
                           hintText: "Description",
-                          validator: (value) => value!.isEmpty
-                              ? "Please Enter Description"
-                              : null,
                         ),
 
                         // CATEGORY DROPDOWN
@@ -420,14 +418,21 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                       id: "",
                                       title: _titleContraller.text.trim(),
                                       isExpense: widget.isExpense,
-                                      description: _descriptionContraller.text
-                                          .trim(),
+                                      description:
+                                          _descriptionContraller.text.isEmpty
+                                          ? "No Description!"
+                                          : _descriptionContraller.text.trim(),
                                       createdDate: _dateNotifer.value,
                                       createdTime: _timeNotifer.value,
                                       amount: double.parse(
                                         _amountContraller.text.trim(),
                                       ),
                                       category: selectedCategory,
+                                    );
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => MainScreen(),
+                                      ),
                                     );
 
                                     await FirebaseDatabaseServices().addData(
@@ -445,14 +450,9 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                         ),
                                       ),
                                     );
-                                    setState(() {});
-                                    AppRoutes.route.go("/MainScreen");
-                                    // Navigator.of(context).pushReplacement(
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => MainScreen(),
-                                    //   ),
-                                    // );
-                                    setState(() {});
+
+                                    //AppRoutes.route.go("/MainScreen");
+
                                     _categeoryContraller.clear();
                                     _amountContraller.clear();
                                     _titleContraller.clear();

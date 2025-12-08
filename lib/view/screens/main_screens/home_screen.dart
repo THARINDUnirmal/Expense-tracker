@@ -10,6 +10,7 @@ import 'package:expenzes/services/firestroe_services/firebase_database_services.
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
+import 'package:expenzes/view/screens/sub_screens/single_data_screen.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
 import 'package:expenzes/widgets/reuseble_widgets/modern_gredient_card.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
@@ -631,10 +632,22 @@ class _HomeScreenState extends State<HomeScreen>
                                       itemCount: dataList.length,
                                       itemBuilder: (context, index) {
                                         DataModel singleData = dataList[index];
-                                        return SingleDataCard(
-                                          title: singleData.title,
-                                          isExpense: singleData.isExpense,
-                                          cardAmount: singleData.amount,
+                                        return InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SingleDataScreen(
+                                                      singleData: singleData,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          child: SingleDataCard(
+                                            title: singleData.title,
+                                            isExpense: singleData.isExpense,
+                                            cardAmount: singleData.amount,
+                                          ),
                                         );
                                       },
                                     ),

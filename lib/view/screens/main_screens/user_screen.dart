@@ -22,10 +22,14 @@ class UserScreen extends StatefulWidget {
   State<UserScreen> createState() => _UserScreenState();
 }
 
-class _UserScreenState extends State<UserScreen> {
+class _UserScreenState extends State<UserScreen>
+    with SingleTickerProviderStateMixin {
   late String? userName;
   late User userData;
   List<String> allCategeory = [];
+
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   final ImagePicker pickImager = ImagePicker();
 
@@ -34,6 +38,15 @@ class _UserScreenState extends State<UserScreen> {
     super.initState();
     getUser();
     getAllcategeoryList();
+
+    //animation
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _controller.forward();
   }
 
   //get all categeory list
@@ -155,6 +168,12 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -170,144 +189,155 @@ class _UserScreenState extends State<UserScreen> {
         ),
         centerTitle: true,
       ),
-      body: Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height * 1,
-        padding: const EdgeInsets.symmetric(vertical: AppConstants.appPadding),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      body: FadeTransition(
+        opacity: _animation,
+        child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 1,
+          padding: const EdgeInsets.symmetric(
+            vertical: AppConstants.appPadding,
           ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(AppConstants.appPadding),
-              child: Column(
-                children: [
-                  //Profile Section
-                  Center(
-                    child: Column(
-                      children: [
-                        Consumer(
-                          builder:
-                              (context, ImageProviderServices provider, child) {
-                                return GestureDetector(
-                                  onTap: imagePickFunction,
-                                  child: Stack(
-                                    children: [
-                                      // Profile Image
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.15,
-                                              ),
-                                              blurRadius: 12,
-                                              offset: const Offset(0, 6),
-                                            ),
-                                          ],
-                                        ),
-                                        child: CircleAvatar(
-                                          radius: 60,
-                                          backgroundImage:
-                                              provider.userImage.isEmpty
-                                              ? const NetworkImage(
-                                                      "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-                                                    )
-                                                    as ImageProvider
-                                              : FileImage(
-                                                  File(provider.userImage),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(AppConstants.appPadding),
+                child: Column(
+                  children: [
+                    //Profile Section
+                    Center(
+                      child: Column(
+                        children: [
+                          Consumer(
+                            builder:
+                                (
+                                  context,
+                                  ImageProviderServices provider,
+                                  child,
+                                ) {
+                                  return GestureDetector(
+                                    onTap: imagePickFunction,
+                                    child: Stack(
+                                      children: [
+                                        // Profile Image
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                  0.15,
                                                 ),
-                                        ),
-                                      ),
-
-                                      // Camera icon overlay
-                                      const Positioned(
-                                        bottom: 0,
-                                        right: 0,
-                                        child: CircleAvatar(
-                                          radius: 22,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            Icons.add_a_photo,
-                                            size: 28,
-                                            color: Colors.blue,
+                                                blurRadius: 12,
+                                                offset: const Offset(0, 6),
+                                              ),
+                                            ],
+                                          ),
+                                          child: CircleAvatar(
+                                            radius: 60,
+                                            backgroundImage:
+                                                provider.userImage.isEmpty
+                                                ? const NetworkImage(
+                                                        "https://tse1.mm.bing.net/th/id/OIP.vmoycMUOmbcs0Vw-1iIdVAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+                                                      )
+                                                      as ImageProvider
+                                                : FileImage(
+                                                    File(provider.userImage),
+                                                  ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
+
+                                        // Camera icon overlay
+                                        const Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: CircleAvatar(
+                                            radius: 22,
+                                            backgroundColor: Colors.white,
+                                            child: Icon(
+                                              Icons.add_a_photo,
+                                              size: 28,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: Text(
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              "Email: ${userName ?? ""}",
+                              style: Theme.of(context).textTheme.bodyLarge!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            "ID: ${userData.uid}",
+                            style: Theme.of(context).textTheme.bodySmall!
+                                .copyWith(fontWeight: FontWeight.normal),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    // Menu Items
+                    Column(
+                      children: [
+                        menuCardModern(
+                          icon: FontAwesomeIcons.user,
+                          title: "User profile",
+                          subTitle: "Change profile image, name & password",
+                          onTap: () =>
+                              GoRouter.of(context).push("/UserProfileScreen"),
                         ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: Text(
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            "Email: ${userName ?? ""}",
-                            style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
+                        menuCardModern(
+                          icon: FontAwesomeIcons.bank,
+                          title: "Accounts",
+                          subTitle: "Manage accounts and descriptions",
+                          onTap: () {
+                            AppMessages().showSnackBarMessage(
+                              context: context,
+                              message:
+                                  "Sorry, this link isn’t available right now.",
+                            );
+                          },
+                        ),
+                        menuCardModern(
+                          icon: FontAwesomeIcons.message,
+                          title: "Categories",
+                          subTitle: "Manage categories & sub-categories",
+                          onTap: () => AppRoutes.route.push(
+                            "/AllCtegeoryScreen",
+                            extra: allCategeory,
                           ),
                         ),
-                        const SizedBox(height: 5),
-                        Text(
-                          "ID: ${userData.uid}",
-                          style: Theme.of(context).textTheme.bodySmall!
-                              .copyWith(fontWeight: FontWeight.normal),
+                        menuCardModern(
+                          icon: FontAwesomeIcons.signOut,
+                          title: "Log Out",
+                          subTitle: "Log Out in current account",
+                          onTap: () async {
+                            await logoutFunction();
+                          },
                         ),
                       ],
                     ),
-                  ),
-
-                  const SizedBox(height: 30),
-
-                  // Menu Items
-                  Column(
-                    children: [
-                      menuCardModern(
-                        icon: FontAwesomeIcons.user,
-                        title: "User profile",
-                        subTitle: "Change profile image, name & password",
-                        onTap: () =>
-                            GoRouter.of(context).push("/UserProfileScreen"),
-                      ),
-                      menuCardModern(
-                        icon: FontAwesomeIcons.bank,
-                        title: "Accounts",
-                        subTitle: "Manage accounts and descriptions",
-                        onTap: () {
-                          AppMessages().showSnackBarMessage(
-                            context: context,
-                            message:
-                                "Sorry, this link isn’t available right now.",
-                          );
-                        },
-                      ),
-                      menuCardModern(
-                        icon: FontAwesomeIcons.message,
-                        title: "Categories",
-                        subTitle: "Manage categories & sub-categories",
-                        onTap: () => AppRoutes.route.push(
-                          "/AllCtegeoryScreen",
-                          extra: allCategeory,
-                        ),
-                      ),
-                      menuCardModern(
-                        icon: FontAwesomeIcons.signOut,
-                        title: "Log Out",
-                        subTitle: "Log Out in current account",
-                        onTap: logoutFunction,
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -484,8 +514,24 @@ class _UserScreenState extends State<UserScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                logoutButton("Yes", Colors.red, true),
-                logoutButton("No", Colors.white, false),
+                InkWell(
+                  onTap: () async {
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                    await FirebaseAuthServices().logOutAccount(
+                      context: context,
+                    );
+                    AppRoutes.route.go("/");
+                  },
+                  child: logoutButton("Yes", Colors.red, true),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: logoutButton("No", Colors.white, false),
+                ),
               ],
             ),
           ],
@@ -495,31 +541,20 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Widget logoutButton(String text, Color color, bool isYes) {
-    return GestureDetector(
-      onTap: () async {
-        if (isYes) {
-          await FirebaseAuthServices().logOutAccount(context: context);
-          if (context.mounted) Navigator.pop(context);
-          AppRoutes.route.go("/");
-        } else {
-          Navigator.pop(context);
-        }
-      },
-      child: Container(
-        width: 120,
-        height: 50,
-        decoration: BoxDecoration(
-          color: isYes ? color : Colors.white,
-          border: Border.all(color: Colors.red, width: isYes ? 0 : 2),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: isYes ? Colors.white : Colors.red,
-              fontSize: 16,
-            ),
+    return Container(
+      width: 120,
+      height: 50,
+      decoration: BoxDecoration(
+        color: isYes ? color : Colors.white,
+        border: Border.all(color: Colors.red, width: isYes ? 0 : 2),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(
+            color: isYes ? Colors.white : Colors.red,
+            fontSize: 16,
           ),
         ),
       ),

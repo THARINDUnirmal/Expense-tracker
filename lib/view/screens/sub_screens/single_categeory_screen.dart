@@ -329,7 +329,8 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
                   ),
                   const SizedBox(height: 20),
                   StreamBuilder(
-                    stream: FirebaseDatabaseServices().getAllDataStream(
+                    stream: FirebaseDatabaseServices().getAllCtegeoryDataStream(
+                      categoryName: widget.categeoryName,
                       curruntUserId: FirebaseAuthServices().curruntUserData.uid,
                     ),
                     builder: (context, snapshot) {

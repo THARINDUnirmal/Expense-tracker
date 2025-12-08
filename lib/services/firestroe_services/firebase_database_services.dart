@@ -101,6 +101,30 @@ class FirebaseDatabaseServices {
     }
   }
 
+  // get data as stream from firebase with category filter
+  Stream<List<DataModel>> getAllCtegeoryDataStream({
+    required String curruntUserId,
+    required String categoryName,
+  }) {
+    try {
+      return _firebaseCollection
+          .doc(curruntUserId)
+          .collection("allData")
+          .where("category", isEqualTo: categoryName)
+          .orderBy("createdDate", descending: false)
+          .snapshots()
+          .map((snapshot) {
+            return snapshot.docs
+                .map((e) => DataModel.fromJson(e.data()))
+                .toList()
+                .reversed
+                .toList();
+          });
+    } catch (error) {
+      throw Exception(error.toString());
+    }
+  }
+
   //get Total Incomes & Expenses
   Future<Map<String, double>> getTotalValues({
     required BuildContext context,

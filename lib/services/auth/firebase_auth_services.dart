@@ -105,6 +105,8 @@ class FirebaseAuthServices {
   Future<void> logOutAccount({required BuildContext context}) async {
     try {
       await firebaseAuth.signOut();
+      await googleSignIn.signOut();
+      await googleSignIn.disconnect();
 
       if (context.mounted) {
         AppMessages().showSnackBarMessage(
