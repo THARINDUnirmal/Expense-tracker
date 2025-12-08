@@ -43,6 +43,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         obscureText: widget.issecurText ? true : false,
         controller: widget.controller,
         decoration: InputDecoration(
+          labelStyle: Theme.of(
+            context,
+          ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.normal),
           labelText: widget.labaleTexts,
           hintStyle: TextStyle(color: AppColors.appBlackColor),
           prefixIcon: Icon(

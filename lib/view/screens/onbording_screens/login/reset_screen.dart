@@ -126,7 +126,7 @@ class _ResetScreenState extends State<ResetScreen>
                   ),
                   const SizedBox(height: 25),
 
-                  // ✨ Animated Email TextField
+                  //Animated Email TextField
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 400),
                     decoration: BoxDecoration(
@@ -152,7 +152,7 @@ class _ResetScreenState extends State<ResetScreen>
 
                   const SizedBox(height: 30),
 
-                  // Modern Gradient Button
+                  //Gradient Button
                   InkWell(
                     borderRadius: BorderRadius.circular(16),
                     onTap: _resetPassword,

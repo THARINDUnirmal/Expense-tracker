@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/provider/image_provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
@@ -28,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen>
   //All veriables
   String currentCodition = "";
   late String? userName;
+  UserModel currentUserInformation = UserModel(userId: "", name: "", email: "");
   Map<String, double> allDataMap = {};
   List<String> allCategeory = [];
   int expensesCount = 0;
@@ -39,6 +41,9 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void> getUser() async {
     User userData = FirebaseAuthServices().curruntUserData;
     userName = userData.isAnonymous ? "Anonymous User" : userData.email;
+
+    currentUserInformation = await FirebaseDatabaseServices()
+        .getCurrentUserData(userId: userData.uid);
   }
 
   //get Total Expenses & Incomes values
@@ -76,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void timeTracker() {
-    DateTime now = DateTime.now(); // current time
+    DateTime now = DateTime.now();
     String timeOfDay;
 
     if (now.hour >= 5 && now.hour < 12) {
@@ -93,9 +98,7 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
-  ////////////////////////////////////////////////////////
-  ///
-  ///
+  //
   late StreamSubscription<bool> _subscription;
   bool isConnected = true;
 
@@ -104,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     getUser();
     getAllTotalValues();
-    timeTracker(); // Subscribe to connection changes
+    timeTracker();
     _subscription = ConnectionService().connectionStream.listen((status) {
       setState(() {
         isConnected = status;
@@ -112,13 +115,11 @@ class _HomeScreenState extends State<HomeScreen>
 
       // Show snackbar on change
       isConnected
-          ? ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Back Online!"),
-                duration: const Duration(seconds: 2),
-              ),
-            )
-          : AppMessages().appAlertMessage("No Internet ", context);
+          ? null
+          : AppMessages().appAlertMessage(
+              "Please check your internet connection",
+              context,
+            );
     });
 
     //animations
@@ -282,7 +283,14 @@ class _HomeScreenState extends State<HomeScreen>
                                                 0.5,
                                             child: Text(
                                               overflow: TextOverflow.ellipsis,
-                                              userName!,
+                                              currentUserInformation
+                                                          .name
+                                                          .isEmpty ||
+                                                      currentUserInformation
+                                                              .name ==
+                                                          ""
+                                                  ? userName!
+                                                  : currentUserInformation.name,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyMedium!
@@ -364,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         ),
 
-                        // -------- Chart Card --------
+                        //Chart Card
                         GestureDetector(
                           onTap: () {
                             setState(() {});

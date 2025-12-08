@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 
@@ -21,6 +24,8 @@ class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late StreamSubscription<bool> _subscription;
+  bool isConnected = true;
 
   @override
   void initState() {
@@ -31,6 +36,21 @@ class _LoginScreenState extends State<LoginScreen>
     );
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
+
+    //connection
+    _subscription = ConnectionService().connectionStream.listen((status) {
+      setState(() {
+        isConnected = status;
+      });
+
+      // Show snackbar on change
+      isConnected
+          ? null
+          : AppMessages().appAlertMessage(
+              "Please check your internet connection",
+              context,
+            );
+    });
   }
 
   //Loading state
@@ -67,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen>
   void dispose() {
     _emailContraller.dispose();
     _passwordContraller.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 
@@ -109,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen>
 
                   const SizedBox(height: 20),
 
-                  /// Glassmorphism Card
+                  // Card
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(25),
@@ -130,15 +151,14 @@ class _LoginScreenState extends State<LoginScreen>
                       children: [
                         Text(
                           "Welcome Back",
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 5),
                         Text(
                           "Sign in to continue",
-                          style: TextStyle(fontSize: 15, color: Colors.black54),
+                          style: Theme.of(context).textTheme.bodySmall!
+                              .copyWith(fontWeight: FontWeight.normal),
                         ),
                         const SizedBox(height: 30),
 
@@ -189,17 +209,20 @@ class _LoginScreenState extends State<LoginScreen>
                                   },
                                   child: Text(
                                     "Forgot Password?",
-                                    style: TextStyle(
-                                      color: AppColors.appBlueColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          color: AppColors.appBlueColor,
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                   ),
                                 ),
                               ),
 
                               const SizedBox(height: 25),
 
-                              /// Modern Login Button
+                              //Login Button
                               SizedBox(
                                 width: double.infinity,
                                 height: 52,
@@ -212,21 +235,28 @@ class _LoginScreenState extends State<LoginScreen>
                                     backgroundColor: const Color(0xff4ab7b6),
                                   ),
                                   onPressed: () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      setState(() => isLoading = true);
-                                      try {
-                                        await emailSign(
-                                          _emailContraller.text,
-                                          _passwordContraller.text,
-                                        );
-                                        await Future.delayed(
-                                          Duration(seconds: 1),
-                                        );
-                                        AppRoutes.route.go("/");
-                                        setState(() {});
-                                      } finally {
-                                        setState(() => isLoading = false);
+                                    if (isConnected) {
+                                      if (_formKey.currentState!.validate()) {
+                                        setState(() => isLoading = true);
+                                        try {
+                                          await emailSign(
+                                            _emailContraller.text,
+                                            _passwordContraller.text,
+                                          );
+                                          await Future.delayed(
+                                            Duration(seconds: 1),
+                                          );
+                                          AppRoutes.route.go("/");
+                                          setState(() {});
+                                        } finally {
+                                          setState(() => isLoading = false);
+                                        }
                                       }
+                                    } else {
+                                      AppMessages().appAlertMessage(
+                                        "Please check your internet connection",
+                                        context,
+                                      );
                                     }
                                   },
                                   child: isLoading
@@ -234,13 +264,15 @@ class _LoginScreenState extends State<LoginScreen>
                                           strokeWidth: 2,
                                           color: Colors.white,
                                         )
-                                      : const Text(
+                                      : Text(
                                           "Login",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
                                         ),
                                 ),
                               ),
@@ -249,10 +281,8 @@ class _LoginScreenState extends State<LoginScreen>
 
                               Text(
                                 "Or continue with",
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 14,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(fontWeight: FontWeight.normal),
                               ),
 
                               const SizedBox(height: 20),
@@ -260,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                         ),
 
-                        /// Social Buttons
+                        //Social Buttons
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -339,14 +369,18 @@ class _LoginScreenState extends State<LoginScreen>
                             child: RichText(
                               text: TextSpan(
                                 text: "Don’t have an account? ",
-                                style: TextStyle(color: Colors.black87),
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(fontWeight: FontWeight.normal),
                                 children: [
                                   TextSpan(
                                     text: "Tap to create",
-                                    style: TextStyle(
-                                      color: AppColors.appBlueColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.appBlueColor,
+                                        ),
                                   ),
                                 ],
                               ),

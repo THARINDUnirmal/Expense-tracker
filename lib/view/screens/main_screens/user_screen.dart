@@ -172,6 +172,7 @@ class _UserScreenState extends State<UserScreen> {
       ),
       body: Container(
         width: double.infinity,
+        height: MediaQuery.of(context).size.height * 1,
         padding: const EdgeInsets.symmetric(vertical: AppConstants.appPadding),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -197,7 +198,7 @@ class _UserScreenState extends State<UserScreen> {
                                   onTap: imagePickFunction,
                                   child: Stack(
                                     children: [
-                                      // Profile Image with shadow
+                                      // Profile Image
                                       Container(
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
@@ -437,7 +438,6 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Future<void> logoutFunction() async {
-    // Simple modern alert using bottom sheet
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,

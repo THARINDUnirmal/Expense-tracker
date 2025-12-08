@@ -1,4 +1,3 @@
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -15,15 +14,14 @@ class AboutMeImageScreen extends StatelessWidget {
 
         title: Text(
           "Developer Preview",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.normal,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/AboutMeScreen"),
+          onTap: () => Navigator.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -44,7 +42,12 @@ class AboutMeImageScreen extends StatelessWidget {
                 tag: 1,
                 child: ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(10),
-                  child: Image.asset(imageUrl, fit: BoxFit.cover),
+                  child: Image.asset(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.65,
+                  ),
                 ),
               ),
             ),

@@ -40,7 +40,7 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/MainScreen"),
+          onTap: () => Navigator.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -65,10 +65,7 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
           height: MediaQuery.of(context).size.height * 1,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Color(0xFFB3E5FC), // Sky Blue
-                Color(0xFFFFF59D), // Soft Yellow
-              ],
+              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

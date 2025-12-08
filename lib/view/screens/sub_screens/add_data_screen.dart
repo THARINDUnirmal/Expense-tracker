@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_form2.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +21,26 @@ class AddDataScreen extends StatefulWidget {
 }
 
 class _AddDataScreenState extends State<AddDataScreen> {
+  late StreamSubscription<bool> _subscription;
+  bool isConnected = true;
+
   @override
   void initState() {
     super.initState();
     listUpdate();
+    _subscription = ConnectionService().connectionStream.listen((status) {
+      setState(() {
+        isConnected = status;
+      });
+
+      // Show snackbar on change
+      isConnected
+          ? null
+          : AppMessages().appAlertMessage(
+              "Please check your internet connection",
+              context,
+            );
+    });
   }
 
   //form key
@@ -53,6 +73,12 @@ class _AddDataScreenState extends State<AddDataScreen> {
   //Value Notifiers
   final ValueNotifier<DateTime> _dateNotifer = ValueNotifier(DateTime.now());
   final ValueNotifier<TimeOfDay> _timeNotifer = ValueNotifier(TimeOfDay.now());
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,10 +207,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
         height: MediaQuery.of(context).size.height * 1,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFFB3E5FC), // Sky Blue
-              Color(0xFFFFF59D), // Soft Yellow
-            ],
+            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -222,7 +245,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
 
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0), // transparent
+                    color: Colors.white.withOpacity(0),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40),
@@ -335,10 +358,8 @@ class _AddDataScreenState extends State<AddDataScreen> {
 
                         Text(
                           "Pick Date & Time",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 15),
 
@@ -392,49 +413,61 @@ class _AddDataScreenState extends State<AddDataScreen> {
                         Center(
                           child: GestureDetector(
                             onTap: () async {
-                              if (_formKey.currentState!.validate()) {
-                                try {
-                                  DataModel sentData = DataModel(
-                                    id: "",
-                                    title: _titleContraller.text.trim(),
-                                    isExpense: widget.isExpense,
-                                    description: _descriptionContraller.text
-                                        .trim(),
-                                    createdDate: _dateNotifer.value,
-                                    createdTime: _timeNotifer.value,
-                                    amount: double.parse(
-                                      _amountContraller.text.trim(),
-                                    ),
-                                    category: selectedCategory,
-                                  );
-
-                                  await FirebaseDatabaseServices().addData(
-                                    context: context,
-                                    userId: FirebaseAuthServices()
-                                        .curruntUserData
-                                        .uid,
-                                    data: sentData,
-                                  );
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        "${widget.isExpense ? "Expense" : "Income"} Added",
+                              if (isConnected) {
+                                if (_formKey.currentState!.validate()) {
+                                  try {
+                                    DataModel sentData = DataModel(
+                                      id: "",
+                                      title: _titleContraller.text.trim(),
+                                      isExpense: widget.isExpense,
+                                      description: _descriptionContraller.text
+                                          .trim(),
+                                      createdDate: _dateNotifer.value,
+                                      createdTime: _timeNotifer.value,
+                                      amount: double.parse(
+                                        _amountContraller.text.trim(),
                                       ),
-                                    ),
-                                  );
-                                  AppRoutes.route.go("/MainScreen");
-                                  _categeoryContraller.clear();
-                                  _amountContraller.clear();
-                                  _titleContraller.clear();
-                                  _descriptionContraller.clear();
+                                      category: selectedCategory,
+                                    );
 
-                                  setState(() {});
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("Error: $e")),
-                                  );
+                                    await FirebaseDatabaseServices().addData(
+                                      context: context,
+                                      userId: FirebaseAuthServices()
+                                          .curruntUserData
+                                          .uid,
+                                      data: sentData,
+                                    );
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "${widget.isExpense ? "Expense" : "Income"} Added",
+                                        ),
+                                      ),
+                                    );
+                                    setState(() {});
+                                    AppRoutes.route.go("/MainScreen");
+                                    // Navigator.of(context).pushReplacement(
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => MainScreen(),
+                                    //   ),
+                                    // );
+                                    setState(() {});
+                                    _categeoryContraller.clear();
+                                    _amountContraller.clear();
+                                    _titleContraller.clear();
+                                    _descriptionContraller.clear();
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("Error: $e")),
+                                    );
+                                  }
                                 }
+                              } else {
+                                AppMessages().appAlertMessage(
+                                  "Please check your internet connection",
+                                  context,
+                                );
                               }
                             },
                             child: CustomButton(title: "Add"),

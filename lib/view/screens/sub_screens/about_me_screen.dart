@@ -55,12 +55,9 @@ class _AboutMeScreenState extends State<AboutMeScreen>
         centerTitle: true,
         title: Text(
           "Developer Information",
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.5,
-            height: 1.2,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -106,7 +103,7 @@ class _AboutMeScreenState extends State<AboutMeScreen>
                   ),
                   child: GestureDetector(
                     onTap: () {
-                      AppRoutes.route.go(
+                      AppRoutes.route.push(
                         "/AboutMeImageScreen",
                         extra: "assets/images/userr.jpg",
                       );

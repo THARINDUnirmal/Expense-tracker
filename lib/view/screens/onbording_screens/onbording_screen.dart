@@ -54,23 +54,32 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
                     ],
                   ),
                   SizedBox(height: 100),
-                  Dismissible(
-                    key: GlobalKey(),
-                    onDismissed: (direction) {
-                      _contraller.nextPage(
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                    child: AnimatedGradientText(
-                      animationDuration: 2,
-                      colors: [Color.fromARGB(31, 99, 97, 97), Colors.white],
-                      textStyle: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
+                  Column(
+                    children: [
+                      Dismissible(
+                        key: GlobalKey(),
+                        onDismissed: (direction) {
+                          _contraller.nextPage(
+                            duration: Duration(seconds: 2),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: AnimatedGradientText(
+                          animationDuration: 2,
+                          colors: [
+                            Color.fromARGB(31, 99, 97, 97),
+                            Colors.white,
+                          ],
+                          textStyle: Theme.of(context).textTheme.headlineSmall!
+                              .copyWith(fontWeight: FontWeight.bold),
+                          text: "> > >",
+                        ),
                       ),
-                      text: "> > >",
-                    ),
+                      Text(
+                        "Slide to the right",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -116,29 +125,18 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
           title: title,
           content: content,
         ),
-        pageIndex == 0
-            ? GestureDetector(
-                onTap: () {
-                  isLastPage
-                      ? GoRouter.of(context).go("/LoginScreen")
-                      : _contraller.nextPage(
-                          duration: Duration(seconds: 1),
-                          curve: Curves.easeInOut,
-                        );
-                },
-                child: CustomButton(title: ">>>"),
-              )
-            : GestureDetector(
-                onTap: () {
-                  isLastPage
-                      ? GoRouter.of(context).go("/LoginScreen")
-                      : _contraller.nextPage(
-                          duration: Duration(seconds: 1),
-                          curve: Curves.easeInOut,
-                        );
-                },
-                child: CustomButton(title: isLastPage ? "GetStared" : "Next"),
-              ),
+
+        GestureDetector(
+          onTap: () {
+            isLastPage
+                ? GoRouter.of(context).go("/LoginScreen")
+                : _contraller.nextPage(
+                    duration: Duration(seconds: 1),
+                    curve: Curves.easeInOut,
+                  );
+          },
+          child: CustomButton(title: isLastPage ? "GetStared" : "Next"),
+        ),
       ],
     );
   }

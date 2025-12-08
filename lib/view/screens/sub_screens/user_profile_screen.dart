@@ -71,7 +71,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/MainScreen"),
+          onTap: () => Navigator.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -94,7 +94,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
         opacity: _animation,
         child: Container(
           width: double.infinity,
-
+          height: MediaQuery.of(context).size.height * 1,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],

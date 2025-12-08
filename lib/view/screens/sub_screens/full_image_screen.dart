@@ -26,7 +26,7 @@ class FullImageScreen extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/UserProfileScreen"),
+          onTap: () => Navigator.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(

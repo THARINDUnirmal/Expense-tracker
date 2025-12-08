@@ -167,15 +167,18 @@ class SingleDataScreen extends StatelessWidget {
 
                           SizedBox(height: 40),
 
-                          GestureDetector(
+                          InkWell(
                             onTap: () async {
+                              print("Delete button click===================");
                               await FirebaseDatabaseServices()
                                   .deleteDataFromeFirebase(
                                     context: context,
                                     itemId: singleData.id,
                                   );
-
-                              Navigator.of(context).pop();
+                              print("Delete button close===================");
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
                             },
                             child: Container(
                               width: double.infinity,

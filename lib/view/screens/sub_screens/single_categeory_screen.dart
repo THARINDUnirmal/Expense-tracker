@@ -1,5 +1,6 @@
 import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/routes/app_routes.dart';
+import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
@@ -115,10 +116,6 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
           gradient: LinearGradient(
             colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
             begin: Alignment.topLeft,
@@ -331,28 +328,196 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 20),
-                  ListView.builder(
-                    itemCount: allData.length,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      DataModel indexData = allData[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  SingleDataScreen(singleData: indexData),
+                  StreamBuilder(
+                    stream: FirebaseDatabaseServices().getAllDataStream(
+                      curruntUserId: FirebaseAuthServices().curruntUserData.uid,
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            "Error : ${snapshot.error}",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
                             ),
-                          );
-                        },
-                        child: SingleDataCard(
-                          title: indexData.title,
-                          isExpense: indexData.isExpense,
-                          cardAmount: indexData.amount,
-                        ),
-                      );
+                          ),
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 10),
+                              Icon(
+                                Icons.inbox_rounded,
+                                size: 80,
+                                color: Colors.grey.shade400,
+                              ),
+
+                              SizedBox(height: 16),
+
+                              Text(
+                                "No Data Found",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+
+                              SizedBox(height: 8),
+
+                              Text(
+                                "It looks empty here. Add your first item!",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(fontWeight: FontWeight.normal),
+                              ),
+
+                              SizedBox(height: 24),
+
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.appBlue2Color,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 28,
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 3,
+                                ),
+                                onPressed: () {
+                                  AppRoutes.route.push("/AddScreen");
+                                },
+                                child: Text(
+                                  "Add Now",
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        List<DataModel> dataList = snapshot.data ?? [];
+                        return dataList.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(height: 10),
+                                    Icon(
+                                      Icons.inbox_rounded,
+                                      size: 80,
+                                      color: Colors.grey.shade400,
+                                    ),
+
+                                    SizedBox(height: 16),
+
+                                    Text(
+                                      "No Data Found",
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+
+                                    SizedBox(height: 8),
+
+                                    Text(
+                                      "It looks empty here. Add your first item!",
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                    ),
+
+                                    SizedBox(height: 24),
+
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            AppColors.appBlue2Color,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 28,
+                                          vertical: 14,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        elevation: 3,
+                                      ),
+                                      onPressed: () {
+                                        AppRoutes.route.push("/AddScreen");
+                                      },
+                                      child: Text(
+                                        "Add Now",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 15),
+
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "Resent ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 20),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: dataList.length,
+                                    itemBuilder: (context, index) {
+                                      DataModel singleData = dataList[index];
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SingleDataScreen(
+                                                    singleData: singleData,
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                        child: SingleDataCard(
+                                          title: singleData.title,
+                                          isExpense: singleData.isExpense,
+                                          cardAmount: singleData.amount,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                      }
                     },
                   ),
                 ],

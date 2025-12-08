@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
@@ -20,6 +23,8 @@ class _RegisterScreenState extends State<RegisterScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late StreamSubscription<bool> _subscription;
+  bool isConnected = true;
 
   @override
   void initState() {
@@ -30,6 +35,21 @@ class _RegisterScreenState extends State<RegisterScreen>
     );
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
+
+    //connection
+    _subscription = ConnectionService().connectionStream.listen((status) {
+      setState(() {
+        isConnected = status;
+      });
+
+      // Show snackbar on change
+      isConnected
+          ? null
+          : AppMessages().appAlertMessage(
+              "Please check your internet connection",
+              context,
+            );
+    });
   }
 
   bool isLoading = false;
@@ -78,6 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen>
     _passwordContraller.dispose();
     _nameContraller.dispose();
     _confirmpasswordContraller.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 
@@ -116,6 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                         ).createShader(Rect.fromLTWH(0, 0, 200, 70)),
                     ),
                   ),
+
                   const SizedBox(height: 20),
 
                   Container(
@@ -138,15 +160,14 @@ class _RegisterScreenState extends State<RegisterScreen>
                       children: [
                         Text(
                           "Create Your Account",
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 5),
                         Text(
                           "Sign Up to continue",
-                          style: TextStyle(fontSize: 15, color: Colors.black54),
+                          style: Theme.of(context).textTheme.bodySmall!
+                              .copyWith(fontWeight: FontWeight.normal),
                         ),
                         const SizedBox(height: 30),
                         Form(
@@ -231,38 +252,45 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     backgroundColor: const Color(0xff4ab7b6),
                                   ),
                                   onPressed: () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      setState(() => isLoading = true);
-                                      try {
-                                        await registerUser(
-                                          email: _emailContraller.text.trim(),
-                                          password: _passwordContraller.text
-                                              .trim(),
-                                        );
+                                    if (isConnected) {
+                                      if (_formKey.currentState!.validate()) {
+                                        setState(() => isLoading = true);
+                                        try {
+                                          await registerUser(
+                                            email: _emailContraller.text.trim(),
+                                            password: _passwordContraller.text
+                                                .trim(),
+                                          );
 
-                                        UserModel userData = UserModel(
-                                          userId: FirebaseAuthServices()
-                                              .curruntUserData
-                                              .uid,
-                                          name: _nameContraller.text.trim(),
-                                          email: _emailContraller.text.trim(),
-                                          createdAt: DateTime.now(),
-                                          updatedAt: DateTime.now(),
-                                        );
+                                          UserModel userData = UserModel(
+                                            userId: FirebaseAuthServices()
+                                                .curruntUserData
+                                                .uid,
+                                            name: _nameContraller.text.trim(),
+                                            email: _emailContraller.text.trim(),
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                          );
 
-                                        if (context.mounted) {
-                                          await FirebaseDatabaseServices()
-                                              .addUser(userData, context);
+                                          if (context.mounted) {
+                                            await FirebaseDatabaseServices()
+                                                .addUser(userData, context);
+                                          }
+
+                                          await Future.delayed(
+                                            Duration(seconds: 1),
+                                          );
+                                          AppRoutes.route.go("/");
+                                          setState(() {});
+                                        } finally {
+                                          setState(() => isLoading = false);
                                         }
-
-                                        await Future.delayed(
-                                          Duration(seconds: 1),
-                                        );
-                                        AppRoutes.route.go("/");
-                                        setState(() {});
-                                      } finally {
-                                        setState(() => isLoading = false);
                                       }
+                                    } else {
+                                      AppMessages().appAlertMessage(
+                                        "Please check your internet connection",
+                                        context,
+                                      );
                                     }
                                   },
                                   child: isLoading
@@ -270,13 +298,15 @@ class _RegisterScreenState extends State<RegisterScreen>
                                           strokeWidth: 2,
                                           color: Colors.white,
                                         )
-                                      : const Text(
+                                      : Text(
                                           "Create Account",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
                                         ),
                                 ),
                               ),
@@ -285,10 +315,8 @@ class _RegisterScreenState extends State<RegisterScreen>
 
                               Text(
                                 "Or continue with",
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 14,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(fontWeight: FontWeight.normal),
                               ),
 
                               const SizedBox(height: 20),
@@ -372,14 +400,18 @@ class _RegisterScreenState extends State<RegisterScreen>
                             child: RichText(
                               text: TextSpan(
                                 text: "Already have an account? ",
-                                style: TextStyle(color: Colors.black87),
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(fontWeight: FontWeight.normal),
                                 children: [
                                   TextSpan(
                                     text: "Login",
-                                    style: TextStyle(
-                                      color: AppColors.appBlueColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.appBlueColor,
+                                        ),
                                   ),
                                 ],
                               ),

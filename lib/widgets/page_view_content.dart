@@ -27,6 +27,7 @@ class PageViewContent extends StatelessWidget {
             context,
           ).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
         ),
+        SizedBox(height: 10),
         Text(
           textAlign: TextAlign.center,
           content,
