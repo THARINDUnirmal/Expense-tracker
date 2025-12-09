@@ -4,6 +4,7 @@ import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class PieChartScreen extends StatefulWidget {
   final Map<String, double> allTotalData;
@@ -17,10 +18,39 @@ class _PieChartScreenState extends State<PieChartScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  BannerAd? _bannerAd;
+  // Set to true to use Google's test ad (always use this during development)
+  final bool _useTestAds = true;
 
   @override
   void initState() {
     super.initState();
+
+    // Initialize banner ad
+    final String adUnitId = _useTestAds
+        ? 'ca-app-pub-3940256099942544/6300978111' // Google test ad
+        : 'ca-app-pub-3718682109484928/3605287211'; //real ad unit
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          print("✅ Banner ad loaded!");
+          setState(() {}); // Refresh to display the ad
+        },
+        onAdFailedToLoad: (ad, error) {
+          print("❌ Banner failed to load: $error");
+          ad.dispose();
+        },
+        onAdOpened: (ad) => print("Ad opened"),
+        onAdClosed: (ad) => print("Ad closed"),
+        onAdImpression: (ad) => print("Ad impression recorded"),
+      ),
+    )..load();
+
+    //animations
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -54,6 +84,7 @@ class _PieChartScreenState extends State<PieChartScreen>
   @override
   void dispose() {
     _controller.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -64,10 +95,18 @@ class _PieChartScreenState extends State<PieChartScreen>
     double expensePercent = percentages["expense"]!;
 
     return Scaffold(
+      bottomNavigationBar: _bannerAd == null
+          ? const SizedBox()
+          : SizedBox(
+              height: _bannerAd!.size.height.toDouble(),
+              width: _bannerAd!.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd!),
+            ),
       body: FadeTransition(
         opacity: _animation,
         child: Container(
           width: double.infinity,
+          height: MediaQuery.of(context).size.height * 1,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [

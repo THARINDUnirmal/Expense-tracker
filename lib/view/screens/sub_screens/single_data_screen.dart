@@ -3,15 +3,66 @@ import 'package:expenzes/services/firestroe_services/firebase_database_services.
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-class SingleDataScreen extends StatelessWidget {
+class SingleDataScreen extends StatefulWidget {
   final DataModel singleData;
   const SingleDataScreen({super.key, required this.singleData});
 
   @override
+  State<SingleDataScreen> createState() => _SingleDataScreenState();
+}
+
+class _SingleDataScreenState extends State<SingleDataScreen> {
+  BannerAd? _bannerAd;
+  // Set to true to use Google's test ad (always use this during development)
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize banner ad
+    final String adUnitId = _useTestAds
+        ? 'ca-app-pub-3940256099942544/6300978111' // Google test ad
+        : 'ca-app-pub-3718682109484928/3605287211'; //real ad unit
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          print("✅ Banner ad loaded!");
+          setState(() {}); // Refresh to display the ad
+        },
+        onAdFailedToLoad: (ad, error) {
+          print("❌ Banner failed to load: $error");
+          ad.dispose();
+        },
+        onAdOpened: (ad) => print("Ad opened"),
+        onAdClosed: (ad) => print("Ad closed"),
+        onAdImpression: (ad) => print("Ad impression recorded"),
+      ),
+    )..load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
+
+  final bool _useTestAds = true;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
+      bottomNavigationBar: _bannerAd == null
+          ? const SizedBox()
+          : SizedBox(
+              height: _bannerAd!.size.height.toDouble(),
+              width: _bannerAd!.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd!),
+            ),
       body: Stack(
         children: [
           Container(
@@ -83,7 +134,7 @@ class SingleDataScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        singleData.isExpense ? "Expense" : "Income",
+                        widget.singleData.isExpense ? "Expense" : "Income",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -92,7 +143,7 @@ class SingleDataScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        "Rs. ${singleData.amount}",
+                        "Rs. ${widget.singleData.amount}",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 40,
@@ -121,7 +172,7 @@ class SingleDataScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            singleData.title,
+                            widget.singleData.title,
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
@@ -137,12 +188,14 @@ class SingleDataScreen extends StatelessWidget {
                                 icon: Icons.calendar_month,
                                 title: "Date",
                                 value:
-                                    "${singleData.createdDate.day}-${singleData.createdDate.month}-${singleData.createdDate.year}",
+                                    "${widget.singleData.createdDate.day}-${widget.singleData.createdDate.month}-${widget.singleData.createdDate.year}",
                               ),
                               _infoTile(
                                 icon: Icons.access_time,
                                 title: "Time",
-                                value: singleData.createdTime.format(context),
+                                value: widget.singleData.createdTime.format(
+                                  context,
+                                ),
                               ),
                             ],
                           ),
@@ -158,7 +211,7 @@ class SingleDataScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            singleData.description,
+                            widget.singleData.description,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black87,
@@ -173,7 +226,7 @@ class SingleDataScreen extends StatelessWidget {
                               await FirebaseDatabaseServices()
                                   .deleteDataFromeFirebase(
                                     context: context,
-                                    itemId: singleData.id,
+                                    itemId: widget.singleData.id,
                                   );
                               print("Delete button close===================");
                               if (context.mounted) {

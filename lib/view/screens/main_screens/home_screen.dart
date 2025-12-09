@@ -16,6 +16,7 @@ import 'package:expenzes/widgets/reuseble_widgets/modern_gredient_card.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,6 +35,9 @@ class _HomeScreenState extends State<HomeScreen>
   Map<String, double> allDataMap = {};
   List<String> allCategeory = [];
   int expensesCount = 0;
+  BannerAd? _bannerAd;
+  // Set to true to use Google's test ad (always use this during development)
+  final bool _useTestAds = true;
 
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -106,6 +110,31 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
+    // Initialize banner ad
+    final String adUnitId = _useTestAds
+        ? 'ca-app-pub-3940256099942544/6300978111' // Google test ad
+        : 'ca-app-pub-3718682109484928/3605287211'; //real ad unit
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          print("✅ Banner ad loaded!");
+          setState(() {}); // Refresh to display the ad
+        },
+        onAdFailedToLoad: (ad, error) {
+          print("❌ Banner failed to load: $error");
+          ad.dispose();
+        },
+        onAdOpened: (ad) => print("Ad opened"),
+        onAdClosed: (ad) => print("Ad closed"),
+        onAdImpression: (ad) => print("Ad impression recorded"),
+      ),
+    )..load();
+
+    //other methords
     getUser();
     getAllTotalValues();
     timeTracker();
@@ -136,12 +165,20 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     _subscription.cancel();
     _controller.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomSheet: _bannerAd == null
+          ? const SizedBox()
+          : SizedBox(
+              height: _bannerAd!.size.height.toDouble(),
+              width: _bannerAd!.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd!),
+            ),
       body: FadeTransition(
         opacity: _animation,
         child: Container(
@@ -651,6 +688,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         );
                                       },
                                     ),
+                                    SizedBox(height: 50),
                                   ],
                                 );
                         }
