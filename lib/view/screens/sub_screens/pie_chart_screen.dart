@@ -37,16 +37,11 @@ class _PieChartScreenState extends State<PieChartScreen>
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          print("✅ Banner ad loaded!");
           setState(() {}); // Refresh to display the ad
         },
         onAdFailedToLoad: (ad, error) {
-          print("❌ Banner failed to load: $error");
           ad.dispose();
         },
-        onAdOpened: (ad) => print("Ad opened"),
-        onAdClosed: (ad) => print("Ad closed"),
-        onAdImpression: (ad) => print("Ad impression recorded"),
       ),
     )..load();
 

@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen>
   late String? userName;
   UserModel currentUserInformation = UserModel(userId: "", name: "", email: "");
   Map<String, double> allDataMap = {};
-  List<String> allCategeory = [];
   int expensesCount = 0;
   BannerAd? _bannerAd;
   // Set to true to use Google's test ad (always use this during development)
@@ -66,22 +65,14 @@ class _HomeScreenState extends State<HomeScreen>
       context: context,
     );
 
-    List<String> dataList = [];
     for (DataModel i in allDataList) {
       if (i.isExpense) {
         expensesCount += 1;
       }
     }
 
-    for (DataModel i in allDataList) {
-      if (!allCategeory.contains(i.category)) {
-        dataList.add(i.category!);
-      }
-    }
-
     setState(() {
       allDataMap = allData;
-      allCategeory = dataList;
     });
   }
 
@@ -121,16 +112,11 @@ class _HomeScreenState extends State<HomeScreen>
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          print("✅ Banner ad loaded!");
           setState(() {}); // Refresh to display the ad
         },
         onAdFailedToLoad: (ad, error) {
-          print("❌ Banner failed to load: $error");
           ad.dispose();
         },
-        onAdOpened: (ad) => print("Ad opened"),
-        onAdClosed: (ad) => print("Ad closed"),
-        onAdImpression: (ad) => print("Ad impression recorded"),
       ),
     )..load();
 
@@ -516,6 +502,7 @@ class _HomeScreenState extends State<HomeScreen>
                           );
                         } else {
                           List<DataModel> dataList = snapshot.data ?? [];
+
                           return dataList.isEmpty
                               ? Center(
                                   child: Column(
@@ -591,65 +578,131 @@ class _HomeScreenState extends State<HomeScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(height: 15),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          textAlign: TextAlign.center,
-                                          "Category",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            AppRoutes.route.push(
-                                              "/AllCtegeoryScreen",
-                                              extra: allCategeory,
-                                            );
-                                          },
-                                          child: Text(
-                                            "See All >>",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20),
 
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                          0.1,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: allCategeory.toSet().length,
-                                        itemBuilder: (context, index) {
-                                          String indexData = allCategeory
-                                              .toSet()
-                                              .toList()[index];
-                                          return InkWell(
-                                            onTap: () {
-                                              AppRoutes.route.push(
-                                                "/SingleCategeoryScreen",
-                                                extra: indexData,
-                                              );
-                                            },
-                                            child: CategoryCardWidget(
-                                              title: indexData,
+                                    //todo secon builder
+                                    StreamBuilder(
+                                      stream: FirebaseDatabaseServices()
+                                          .getAllCategoryNameStream(
+                                            curruntUserId:
+                                                FirebaseAuthServices()
+                                                    .curruntUserData
+                                                    .uid,
+                                          ),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          return Center(
+                                            child: Text(
+                                              textAlign: TextAlign.center,
+                                              "Error : ${snapshot.error}",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.normal,
+                                              ),
                                             ),
                                           );
-                                        },
-                                      ),
+                                        } else if (!snapshot.hasData) {
+                                          return Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "No Data Found",
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge!
+                                                      .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          List<String> categeoryNames =
+                                              snapshot.data ?? [];
+                                          return Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    textAlign: TextAlign.center,
+                                                    "Category",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyLarge!
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      AppRoutes.route.push(
+                                                        "/AllCtegeoryScreen",
+                                                        extra: categeoryNames,
+                                                      );
+                                                    },
+                                                    child: Text(
+                                                      "See All >>",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall!
+                                                          .copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 20),
+                                              SizedBox(
+                                                height:
+                                                    MediaQuery.of(
+                                                      context,
+                                                    ).size.height *
+                                                    0.1,
+                                                child: ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount: categeoryNames
+                                                      .toSet()
+                                                      .length,
+                                                  itemBuilder: (context, index) {
+                                                    String indexData =
+                                                        categeoryNames
+                                                            .toSet()
+                                                            .toList()[index];
+                                                    return InkWell(
+                                                      onTap: () {
+                                                        AppRoutes.route.push(
+                                                          "/SingleCategeoryScreen",
+                                                          extra: indexData,
+                                                        );
+                                                      },
+                                                      child: CategoryCardWidget(
+                                                        title: indexData,
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      },
                                     ),
 
                                     SizedBox(height: 20),

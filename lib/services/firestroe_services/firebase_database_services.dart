@@ -101,6 +101,29 @@ class FirebaseDatabaseServices {
     }
   }
 
+  // get category names as a stream from firebase
+  Stream<List<String>> getAllCategoryNameStream({
+    required String curruntUserId,
+  }) {
+    try {
+      return _firebaseCollection
+          .doc(curruntUserId)
+          .collection("allData")
+          .orderBy("createdDate", descending: false)
+          .snapshots()
+          .map((snapshot) {
+            // extract only the category names
+            return snapshot.docs
+                .map((doc) => doc.data()['category'] as String)
+                .toList()
+                .reversed // if you want latest first
+                .toList();
+          });
+    } catch (error) {
+      throw Exception(error.toString());
+    }
+  }
+
   // get data as stream from firebase with category filter
   Stream<List<DataModel>> getAllCtegeoryDataStream({
     required String curruntUserId,

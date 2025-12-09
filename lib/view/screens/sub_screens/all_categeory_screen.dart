@@ -36,16 +36,11 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          print("✅ Banner ad loaded!");
           setState(() {}); // Refresh to display the ad
         },
         onAdFailedToLoad: (ad, error) {
-          print("❌ Banner failed to load: $error");
           ad.dispose();
         },
-        onAdOpened: (ad) => print("Ad opened"),
-        onAdClosed: (ad) => print("Ad closed"),
-        onAdImpression: (ad) => print("Ad impression recorded"),
       ),
     )..load();
 
@@ -109,40 +104,40 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
               end: Alignment.bottomRight,
             ),
           ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(AppConstants.appPadding),
-              child: widget.categeoryList.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.category_outlined,
-                            size: 80,
-                            color: Colors.grey.shade400,
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.appPadding),
+            child: widget.categeoryList.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.category_outlined,
+                          size: 80,
+                          color: Colors.grey.shade400,
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          "No Categories Yet!",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade600,
                           ),
-                          SizedBox(height: 20),
-                          Text(
-                            "No Categories Yet!",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade600,
-                            ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Add a new category to get started.",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade500,
                           ),
-                          SizedBox(height: 10),
-                          Text(
-                            "Add a new category to get started.",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : GridView.builder(
+                        ),
+                      ],
+                    ),
+                  )
+                : SingleChildScrollView(
+                    child: GridView.builder(
                       itemCount: widget.categeoryList.toSet().toList().length,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -167,7 +162,7 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
                         );
                       },
                     ),
-            ),
+                  ),
           ),
         ),
       ),

@@ -9,8 +9,7 @@ class DataModel {
   final DateTime createdDate;
   final TimeOfDay createdTime;
   final double amount;
-  final String? category; // <-- ADD THIS FIELD
-
+  final String? category;
   DataModel({
     required this.createdTime,
     required this.id,
