@@ -11,6 +11,7 @@ import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:expenzes/view/screens/sub_screens/single_data_screen.dart';
+import 'package:expenzes/widgets/modern_FAB.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
 import 'package:expenzes/widgets/reuseble_widgets/modern_gredient_card.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
@@ -158,6 +159,14 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(bottom: 40),
+        child: ModernFAB(
+          onPressed: () {
+            AppRoutes.route.push("/AddScreen");
+          },
+        ),
+      ),
       bottomSheet: _bannerAd == null
           ? const SizedBox()
           : SizedBox(
@@ -254,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         GestureDetector(
                           onTap: () {
-                            AppRoutes.route.push("/UserProfileScreen");
+                            AppRoutes.route.push("/UserScreen");
                           },
                           child: Consumer(
                             builder:
@@ -589,12 +598,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                     .uid,
                                           ),
                                       builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        } else if (snapshot.hasError) {
+                                        if (snapshot.hasError) {
                                           return Center(
                                             child: Text(
                                               textAlign: TextAlign.center,
@@ -650,7 +654,6 @@ class _HomeScreenState extends State<HomeScreen>
                                                     onTap: () {
                                                       AppRoutes.route.push(
                                                         "/AllCtegeoryScreen",
-                                                        extra: categeoryNames,
                                                       );
                                                     },
                                                     child: Text(

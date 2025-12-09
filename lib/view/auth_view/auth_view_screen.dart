@@ -29,7 +29,7 @@
 // }
 
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
-import 'package:expenzes/view/screens/main_screen.dart';
+import 'package:expenzes/view/screens/main_screens/home_screen.dart';
 import 'package:expenzes/view/screens/onbording_screens/onbording_screen.dart';
 import 'package:expenzes/view/screens/onbording_screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +72,7 @@ class _AuthViewScreenState extends State<AuthViewScreen> {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           // User is logged in → go to MainScreen
-          return MainScreen();
+          return HomeScreen();
         } else {
           // User is not logged in → decide between onboarding or login
           return hasSeenOnboarding! ? LoginScreen() : OnbordingScreen();

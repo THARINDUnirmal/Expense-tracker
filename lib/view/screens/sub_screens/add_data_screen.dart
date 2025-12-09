@@ -1,14 +1,11 @@
 import 'dart:async';
-
 import 'package:expenzes/models/data_model.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
-import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_form2.dart';
 import 'package:flutter/material.dart';
@@ -429,11 +426,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                       ),
                                       category: selectedCategory,
                                     );
-                                    Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (context) => MainScreen(),
-                                      ),
-                                    );
+                                    Navigator.of(context).pop();
 
                                     await FirebaseDatabaseServices().addData(
                                       context: context,

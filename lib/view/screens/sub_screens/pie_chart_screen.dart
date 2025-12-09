@@ -138,7 +138,7 @@ class _PieChartScreenState extends State<PieChartScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        onTap: () => AppRoutes.route.go("/MainScreen"),
+                        onTap: () => AppRoutes.route.go("/HomeScreen"),
                         child: Container(
                           padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(

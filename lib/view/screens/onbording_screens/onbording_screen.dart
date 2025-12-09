@@ -24,7 +24,6 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
     return Scaffold(
       body: Container(
         width: double.infinity,
-
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],

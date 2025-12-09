@@ -1,12 +1,13 @@
 import 'package:expenzes/routes/app_routes.dart';
+import 'package:expenzes/services/auth/firebase_auth_services.dart';
+import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AllCategeoryScreen extends StatefulWidget {
-  final List<String> categeoryList;
-  const AllCategeoryScreen({super.key, required this.categeoryList});
+  const AllCategeoryScreen({super.key});
 
   @override
   State<AllCategeoryScreen> createState() => _AllCategeoryScreenState();
@@ -106,8 +107,26 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
           ),
           child: Padding(
             padding: const EdgeInsets.all(AppConstants.appPadding),
-            child: widget.categeoryList.isEmpty
-                ? Center(
+            child: StreamBuilder(
+              stream: FirebaseDatabaseServices().getAllCategoryNameStream(
+                curruntUserId: FirebaseAuthServices().curruntUserData.uid,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      "Error : ${snapshot.error}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  );
+                } else if (!snapshot.hasData) {
+                  return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -135,34 +154,70 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
                         ),
                       ],
                     ),
-                  )
-                : SingleChildScrollView(
-                    child: GridView.builder(
-                      itemCount: widget.categeoryList.toSet().toList().length,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 10 / 5,
-                        crossAxisCount: 2,
-                      ),
-                      itemBuilder: (context, index) {
-                        String indexValue = widget.categeoryList
-                            .toSet()
-                            .toList()[index];
-                        return InkWell(
-                          onTap: () {
-                            AppRoutes.route.push(
-                              "/SingleCategeoryScreen",
-                              extra: indexValue,
-                            );
-                          },
-                          child: CategoryCardWidget(title: indexValue),
+                  );
+                } else {
+                  List<String> categeoryNames = snapshot.data ?? [];
+                  return categeoryNames.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.category_outlined,
+                                size: 80,
+                                color: Colors.grey.shade400,
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                "No Categories Yet!",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "Add a new category to get started.",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey.shade500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : SingleChildScrollView(
+                          child: GridView.builder(
+                            itemCount: categeoryNames.toSet().toList().length,
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 10 / 5,
+                                  crossAxisCount: 2,
+                                ),
+                            itemBuilder: (context, index) {
+                              String indexValue = categeoryNames
+                                  .toSet()
+                                  .toList()[index];
+                              return InkWell(
+                                onTap: () {
+                                  AppRoutes.route.push(
+                                    "/SingleCategeoryScreen",
+                                    extra: indexValue,
+                                  );
+                                },
+                                child: CategoryCardWidget(title: indexValue),
+                              );
+                            },
+                          ),
                         );
-                      },
-                    ),
-                  ),
+                }
+              },
+            ),
           ),
         ),
       ),

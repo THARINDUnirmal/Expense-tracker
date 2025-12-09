@@ -4,7 +4,6 @@ import 'package:expenzes/view/screens/sub_screens/about_me_image_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/all_categeory_screen.dart';
 import 'package:expenzes/view/screens/sub_screens/empty_notifications_Screen.dart';
 import 'package:expenzes/view/screens/sub_screens/about_me_screen.dart';
-import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/view/screens/main_screens/add_screen.dart';
 import 'package:expenzes/view/screens/main_screens/home_screen.dart';
 import 'package:expenzes/view/screens/main_screens/user_screen.dart';
@@ -32,21 +31,23 @@ class AppRoutes {
       GoRoute(path: "/ResetScreen", builder: (context, state) => ResetScreen()),
 
       //Min screen route
-      GoRoute(
-        path: "/MainScreen",
-        builder: (context, state) => MainScreen(),
-        routes: [
-          GoRoute(
-            path: "HomeScreen",
-            builder: (context, state) => HomeScreen(),
-          ),
+      // GoRoute(
+      //   path: "/MainScreen",
+      //   builder: (context, state) => MainScreen(),
+      //   routes: [
+      //     GoRoute(
+      //       path: "HomeScreen",
+      //       builder: (context, state) => HomeScreen(),
+      //     ),
 
-          GoRoute(
-            path: "ProfileScreen",
-            builder: (context, state) => UserScreen(),
-          ),
-        ],
-      ),
+      //     GoRoute(
+      //       path: "ProfileScreen",
+      //       builder: (context, state) => UserScreen(),
+      //     ),
+      //   ],
+      // ),
+      GoRoute(path: "/HomeScreen", builder: (context, state) => HomeScreen()),
+      GoRoute(path: "/UserScreen", builder: (context, state) => UserScreen()),
       GoRoute(
         path: "/AddScreen",
         builder: (context, state) => AddScreen(),
@@ -103,8 +104,7 @@ class AppRoutes {
       GoRoute(
         path: "/AllCtegeoryScreen",
         builder: (context, state) {
-          List<String> allCategeory = state.extra as List<String>;
-          return AllCategeoryScreen(categeoryList: allCategeory);
+          return AllCategeoryScreen();
         },
       ),
       GoRoute(

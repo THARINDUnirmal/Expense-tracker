@@ -63,7 +63,7 @@ class _AboutMeScreenState extends State<AboutMeScreen>
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/MainScreen"),
+          onTap: () => AppRoutes.route.go("/HomeScreen"),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
