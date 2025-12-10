@@ -1,6 +1,7 @@
 import 'package:expenzes/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutMeScreen extends StatefulWidget {
@@ -63,7 +64,7 @@ class _AboutMeScreenState extends State<AboutMeScreen>
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/MainScreen"),
+          onTap: () => GoRouter.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -103,7 +104,7 @@ class _AboutMeScreenState extends State<AboutMeScreen>
                   ),
                   child: GestureDetector(
                     onTap: () {
-                      AppRoutes.route.push(
+                      GoRouter.of(context).push(
                         "/AboutMeImageScreen",
                         extra: "assets/images/userr.jpg",
                       );

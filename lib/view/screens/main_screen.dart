@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainScreen extends StatefulWidget {
-  final int? index;
-  const MainScreen({super.key, this.index});
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();

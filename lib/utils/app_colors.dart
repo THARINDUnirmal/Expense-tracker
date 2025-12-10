@@ -20,4 +20,11 @@ class AppColors {
   static const Color appYellowColor = Color(0xffFEEE91);
   static const Color appGreyColor = Color(0xff91C4C3);
   static const Color appcardBlueColor = Color(0xFF4A90E2);
+
+  //backgraound gredient color
+  static const Gradient backgroudColor = LinearGradient(
+    colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }

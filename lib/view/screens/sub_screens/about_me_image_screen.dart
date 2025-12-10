@@ -1,5 +1,6 @@
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AboutMeImageScreen extends StatelessWidget {
   final String imageUrl;
@@ -21,7 +22,7 @@ class AboutMeImageScreen extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
+          onTap: () => GoRouter.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(

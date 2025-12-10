@@ -3,6 +3,7 @@ import 'package:expenzes/services/firestroe_services/firebase_database_services.
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class SingleDataScreen extends StatefulWidget {
@@ -75,38 +76,40 @@ class _SingleDataScreenState extends State<SingleDataScreen> {
           SafeArea(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.appPadding,
-                    vertical: 10,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            shape: BoxShape.circle,
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppConstants.appPadding,
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () => GoRouter.of(context).pop(),
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.arrow_back_ios_rounded,
+                              color: Colors.white,
+                            ),
                           ),
-                          child: Icon(
-                            Icons.arrow_back_ios_rounded,
+                        ),
+                        Text(
+                          "Transaction Details",
+                          style: TextStyle(
                             color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                      Text(
-                        "Transaction Details",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 40),
-                    ],
+                        SizedBox(width: 40),
+                      ],
+                    ),
                   ),
                 ),
 
@@ -217,16 +220,14 @@ class _SingleDataScreenState extends State<SingleDataScreen> {
 
                           InkWell(
                             onTap: () async {
-                              print("Delete button click===================");
+                              if (context.mounted) {
+                                GoRouter.of(context).pop();
+                              }
                               await FirebaseDatabaseServices()
                                   .deleteDataFromeFirebase(
                                     context: context,
                                     itemId: widget.singleData.id,
                                   );
-                              print("Delete button close===================");
-                              if (context.mounted) {
-                                Navigator.of(context).pop();
-                              }
                             },
                             child: Container(
                               width: double.infinity,

@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:expenzes/provider/image_provider_services.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class FullImageScreen extends StatelessWidget {
@@ -26,7 +25,7 @@ class FullImageScreen extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
+          onTap: () => GoRouter.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -71,7 +70,7 @@ class FullImageScreen extends StatelessWidget {
                           context,
                           listen: false,
                         ).deleteUserImageFromLocal(context: context);
-                        AppRoutes.route.go("/UserProfileScreen");
+                        GoRouter.of(context).pop();
                       },
                       child: Text(
                         "Delete Photo",

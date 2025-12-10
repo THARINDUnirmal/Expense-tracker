@@ -1,14 +1,14 @@
 import 'package:expenzes/models/data_model.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
-import 'package:expenzes/view/screens/sub_screens/single_data_screen.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 
@@ -122,7 +122,7 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => GoRouter.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -150,17 +150,8 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
           SizedBox(width: 10),
         ],
       ),
-      body: Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: SafeArea(
+      body: GredientPage(
+        childWidget: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(AppConstants.appPadding),
@@ -430,7 +421,7 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
                                   elevation: 3,
                                 ),
                                 onPressed: () {
-                                  AppRoutes.route.push("/AddScreen");
+                                  GoRouter.of(context).push("/AddScreen");
                                 },
                                 child: Text(
                                   "Add Now",
@@ -499,7 +490,7 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
                                         elevation: 3,
                                       ),
                                       onPressed: () {
-                                        AppRoutes.route.push("/AddScreen");
+                                        GoRouter.of(context).push("/AddScreen");
                                       },
                                       child: Text(
                                         "Add Now",
@@ -536,14 +527,9 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
                                       DataModel singleData = dataList[index];
                                       return InkWell(
                                         onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SingleDataScreen(
-                                                    singleData: singleData,
-                                                  ),
-                                            ),
+                                          GoRouter.of(context).push(
+                                            "/SingleDataScreen",
+                                            extra: singleData,
                                           );
                                         },
                                         child: SingleDataCard(
@@ -611,8 +597,8 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                logoutButton("Yes", Colors.red, true, categeory),
-                logoutButton("No", Colors.white, false, categeory),
+                logoutButton("Yes", Colors.red, true, categeory, context),
+                logoutButton("No", Colors.white, false, categeory, context),
               ],
             ),
           ],
@@ -621,16 +607,24 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
     );
   }
 
-  Widget logoutButton(String text, Color color, bool isYes, String categeory) {
+  Widget logoutButton(
+    String text,
+    Color color,
+    bool isYes,
+    String categeory,
+    BuildContext context,
+  ) {
     return GestureDetector(
       onTap: () async {
         if (isYes) {
+          if (context.mounted) {
+            Navigator.pop(context);
+            GoRouter.of(context).pop();
+          }
           await FirebaseDatabaseServices().deleteDataUsingCategeory(
             context: context,
             categeory: categeory,
           );
-          if (context.mounted) Navigator.pop(context);
-          AppRoutes.route.go("/MainScreen");
         } else {
           Navigator.pop(context);
         }

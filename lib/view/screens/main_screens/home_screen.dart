@@ -12,10 +12,12 @@ import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:expenzes/view/screens/sub_screens/single_data_screen.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:expenzes/widgets/reuseble_widgets/modern_gredient_card.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
@@ -162,22 +164,13 @@ class _HomeScreenState extends State<HomeScreen>
           ? const SizedBox()
           : SizedBox(
               height: _bannerAd!.size.height.toDouble(),
-              width: _bannerAd!.size.width.toDouble(),
+              width: double.infinity,
               child: AdWidget(ad: _bannerAd!),
             ),
       body: FadeTransition(
         opacity: _animation,
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 1,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: SafeArea(
+        child: GredientPage(
+          childWidget: SafeArea(
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(AppConstants.appPadding),
@@ -189,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         GestureDetector(
                           onLongPress: () {
-                            AppRoutes.route.push("/AboutMeSreen");
+                            GoRouter.of(context).push("/AboutMeSreen");
                           },
                           child: RichText(
                             text: TextSpan(
@@ -214,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                         TextButton(
                           onPressed: () {
-                            AppRoutes.route.push("/NotificationScreen");
+                            GoRouter.of(context).push("/NotificationScreen");
                           },
 
                           style: TextButton.styleFrom(
@@ -254,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         GestureDetector(
                           onTap: () {
-                            AppRoutes.route.push("/UserProfileScreen");
+                            GoRouter.of(context).push("/UserProfileScreen");
                           },
                           child: Consumer(
                             builder:
@@ -333,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen>
 
                         IconButton(
                           onPressed: () {
-                            AppRoutes.route.push("/UserProfileScreen");
+                            GoRouter.of(context).push("/UserProfileScreen");
                           },
                           icon: Icon(
                             Icons.keyboard_double_arrow_right,
@@ -363,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                         IconButton(
                           onPressed: () {
-                            AppRoutes.route.push("/AddScreen");
+                            GoRouter.of(context).push("/AddScreen");
                           },
                           icon: Icon(Icons.add, size: 25),
                         ),
@@ -377,10 +370,10 @@ class _HomeScreenState extends State<HomeScreen>
                         GestureDetector(
                           onTap: () {
                             setState(() {});
-                            AppRoutes.route.push(
-                              "/SummaryScreen",
-                              extra: allDataMap,
-                            );
+
+                            GoRouter.of(
+                              context,
+                            ).push("/SummaryScreen", extra: allDataMap);
                           },
                           child: ModernGredientCard(
                             cardGradient: LinearGradient(
@@ -400,10 +393,10 @@ class _HomeScreenState extends State<HomeScreen>
                         GestureDetector(
                           onTap: () {
                             setState(() {});
-                            AppRoutes.route.push(
-                              "/PieChartScreen",
-                              extra: allDataMap,
-                            );
+
+                            GoRouter.of(
+                              context,
+                            ).push("/PieChartScreen", extra: allDataMap);
                           },
                           child: ModernGredientCard(
                             cardGradient: LinearGradient(
@@ -487,7 +480,7 @@ class _HomeScreenState extends State<HomeScreen>
                                     elevation: 3,
                                   ),
                                   onPressed: () {
-                                    AppRoutes.route.push("/AddScreen");
+                                    GoRouter.of(context).push("/AddScreen");
                                   },
                                   child: Text(
                                     "Add Now",
@@ -559,7 +552,9 @@ class _HomeScreenState extends State<HomeScreen>
                                           elevation: 3,
                                         ),
                                         onPressed: () {
-                                          AppRoutes.route.push("/AddScreen");
+                                          GoRouter.of(
+                                            context,
+                                          ).push("/AddScreen");
                                         },
                                         child: Text(
                                           "Add Now",
@@ -648,7 +643,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                   ),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      AppRoutes.route.push(
+                                                      GoRouter.of(context).push(
                                                         "/AllCtegeoryScreen",
                                                         extra: categeoryNames,
                                                       );
@@ -687,7 +682,9 @@ class _HomeScreenState extends State<HomeScreen>
                                                             .toList()[index];
                                                     return InkWell(
                                                       onTap: () {
-                                                        AppRoutes.route.push(
+                                                        GoRouter.of(
+                                                          context,
+                                                        ).push(
                                                           "/SingleCategeoryScreen",
                                                           extra: indexData,
                                                         );
@@ -724,13 +721,9 @@ class _HomeScreenState extends State<HomeScreen>
                                         DataModel singleData = dataList[index];
                                         return InkWell(
                                           onTap: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SingleDataScreen(
-                                                      singleData: singleData,
-                                                    ),
-                                              ),
+                                            GoRouter.of(context).push(
+                                              "/SingleDataScreen",
+                                              extra: singleData,
                                             );
                                           },
                                           child: SingleDataCard(

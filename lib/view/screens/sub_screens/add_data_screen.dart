@@ -1,17 +1,16 @@
 import 'dart:async';
-
 import 'package:expenzes/models/data_model.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
-import 'package:expenzes/view/screens/main_screen.dart';
 import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_form2.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AddDataScreen extends StatefulWidget {
   final bool isExpense;
@@ -192,7 +191,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => GoRouter.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -203,17 +202,8 @@ class _AddDataScreenState extends State<AddDataScreen> {
           ),
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height * 1,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: SafeArea(
+      body: GredientPage(
+        childWidget: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -429,11 +419,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                       ),
                                       category: selectedCategory,
                                     );
-                                    Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (context) => MainScreen(),
-                                      ),
-                                    );
+                                    GoRouter.of(context).pop();
 
                                     await FirebaseDatabaseServices().addData(
                                       context: context,
@@ -450,8 +436,6 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                         ),
                                       ),
                                     );
-
-                                    //AppRoutes.route.go("/MainScreen");
 
                                     _categeoryContraller.clear();
                                     _amountContraller.clear();

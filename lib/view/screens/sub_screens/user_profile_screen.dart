@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/provider/image_provider_services.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -71,7 +72,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
+          onTap: () => GoRouter.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -92,17 +93,8 @@ class _UserProfileScreenState extends State<UserProfileScreen>
       ),
       body: FadeTransition(
         opacity: _animation,
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 1,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: SafeArea(
+        child: GredientPage(
+          childWidget: SafeArea(
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(AppConstants.appPadding),
@@ -125,7 +117,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          AppRoutes.route.push(
+                                          GoRouter.of(context).push(
                                             "/FullImageScreen",
                                             extra: provider.userImage,
                                           );

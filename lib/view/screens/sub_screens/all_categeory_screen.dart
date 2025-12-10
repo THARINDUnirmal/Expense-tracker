@@ -1,7 +1,8 @@
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AllCategeoryScreen extends StatefulWidget {
@@ -74,7 +75,7 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
+          onTap: () => GoRouter.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -94,17 +95,8 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
       ),
       body: FadeTransition(
         opacity: _animation,
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 1,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Padding(
+        child: GredientPage(
+          childWidget: Padding(
             padding: const EdgeInsets.all(AppConstants.appPadding),
             child: widget.categeoryList.isEmpty
                 ? Center(
@@ -153,10 +145,9 @@ class _AllCategeoryScreenState extends State<AllCategeoryScreen>
                             .toList()[index];
                         return InkWell(
                           onTap: () {
-                            AppRoutes.route.push(
-                              "/SingleCategeoryScreen",
-                              extra: indexValue,
-                            );
+                            GoRouter.of(
+                              context,
+                            ).push("/SingleCategeoryScreen", extra: indexValue);
                           },
                           child: CategoryCardWidget(title: indexValue),
                         );

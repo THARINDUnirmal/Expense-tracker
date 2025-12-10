@@ -1,7 +1,8 @@
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:expenzes/routes/app_routes.dart';
 
 class EmptyNotificationsScreen extends StatefulWidget {
   const EmptyNotificationsScreen({super.key});
@@ -75,7 +76,7 @@ class _EmptyNotificationsScreenState extends State<EmptyNotificationsScreen>
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/MainScreen"),
+          onTap: () => GoRouter.of(context).pop(),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -88,17 +89,8 @@ class _EmptyNotificationsScreenState extends State<EmptyNotificationsScreen>
       ),
       body: FadeTransition(
         opacity: _animation,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 40),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: SafeArea(
+        child: GredientPage(
+          childWidget: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -122,7 +114,7 @@ class _EmptyNotificationsScreenState extends State<EmptyNotificationsScreen>
                     // button: you can pass your custom button,
                     btnText: "Go Home",
                     press: () {
-                      AppRoutes.route.go("/MainScreen");
+                      GoRouter.of(context).pop();
                     },
                   ),
                 ],

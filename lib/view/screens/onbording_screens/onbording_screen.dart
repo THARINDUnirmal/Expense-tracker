@@ -2,6 +2,7 @@ import 'package:animated_gradient_text/animated_gradient_text.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/widgets/custom_button.dart';
 import 'package:expenzes/widgets/page_view_content.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
@@ -22,17 +23,8 @@ class _OnbordingScreenState extends State<OnbordingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
+      body: GredientPage(
+        childWidget: Padding(
           padding: const EdgeInsets.all(AppConstants.appPadding),
           child: PageView(
             controller: _contraller,

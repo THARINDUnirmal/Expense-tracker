@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class NoConnectionScreen extends StatelessWidget {
   const NoConnectionScreen({super.key});
@@ -31,7 +32,9 @@ class NoConnectionScreen extends StatelessWidget {
                     "The page you are looking for seems to be missing. Please go back or visit the homepage.",
                 // button: you can pass your custom button,
                 btnText: "Back to home",
-                press: () {},
+                press: () {
+                  GoRouter.of(context).pop();
+                },
               ),
             ],
           ),

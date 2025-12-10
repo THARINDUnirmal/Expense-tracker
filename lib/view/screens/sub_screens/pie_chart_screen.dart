@@ -1,9 +1,10 @@
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class PieChartScreen extends StatefulWidget {
@@ -99,20 +100,8 @@ class _PieChartScreenState extends State<PieChartScreen>
             ),
       body: FadeTransition(
         opacity: _animation,
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 1,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFB3E5FC), // Sky Blue
-                Color(0xFFFFF59D), // Soft Yellow
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: SingleChildScrollView(
+        child: GredientPage(
+          childWidget: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -138,7 +127,7 @@ class _PieChartScreenState extends State<PieChartScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        onTap: () => AppRoutes.route.go("/MainScreen"),
+                        onTap: () => GoRouter.of(context).pop(),
                         child: Container(
                           padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(

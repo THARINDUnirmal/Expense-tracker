@@ -8,6 +8,7 @@ import 'package:expenzes/services/firestroe_services/firebase_database_services.
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
 import 'package:expenzes/widgets/reuseble_widgets/custom_text_field.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:expenzes/widgets/reuseble_widgets/small_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -108,17 +109,8 @@ class _RegisterScreenState extends State<RegisterScreen>
       backgroundColor: Colors.transparent,
       body: FadeTransition(
         opacity: _animation,
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: SafeArea(
+        child: GredientPage(
+          childWidget: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(

@@ -4,6 +4,7 @@ import 'package:expenzes/provider/image_provider_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +12,6 @@ import 'package:lottie/lottie.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -129,8 +129,8 @@ class _UserScreenState extends State<UserScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                pickOptionButton("Gallery", ImageSource.gallery),
-                pickOptionButton("Camera", ImageSource.camera),
+                pickOptionButton("Gallery", ImageSource.gallery, context),
+                pickOptionButton("Camera", ImageSource.camera, context),
               ],
             ),
           ],
@@ -139,7 +139,11 @@ class _UserScreenState extends State<UserScreen>
     );
   }
 
-  Widget pickOptionButton(String title, ImageSource source) {
+  Widget pickOptionButton(
+    String title,
+    ImageSource source,
+    BuildContext context,
+  ) {
     return GestureDetector(
       onTap: () async {
         await pickImage(source, context);
@@ -191,20 +195,8 @@ class _UserScreenState extends State<UserScreen>
       ),
       body: FadeTransition(
         opacity: _animation,
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 1,
-          padding: const EdgeInsets.symmetric(
-            vertical: AppConstants.appPadding,
-          ),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: SafeArea(
+        child: GredientPage(
+          childWidget: SafeArea(
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(AppConstants.appPadding),
@@ -321,10 +313,9 @@ class _UserScreenState extends State<UserScreen>
                           icon: FontAwesomeIcons.message,
                           title: "Categories",
                           subTitle: "Manage categories & sub-categories",
-                          onTap: () => AppRoutes.route.push(
-                            "/AllCtegeoryScreen",
-                            extra: allCategeory,
-                          ),
+                          onTap: () => GoRouter.of(
+                            context,
+                          ).push("/AllCtegeoryScreen", extra: allCategeory),
                         ),
                         menuCardModern(
                           icon: FontAwesomeIcons.signOut,
@@ -518,11 +509,11 @@ class _UserScreenState extends State<UserScreen>
                   onTap: () async {
                     if (context.mounted) {
                       Navigator.pop(context);
+                      GoRouter.of(context).go("/");
                     }
                     await FirebaseAuthServices().logOutAccount(
                       context: context,
                     );
-                    AppRoutes.route.go("/");
                   },
                   child: logoutButton("Yes", Colors.red, true),
                 ),

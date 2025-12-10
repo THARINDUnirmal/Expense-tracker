@@ -1,4 +1,6 @@
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class SummaryScreen extends StatefulWidget {
@@ -78,19 +80,8 @@ class _SummaryScreenState extends State<SummaryScreen>
             ),
       body: FadeTransition(
         opacity: _animation,
-        child: Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFB3E5FC), // Sky Blue
-                Color(0xFFFFF59D), // Soft Yellow
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Column(
+        child: GredientPage(
+          childWidget: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -114,7 +105,7 @@ class _SummaryScreenState extends State<SummaryScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => GoRouter.of(context).pop(),
                       child: Container(
                         padding: EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -289,7 +280,7 @@ class _SummaryScreenState extends State<SummaryScreen>
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: LinearProgressIndicator(
-                        value: expensePercentage, // automatically calculated
+                        value: expensePercentage,
                         minHeight: 10,
                         backgroundColor: Colors.grey[300],
                         color: Colors.blue,

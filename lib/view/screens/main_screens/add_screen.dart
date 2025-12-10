@@ -2,12 +2,12 @@ import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
-import 'package:expenzes/view/screens/sub_screens/add_data_screen.dart';
-import 'package:expenzes/view/screens/sub_screens/single_data_screen.dart';
 import 'package:expenzes/widgets/add_card_modern.dart';
+import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
@@ -66,18 +66,8 @@ class _AddScreenState extends State<AddScreen>
       ),
       body: FadeTransition(
         opacity: _animation,
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 1,
-          padding: const EdgeInsets.only(top: 30),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: SafeArea(
+        child: GredientPage(
+          childWidget: SafeArea(
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(AppConstants.appPadding),
@@ -89,13 +79,9 @@ class _AddScreenState extends State<AddScreen>
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            GoRouter.of(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AddDataScreen(isExpense: false),
-                              ),
-                            );
+                            ).push("/AddDataScreen", extra: false);
                           },
                           child: AddCardModern(
                             title: "Add Income",
@@ -106,13 +92,9 @@ class _AddScreenState extends State<AddScreen>
 
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            GoRouter.of(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AddDataScreen(isExpense: true),
-                              ),
-                            );
+                            ).push("/AddDataScreen", extra: true);
                           },
                           child: AddCardModern(
                             title: "Add Expense",
@@ -256,14 +238,9 @@ class _AddScreenState extends State<AddScreen>
                                         DataModel singleData = allData[index];
                                         return GestureDetector(
                                           onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SingleDataScreen(
-                                                      singleData: singleData,
-                                                    ),
-                                              ),
+                                            GoRouter.of(context).push(
+                                              "/SingleDataScreen",
+                                              extra: singleData,
                                             );
                                           },
                                           child: SingleDataCard(
