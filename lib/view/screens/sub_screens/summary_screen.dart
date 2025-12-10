@@ -1,4 +1,3 @@
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -115,7 +114,7 @@ class _SummaryScreenState extends State<SummaryScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
-                      onTap: () => AppRoutes.route.go("/HomeScreen"),
+                      onTap: () => Navigator.pop(context),
                       child: Container(
                         padding: EdgeInsets.all(12),
                         decoration: BoxDecoration(

@@ -1,5 +1,4 @@
 import 'package:expenzes/models/data_model.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
@@ -55,17 +54,6 @@ class _AddScreenState extends State<AddScreen>
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/HomeScreen"),
-          child: Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.arrow_back_ios_rounded, color: Colors.black),
-          ),
-        ),
         centerTitle: true,
         title: Text(
           "Add",

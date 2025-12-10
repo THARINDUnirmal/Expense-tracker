@@ -75,7 +75,7 @@ class _EmptyNotificationsScreenState extends State<EmptyNotificationsScreen>
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/HomeScreen"),
+          onTap: () => AppRoutes.route.go("/MainScreen"),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(

@@ -625,11 +625,12 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
     return GestureDetector(
       onTap: () async {
         if (isYes) {
-          Navigator.of(context).pop();
           await FirebaseDatabaseServices().deleteDataUsingCategeory(
             context: context,
             categeory: categeory,
           );
+          if (context.mounted) Navigator.pop(context);
+          AppRoutes.route.go("/MainScreen");
         } else {
           Navigator.pop(context);
         }

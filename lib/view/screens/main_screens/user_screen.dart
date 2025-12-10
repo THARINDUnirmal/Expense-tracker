@@ -179,27 +179,15 @@ class _UserScreenState extends State<UserScreen>
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: GestureDetector(
-          onTap: () => AppRoutes.route.go("/HomeScreen"),
-          child: Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.arrow_back_ios_rounded, color: Colors.black),
-          ),
-        ),
-        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         title: Text(
           "Profile",
           style: Theme.of(
             context,
           ).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        centerTitle: true,
       ),
       body: FadeTransition(
         opacity: _animation,
@@ -333,8 +321,10 @@ class _UserScreenState extends State<UserScreen>
                           icon: FontAwesomeIcons.message,
                           title: "Categories",
                           subTitle: "Manage categories & sub-categories",
-                          onTap: () =>
-                              AppRoutes.route.push("/AllCtegeoryScreen"),
+                          onTap: () => AppRoutes.route.push(
+                            "/AllCtegeoryScreen",
+                            extra: allCategeory,
+                          ),
                         ),
                         menuCardModern(
                           icon: FontAwesomeIcons.signOut,

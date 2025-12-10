@@ -217,12 +217,13 @@ class _SingleDataScreenState extends State<SingleDataScreen> {
 
                           InkWell(
                             onTap: () async {
+                              print("Delete button click===================");
                               await FirebaseDatabaseServices()
                                   .deleteDataFromeFirebase(
                                     context: context,
                                     itemId: widget.singleData.id,
                                   );
-
+                              print("Delete button close===================");
                               if (context.mounted) {
                                 Navigator.of(context).pop();
                               }
