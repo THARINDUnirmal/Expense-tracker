@@ -28,7 +28,7 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
 
   BannerAd? _bannerAd;
   // Set to true to use Google's test ad (always use this during development)
-  final bool _useTestAds = true;
+  final bool _useTestAds = false;
 
   @override
   void initState() {
@@ -113,7 +113,7 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
           ? const SizedBox()
           : SizedBox(
               height: _bannerAd!.size.height.toDouble(),
-              width: _bannerAd!.size.width.toDouble(),
+              width: double.infinity,
               child: AdWidget(ad: _bannerAd!),
             ),
       appBar: AppBar(

@@ -1,25 +1,32 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:expenzes/view/screens/main_screens/add_screen.dart';
 import 'package:expenzes/view/screens/main_screens/home_screen.dart';
 import 'package:expenzes/view/screens/main_screens/user_screen.dart';
-import 'package:expenzes/view/screens/main_screens/add_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final int initialIndex; // NEW
+  const MainScreen({super.key, this.initialIndex = 0});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _curruntIndex = 0;
-  final PageController _pageController = PageController();
+  late int _curruntIndex;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _curruntIndex = widget.initialIndex;
+    _pageController = PageController(initialPage: widget.initialIndex);
+  }
 
   @override
   void dispose() {
-    super.dispose();
     _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -32,23 +39,22 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Color(0xff73EC8B),
         onTap: (value) {
           setState(() {
+            _curruntIndex = value;
             _pageController.jumpToPage(value);
           });
         },
-        items: [
-          Icon(FontAwesomeIcons.house, size: 22),
-          Icon(FontAwesomeIcons.circlePlus, size: 22),
-          Icon(FontAwesomeIcons.user, size: 22),
+        items: const [
+          Icon(Icons.home, size: 22),
+          Icon(Icons.add_circle, size: 22),
+          Icon(Icons.person, size: 22),
         ],
       ),
       body: PageView(
-        onPageChanged: (value) {
-          setState(() {
-            _curruntIndex = value;
-          });
-        },
         controller: _pageController,
-        children: [HomeScreen(), AddScreen(), UserScreen()],
+        onPageChanged: (value) {
+          setState(() => _curruntIndex = value);
+        },
+        children: const [HomeScreen(), AddScreen(), UserScreen()],
       ),
     );
   }

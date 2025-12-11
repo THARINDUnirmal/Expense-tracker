@@ -183,6 +183,7 @@ class _UserScreenState extends State<UserScreen>
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: Text(

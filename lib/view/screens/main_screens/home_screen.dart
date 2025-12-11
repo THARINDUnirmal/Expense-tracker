@@ -3,14 +3,12 @@ import 'dart:io';
 import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/provider/image_provider_services.dart';
-import 'package:expenzes/routes/app_routes.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
 import 'package:expenzes/utils/messages/app_messages.dart';
-import 'package:expenzes/view/screens/sub_screens/single_data_screen.dart';
 import 'package:expenzes/widgets/reuseble_widgets/categeory_card_widget.dart';
 import 'package:expenzes/widgets/reuseble_widgets/gredient_page.dart';
 import 'package:expenzes/widgets/reuseble_widgets/modern_gredient_card.dart';
@@ -38,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen>
   int expensesCount = 0;
   BannerAd? _bannerAd;
   // Set to true to use Google's test ad (always use this during development)
-  final bool _useTestAds = true;
+  final bool _useTestAds = false;
 
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -182,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         GestureDetector(
                           onLongPress: () {
-                            GoRouter.of(context).push("/AboutMeSreen");
+                            GoRouter.of(context).push("/AboutMeScreen");
                           },
                           child: RichText(
                             text: TextSpan(
@@ -247,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         GestureDetector(
                           onTap: () {
-                            GoRouter.of(context).push("/UserProfileScreen");
+                            GoRouter.of(context).go("/MainScreen/2");
                           },
                           child: Consumer(
                             builder:
@@ -326,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen>
 
                         IconButton(
                           onPressed: () {
-                            GoRouter.of(context).push("/UserProfileScreen");
+                            GoRouter.of(context).go("/MainScreen/2");
                           },
                           icon: Icon(
                             Icons.keyboard_double_arrow_right,
@@ -356,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                         IconButton(
                           onPressed: () {
-                            GoRouter.of(context).push("/AddScreen");
+                            GoRouter.of(context).go("/MainScreen/1");
                           },
                           icon: Icon(Icons.add, size: 25),
                         ),

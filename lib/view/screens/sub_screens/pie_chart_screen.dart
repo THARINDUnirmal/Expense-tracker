@@ -21,7 +21,7 @@ class _PieChartScreenState extends State<PieChartScreen>
   late Animation<double> _animation;
   BannerAd? _bannerAd;
   // Set to true to use Google's test ad (always use this during development)
-  final bool _useTestAds = true;
+  final bool _useTestAds = false;
 
   @override
   void initState() {
@@ -95,7 +95,7 @@ class _PieChartScreenState extends State<PieChartScreen>
           ? const SizedBox()
           : SizedBox(
               height: _bannerAd!.size.height.toDouble(),
-              width: _bannerAd!.size.width.toDouble(),
+              width: double.infinity,
               child: AdWidget(ad: _bannerAd!),
             ),
       body: FadeTransition(

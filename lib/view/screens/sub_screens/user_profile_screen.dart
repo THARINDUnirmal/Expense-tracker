@@ -72,7 +72,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: GestureDetector(
-          onTap: () => GoRouter.of(context).pop(),
+          onTap: () => GoRouter.of(context).go("/MainScreen/2"),
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(

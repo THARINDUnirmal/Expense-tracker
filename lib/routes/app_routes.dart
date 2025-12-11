@@ -25,13 +25,11 @@ final GlobalKey<NavigatorState> _navigatorState = GlobalKey<NavigatorState>();
 
 class AppRoutes {
   static GoRouter route = GoRouter(
-    errorBuilder: (context, state) {
-      return NoConnectionScreen();
-    },
+    errorBuilder: (context, state) => NoConnectionScreen(),
     navigatorKey: _navigatorState,
     initialLocation: "/",
     routes: [
-      //Login Route
+      // Login routes
       GoRoute(path: "/", builder: (context, state) => AuthViewScreen()),
       GoRoute(path: "/LoginScreen", builder: (context, state) => LoginScreen()),
       GoRoute(path: "/ResetScreen", builder: (context, state) => ResetScreen()),
@@ -40,11 +38,17 @@ class AppRoutes {
         builder: (context, state) => RegisterScreen(),
       ),
 
-      //Min screen route
-      GoRoute(path: "/MainScreen", builder: (context, state) => MainScreen()),
-      GoRoute(path: "/AddScreen", builder: (context, state) => AddScreen()),
+      // MainScreen with tab parameter
+      GoRoute(
+        path: "/MainScreen/:tab", // tab parameter: 0=Home, 1=Add, 2=User
+        builder: (context, state) {
+          final tab = int.tryParse(state.pathParameters['tab'] ?? '0') ?? 0;
+          return MainScreen(initialIndex: tab);
+        },
+      ),
 
-      //Home screen routes
+      // Other screens (example: AddScreen, ProfileScreen etc.)
+      GoRoute(path: "/AddScreen", builder: (context, state) => AddScreen()),
       GoRoute(
         path: "/ProfileScreen",
         builder: (context, state) => UserScreen(),
@@ -54,53 +58,56 @@ class AppRoutes {
         builder: (context, state) => UserProfileScreen(),
       ),
       GoRoute(
-        path: "/AboutMeSreen",
+        path: "/AboutMeScreen",
         builder: (context, state) => AboutMeScreen(),
+      ),
+      GoRoute(
+        path: "/AboutMeImageScreen",
+        builder: (context, state) {
+          final image = state.extra as String;
+          return AboutMeImageScreen(imageUrl: image);
+        },
       ),
       GoRoute(
         path: "/SummaryScreen",
         builder: (context, state) {
-          Map<String, double> allData = state.extra as Map<String, double>;
+          final allData = state.extra as Map<String, double>;
           return SummaryScreen(allTotalData: allData);
         },
       ),
       GoRoute(
         path: "/PieChartScreen",
         builder: (context, state) {
-          Map<String, double> allData = state.extra as Map<String, double>;
+          final allData = state.extra as Map<String, double>;
           return PieChartScreen(allTotalData: allData);
         },
       ),
-
-      //Sub screens
       GoRoute(
         path: "/AddDataScreen",
         builder: (context, state) {
-          final bool value = state.extra! as bool;
-          return AddDataScreen(isExpense: value);
+          final isExpense = state.extra as bool;
+          return AddDataScreen(isExpense: isExpense);
         },
       ),
-
       GoRoute(
         path: "/FullImageScreen",
         builder: (context, state) {
-          String userImage = state.extra as String;
+          final userImage = state.extra as String;
           return FullImageScreen(imageUrl: userImage);
         },
       ),
-
       GoRoute(
         path: "/SingleCategeoryScreen",
         builder: (context, state) {
-          String categeoryName = state.extra as String;
-          return SingleCategeoryScreen(categeoryName: categeoryName);
+          final categoryName = state.extra as String;
+          return SingleCategeoryScreen(categeoryName: categoryName);
         },
       ),
       GoRoute(
         path: "/AllCtegeoryScreen",
         builder: (context, state) {
-          List<String> allCategeory = state.extra as List<String>;
-          return AllCategeoryScreen(categeoryList: allCategeory);
+          final allCategory = state.extra as List<String>;
+          return AllCategeoryScreen(categeoryList: allCategory);
         },
       ),
       GoRoute(
@@ -108,21 +115,9 @@ class AppRoutes {
         builder: (context, state) => EmptyNotificationsScreen(),
       ),
       GoRoute(
-        path: "/AboutMeScreen",
-        builder: (context, state) => AboutMeScreen(),
-      ),
-      GoRoute(
-        path: "/AboutMeImageScreen",
-        builder: (context, state) {
-          String image = state.extra as String;
-          return AboutMeImageScreen(imageUrl: image);
-        },
-      ),
-
-      GoRoute(
         path: "/SingleDataScreen",
         builder: (context, state) {
-          DataModel data = state.extra as DataModel;
+          final data = state.extra as DataModel;
           return SingleDataScreen(singleData: data);
         },
       ),

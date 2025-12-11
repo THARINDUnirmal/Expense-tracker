@@ -8,6 +8,7 @@ import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
@@ -21,6 +22,9 @@ class _AddScreenState extends State<AddScreen>
   User? curruntUser;
   late AnimationController _controller;
   late Animation<double> _animation;
+  BannerAd? _bannerAd;
+  // Set to true to use Google's test ad (always use this during development)
+  final bool _useTestAds = false;
 
   void userSet() {
     User? userData = FirebaseAuthServices().curruntUserData;
@@ -34,6 +38,25 @@ class _AddScreenState extends State<AddScreen>
     super.initState();
     userSet();
 
+    // Initialize banner ad
+    final String adUnitId = _useTestAds
+        ? 'ca-app-pub-3940256099942544/6300978111' // Google test ad
+        : 'ca-app-pub-3718682109484928/3605287211'; //real ad unit
+
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {}); // Refresh to display the ad
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+        },
+      ),
+    )..load();
+
     //animations
     _controller = AnimationController(
       vsync: this,
@@ -46,12 +69,20 @@ class _AddScreenState extends State<AddScreen>
   @override
   void dispose() {
     super.dispose();
+    _bannerAd?.dispose();
     _controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomSheet: _bannerAd == null
+          ? const SizedBox()
+          : SizedBox(
+              height: _bannerAd!.size.height.toDouble(),
+              width: double.infinity,
+              child: AdWidget(ad: _bannerAd!),
+            ),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
