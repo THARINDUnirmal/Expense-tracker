@@ -259,7 +259,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                           widget.isExpense
                               ? "Expenses Details"
                               : "Income Details",
-                          style: Theme.of(context).textTheme.bodyLarge!
+                          style: Theme.of(context).textTheme.headlineSmall!
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 30),
@@ -282,6 +282,20 @@ class _AddDataScreenState extends State<AddDataScreen> {
                         DropdownButtonFormField(
                           value: selectedCategory,
                           decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(
+                                width: 2,
+                                color: AppColors.appGreenColor,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(
+                                width: 2,
+                                color: Colors.purpleAccent,
+                              ),
+                            ),
                             hintText: "Select Category",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
