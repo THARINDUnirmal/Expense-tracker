@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:expenzes/models/data_model.dart';
 import 'package:expenzes/models/user_model.dart';
 import 'package:expenzes/provider/image_provider_services.dart';
+import 'package:expenzes/services/adds/ad_manager.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
@@ -16,8 +17,8 @@ import 'package:expenzes/widgets/reuseble_widgets/single_data_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,117 +29,55 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  //All veriables
+  // ------------------ USER DATA ------------------
   String currentCodition = "";
   late String? userName;
   UserModel currentUserInformation = UserModel(userId: "", name: "", email: "");
   Map<String, double> allDataMap = {};
   int expensesCount = 0;
-  BannerAd? _bannerAd;
-  // Set to true to use Google's test ad (always use this during development)
-  final bool _useTestAds = false;
 
+  // ------------------ ADS ------------------
+  BannerAd? _bannerAd;
+
+  // ------------------ ANIMATION ------------------
   late AnimationController _controller;
   late Animation<double> _animation;
 
-  //get user name form current user
-  Future<void> getUser() async {
-    User userData = FirebaseAuthServices().curruntUserData;
-    userName = userData.isAnonymous ? "Anonymous User" : userData.email;
-
-    currentUserInformation = await FirebaseDatabaseServices()
-        .getCurrentUserData(userId: userData.uid);
-  }
-
-  //get Total Expenses & Incomes values
-  Future<void> getAllTotalValues() async {
-    //get current userId
-    String uId = FirebaseAuthServices().curruntUserData.uid;
-
-    //get total values
-    Map<String, double> allData = await FirebaseDatabaseServices()
-        .getTotalValues(currentUserId: uId, context: context);
-
-    //get all data & add there categeorys in a list
-    List<DataModel> allDataList = await FirebaseDatabaseServices().getAllData(
-      curruntUserId: uId,
-      context: context,
-    );
-
-    for (DataModel i in allDataList) {
-      if (i.isExpense) {
-        expensesCount += 1;
-      }
-    }
-
-    setState(() {
-      allDataMap = allData;
-    });
-  }
-
-  void timeTracker() {
-    DateTime now = DateTime.now();
-    String timeOfDay;
-
-    if (now.hour >= 5 && now.hour < 12) {
-      timeOfDay = "Good Morning";
-    } else if (now.hour >= 12 && now.hour < 17) {
-      timeOfDay = "Good Afternoon";
-    } else if (now.hour >= 17 && now.hour < 20) {
-      timeOfDay = "Good Evening";
-    } else {
-      timeOfDay = "Good Night";
-    }
-    setState(() {
-      currentCodition = timeOfDay;
-    });
-  }
-
-  //
+  // ------------------ CONNECTION ------------------
   late StreamSubscription<bool> _subscription;
   bool isConnected = true;
 
   @override
   void initState() {
     super.initState();
-    // Initialize banner ad
-    final String adUnitId = _useTestAds
-        ? 'ca-app-pub-3940256099942544/6300978111' // Google test ad
-        : 'ca-app-pub-3718682109484928/3605287211'; //real ad unit
 
-    _bannerAd = BannerAd(
-      size: AdSize.banner,
-      adUnitId: adUnitId,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {}); // Refresh to display the ad
-        },
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-        },
-      ),
-    )..load();
+    // Banner load
+    _bannerAd = AdManager.createBannerAd(() => setState(() {}))..load();
 
-    //other methords
+    // Interstitial preload
+    AdManager.loadInterstitial();
+
+    // Auto-show after first frame
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   AdManager.showInterstitial(); // first-time interstitial
+    // });
+
+    // Other methods
     getUser();
     getAllTotalValues();
     timeTracker();
-    _subscription = ConnectionService().connectionStream.listen((status) {
-      setState(() {
-        isConnected = status;
-      });
 
-      // Show snackbar on change
-      isConnected
-          ? null
-          : AppMessages().appAlertMessage(
-              "Please check your internet connection",
-              context,
-            );
+    _subscription = ConnectionService().connectionStream.listen((status) {
+      isConnected = status;
+      if (!status) {
+        AppMessages().appAlertMessage(
+          "Please check your internet connection",
+          context,
+        );
+      }
     });
 
-    //animations
+    // Animation
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -153,6 +92,46 @@ class _HomeScreenState extends State<HomeScreen>
     _controller.dispose();
     _bannerAd?.dispose();
     super.dispose();
+  }
+
+  // ------------------ USER FUNCTIONS ------------------
+  Future<void> getUser() async {
+    User userData = FirebaseAuthServices().curruntUserData;
+    userName = userData.isAnonymous ? "Anonymous User" : userData.email;
+
+    currentUserInformation = await FirebaseDatabaseServices()
+        .getCurrentUserData(userId: userData.uid);
+  }
+
+  Future<void> getAllTotalValues() async {
+    String uId = FirebaseAuthServices().curruntUserData.uid;
+
+    Map<String, double> allData = await FirebaseDatabaseServices()
+        .getTotalValues(currentUserId: uId, context: context);
+
+    List<DataModel> allDataList = await FirebaseDatabaseServices().getAllData(
+      curruntUserId: uId,
+      context: context,
+    );
+
+    expensesCount = allDataList.where((e) => e.isExpense).length;
+
+    setState(() {
+      allDataMap = allData;
+    });
+  }
+
+  void timeTracker() {
+    DateTime now = DateTime.now();
+    if (now.hour >= 5 && now.hour < 12) {
+      currentCodition = "Good Morning";
+    } else if (now.hour >= 12 && now.hour < 17) {
+      currentCodition = "Good Afternoon";
+    } else if (now.hour >= 17 && now.hour < 20) {
+      currentCodition = "Good Evening";
+    } else {
+      currentCodition = "Good Night";
+    }
   }
 
   @override
@@ -368,6 +347,7 @@ class _HomeScreenState extends State<HomeScreen>
                         GestureDetector(
                           onTap: () {
                             setState(() {});
+                            AdManager.showInterstitial();
 
                             GoRouter.of(
                               context,
@@ -391,6 +371,7 @@ class _HomeScreenState extends State<HomeScreen>
                         GestureDetector(
                           onTap: () {
                             setState(() {});
+                            AdManager.showInterstitial();
 
                             GoRouter.of(
                               context,
@@ -641,6 +622,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                   ),
                                                   GestureDetector(
                                                     onTap: () {
+                                                      AdManager.showInterstitial();
                                                       GoRouter.of(context).push(
                                                         "/AllCtegeoryScreen",
                                                         extra: categeoryNames,

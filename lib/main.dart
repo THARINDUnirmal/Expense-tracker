@@ -1,6 +1,7 @@
 import 'package:expenzes/firebase_options.dart';
 import 'package:expenzes/provider/image_provider_services.dart';
 import 'package:expenzes/routes/app_routes.dart';
+import 'package:expenzes/services/adds/ad_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MobileAds.instance.initialize();
+  AdManager.loadInterstitial();
   await SharedPreferences.getInstance();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(

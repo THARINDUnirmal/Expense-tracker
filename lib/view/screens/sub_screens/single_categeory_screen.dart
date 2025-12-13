@@ -1,4 +1,5 @@
 import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/services/adds/ad_manager.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/app_colors.dart';
@@ -27,30 +28,16 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
   int touchedIndex = -1; // for tap animation
 
   BannerAd? _bannerAd;
-  // Set to true to use Google's test ad (always use this during development)
-  final bool _useTestAds = false;
 
   @override
   void initState() {
     super.initState();
-    // Initialize banner ad
-    final String adUnitId = _useTestAds
-        ? 'ca-app-pub-3940256099942544/6300978111' // Google test ad
-        : 'ca-app-pub-3718682109484928/3605287211'; //real ad unit
+    AdManager.loadInterstitial();
+    // Banner load
+    _bannerAd = AdManager.createBannerAd(() => setState(() {}))..load();
 
-    _bannerAd = BannerAd(
-      size: AdSize.banner,
-      adUnitId: adUnitId,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {}); // Refresh to display the ad
-        },
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-        },
-      ),
-    )..load();
+    // Interstitial preload
+    AdManager.loadInterstitial();
 
     //other
     getCategeoryData();
@@ -122,7 +109,10 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
-          onTap: () => GoRouter.of(context).pop(),
+          onTap: () {
+            AdManager.showInterstitial();
+            GoRouter.of(context).pop();
+          },
           child: Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -141,6 +131,7 @@ class _SingleCategeoryScreenState extends State<SingleCategeoryScreen> {
             child: Center(
               child: IconButton(
                 onPressed: () async {
+                  AdManager.showInterstitial();
                   await deleteFunction(categeory: widget.categeoryName);
                 },
                 icon: Icon(Icons.delete_outline, size: 30),

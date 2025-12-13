@@ -1,4 +1,5 @@
 import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/services/adds/ad_manager.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
 import 'package:expenzes/utils/constants/app_constants.dart';
@@ -23,8 +24,6 @@ class _AddScreenState extends State<AddScreen>
   late AnimationController _controller;
   late Animation<double> _animation;
   BannerAd? _bannerAd;
-  // Set to true to use Google's test ad (always use this during development)
-  final bool _useTestAds = false;
 
   void userSet() {
     User? userData = FirebaseAuthServices().curruntUserData;
@@ -38,24 +37,11 @@ class _AddScreenState extends State<AddScreen>
     super.initState();
     userSet();
 
-    // Initialize banner ad
-    final String adUnitId = _useTestAds
-        ? 'ca-app-pub-3940256099942544/6300978111' // Google test ad
-        : 'ca-app-pub-3718682109484928/3605287211'; //real ad unit
+    // Banner load
+    _bannerAd = AdManager.createBannerAd(() => setState(() {}))..load();
 
-    _bannerAd = BannerAd(
-      size: AdSize.banner,
-      adUnitId: adUnitId,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {}); // Refresh to display the ad
-        },
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-        },
-      ),
-    )..load();
+    // Interstitial preload
+    AdManager.loadInterstitial();
 
     //animations
     _controller = AnimationController(

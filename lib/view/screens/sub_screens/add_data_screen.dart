@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:expenzes/models/data_model.dart';
+import 'package:expenzes/services/adds/ad_manager.dart';
 import 'package:expenzes/services/auth/firebase_auth_services.dart';
 import 'package:expenzes/services/connection/connection_service.dart';
 import 'package:expenzes/services/firestroe_services/firebase_database_services.dart';
@@ -27,6 +28,8 @@ class _AddDataScreenState extends State<AddDataScreen> {
   @override
   void initState() {
     super.initState();
+    AdManager.loadInterstitial();
+
     listUpdate();
     _subscription = ConnectionService().connectionStream.listen((status) {
       setState(() {
@@ -419,6 +422,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                                       ),
                                       category: selectedCategory,
                                     );
+                                    AdManager.showInterstitial();
                                     GoRouter.of(context).pop();
 
                                     await FirebaseDatabaseServices().addData(
