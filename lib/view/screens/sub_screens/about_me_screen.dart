@@ -180,7 +180,7 @@ class _AboutMeScreenState extends State<AboutMeScreen>
   }
 
   Widget _animatedSocialButton({
-    required IconData icon,
+    required FaIconData icon,
     required Color color,
     required VoidCallback onTap,
   }) {
@@ -204,7 +204,7 @@ class _AboutMeScreenState extends State<AboutMeScreen>
             ),
           ],
         ),
-        child: Icon(icon, color: Colors.white, size: 30),
+        child: FaIcon(icon, color: Colors.white, size: 30),
       ),
     );
   }

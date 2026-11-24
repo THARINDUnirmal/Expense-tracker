@@ -340,7 +340,7 @@ class _UserScreenState extends State<UserScreen>
 
   // Modern Menu Card
   Widget menuCardModern({
-    required IconData icon,
+    required FaIconData icon,
     required String title,
     required String subTitle,
     VoidCallback? onTap,
@@ -370,7 +370,7 @@ class _UserScreenState extends State<UserScreen>
                 color: Colors.blue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: Colors.blue),
+              child: FaIcon(icon, color: Colors.blue),
             ),
             const SizedBox(width: 20),
 

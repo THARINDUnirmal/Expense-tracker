@@ -1,3 +1,4 @@
+import 'package:expenzes/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,54 +16,53 @@ class AddCardModern extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = isExpense ? AppColors.expense : AppColors.income;
     return Container(
-      width: MediaQuery.of(context).size.width * 0.41,
-      height: 105,
+      width: MediaQuery.sizeOf(context).width * .41,
+      height: 126,
+      padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
-        gradient: LinearGradient(
-          colors: isExpense
-              ? [
-                  const Color(0xFFFFA953), // orange gradient
-                  const Color(0xFFFF7A32),
-                ]
-              : [
-                  const Color(0xFF4A90E2), // blue gradient
-                  const Color(0xFF50C9C3),
-                ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(23),
+        border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 10,
-            spreadRadius: 1,
-            offset: const Offset(0, 4),
+            color: color.withOpacity(.10),
+            blurRadius: 22,
+            offset: const Offset(0, 9),
           ),
         ],
       ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              svgPath,
-              width: 34,
-              height: 34,
-              color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            padding: const EdgeInsets.all(11),
+            decoration: BoxDecoration(
+              color: color.withOpacity(.11),
+              borderRadius: BorderRadius.circular(16),
             ),
-            const SizedBox(height: 6),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            child: SvgPicture.asset(svgPath, color: color),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
+                ),
               ),
-            ),
-          ],
-        ),
+              Icon(Icons.arrow_forward_rounded, color: color, size: 19),
+            ],
+          ),
+        ],
       ),
     );
   }

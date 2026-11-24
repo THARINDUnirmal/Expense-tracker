@@ -22,43 +22,28 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  bool _obscure = true;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 8,
-            color: Colors.grey.withOpacity(0.5),
-            offset: Offset(15, 15),
-          ),
-          BoxShadow(blurRadius: 1, color: Colors.white, offset: Offset(-1, 0)),
-        ],
-      ),
-      child: TextFormField(
-        style: TextStyle(color: Colors.black),
-        validator: widget.validator,
-        obscureText: widget.issecurText ? true : false,
-        controller: widget.controller,
-        decoration: InputDecoration(
-          labelStyle: Theme.of(
-            context,
-          ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.normal),
-          labelText: widget.labaleTexts,
-          hintStyle: TextStyle(color: AppColors.appBlackColor),
-          prefixIcon: Icon(
-            widget.icon,
-            color: AppColors.appBlueColor,
-            size: 30,
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(20),
-          ),
-        ),
+    return TextFormField(
+      controller: widget.controller,
+      validator: widget.validator,
+      obscureText: widget.issecurText && _obscure,
+      style: const TextStyle(color: AppColors.textPrimary),
+      decoration: InputDecoration(
+        labelText: widget.labaleTexts,
+        prefixIcon: Icon(widget.icon, color: AppColors.appGreenColor, size: 21),
+        suffixIcon: widget.issecurText
+            ? IconButton(
+                tooltip: _obscure ? 'Show password' : 'Hide password',
+                onPressed: () => setState(() => _obscure = !_obscure),
+                icon: Icon(
+                  _obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                  color: AppColors.textSecondary,
+                ),
+              )
+            : null,
       ),
     );
   }

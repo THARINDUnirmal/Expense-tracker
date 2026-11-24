@@ -1,3 +1,4 @@
+import 'package:expenzes/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ModernGredientCard extends StatelessWidget {
@@ -14,36 +15,33 @@ class ModernGredientCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.41,
-      height: 105,
+      width: MediaQuery.sizeOf(context).width * .41,
+      height: 112,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
         gradient: cardGradient,
+        borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 10,
-            spreadRadius: 1,
-            offset: Offset(0, 4),
+            color: AppColors.appGreenColor.withOpacity(.12),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(cardIcon, size: 30, color: Colors.white),
-            SizedBox(height: 6),
-            Text(
-              cardTitle,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(cardIcon, size: 28, color: Colors.white),
+          const SizedBox(height: 8),
+          Text(
+            cardTitle,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

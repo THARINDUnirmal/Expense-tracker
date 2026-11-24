@@ -1,30 +1,36 @@
 import 'package:flutter/material.dart';
 
+/// FinanceMate 2026 design system.
 class AppColors {
-  static Color appBlackColor = Colors.black;
-  static Color appWhiteColor = Color(0xffe7f4fd);
-  static Color appCreamColor = Color(0xffeeedf1);
-  static Color appBlueColor = Color(0xff1d96e4);
-  static Color appRedColor = Color(0xffFF2E63);
-  static Color appBlue2Color = Color(0xfff3ebfe);
-  static Color appGreenColor = Color(0xff08CB00);
-  static Color appGreen2Color = Color(0xffE0FBE2);
-  static Color appCream3Color = Color(0xffD6F4ED);
-  static Color appCream2Color = Color.fromARGB(255, 255, 195, 177);
+  static const Color appBlackColor = Color(0xFF17212B);
+  static const Color appWhiteColor = Color(0xFFFFFFFF);
+  static const Color appCreamColor = Color(0xFFF5F7FA);
+  static const Color appBlueColor = Color(0xFF3867D6);
+  static const Color appRedColor = Color(0xFFE85D75);
+  static const Color appBlue2Color = Color(0xFFEAF0FF);
+  static const Color appGreenColor = Color(0xFF16A681);
+  static const Color appGreen2Color = Color(0xFFE5F7F1);
+  static const Color appCream3Color = Color(0xFFE8F5F2);
+  static const Color appCream2Color = Color(0xFFFFEEE8);
 
-  //botosheet colors
-  static const Color appSheetBlueColor = Color(0xff489eff);
-  static const Color appSheetRedColor = Color(0xffff1b2b);
-  static const Color appSheetBlackColor = Color(0xff00001c);
-  //card colors
-  static const Color appYellowColor = Color(0xffFEEE91);
-  static const Color appGreyColor = Color(0xff91C4C3);
-  static const Color appcardBlueColor = Color(0xFF4A90E2);
+  static const Color appSheetBlueColor = Color(0xFF3867D6);
+  static const Color appSheetRedColor = Color(0xFFE85D75);
+  static const Color appSheetBlackColor = Color(0xFF17212B);
+  static const Color appYellowColor = Color(0xFFFFD166);
+  static const Color appGreyColor = Color(0xFF8FA3B8);
+  static const Color appcardBlueColor = Color(0xFF3867D6);
 
-  //backgraound gredient color
+  static const Color background = Color(0xFFF5F7FA);
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color textPrimary = Color(0xFF17212B);
+  static const Color textSecondary = Color(0xFF778494);
+  static const Color border = Color(0xFFE8EDF2);
+  static const Color income = Color(0xFF16A681);
+  static const Color expense = Color(0xFFE85D75);
+
   static const Gradient backgroudColor = LinearGradient(
-    colors: [Color(0xFFB3E5FC), Color(0xFFFFF59D)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
+    colors: [background, Color(0xFFF0F4F8)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
   );
 }

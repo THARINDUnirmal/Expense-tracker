@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen>
                               text: "Finance",
                               style: TextStyle(
                                 fontSize: 30,
-                                color: Color(0xfffdaa5d),
+                                color: AppColors.appGreenColor,
                                 fontWeight: FontWeight.bold,
                               ),
                               children: [
@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   text: "Mate",
                                   style: TextStyle(
                                     fontSize: 30,
-                                    color: Color(0xff4ab7b6),
+                                    color: AppColors.appBlueColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -356,8 +356,8 @@ class _HomeScreenState extends State<HomeScreen>
                           child: ModernGredientCard(
                             cardGradient: LinearGradient(
                               colors: [
-                                Color(0xFF4A90E2).withOpacity(0.85),
-                                Color(0xFF50C9C3).withOpacity(0.85),
+                                AppColors.appGreenColor,
+                                const Color(0xFF43BFA0),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -380,8 +380,8 @@ class _HomeScreenState extends State<HomeScreen>
                           child: ModernGredientCard(
                             cardGradient: LinearGradient(
                               colors: [
-                                Color(0xFFFFC857).withOpacity(0.95),
-                                Color(0xFFFFA534).withOpacity(0.95),
+                                AppColors.appBlueColor,
+                                const Color(0xFF6F8DEB),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
