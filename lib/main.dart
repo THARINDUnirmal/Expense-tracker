@@ -49,23 +49,34 @@ class MyApp extends StatelessWidget {
         ),
         textTheme: baseTextTheme.copyWith(
           headlineLarge: baseTextTheme.headlineLarge?.copyWith(
-            color: AppColors.textPrimary, fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w800,
           ),
           headlineMedium: baseTextTheme.headlineMedium?.copyWith(
-            color: AppColors.textPrimary, fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w800,
           ),
           headlineSmall: baseTextTheme.headlineSmall?.copyWith(
-            color: AppColors.textPrimary, fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w700,
           ),
           titleLarge: baseTextTheme.titleLarge?.copyWith(
-            color: AppColors.textPrimary, fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w700,
           ),
           titleMedium: baseTextTheme.titleMedium?.copyWith(
-            color: AppColors.textPrimary, fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
           ),
-          bodyLarge: baseTextTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
-          bodyMedium: baseTextTheme.bodyMedium?.copyWith(color: AppColors.textPrimary),
-          bodySmall: baseTextTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+          bodyLarge: baseTextTheme.bodyLarge?.copyWith(
+            color: AppColors.textPrimary,
+          ),
+          bodyMedium: baseTextTheme.bodyMedium?.copyWith(
+            color: AppColors.textPrimary,
+          ),
+          bodySmall: baseTextTheme.bodySmall?.copyWith(
+            color: AppColors.textSecondary,
+          ),
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: AppColors.background,
@@ -86,7 +97,10 @@ class MyApp extends StatelessWidget {
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: AppColors.surface,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 17),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 17,
+          ),
           hintStyle: const TextStyle(color: AppColors.textSecondary),
           labelStyle: const TextStyle(color: AppColors.textSecondary),
           border: OutlineInputBorder(
@@ -99,7 +113,10 @@ class MyApp extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: AppColors.appGreenColor, width: 1.6),
+            borderSide: const BorderSide(
+              color: AppColors.appGreenColor,
+              width: 1.6,
+            ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -112,7 +129,9 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.white,
             elevation: 0,
             minimumSize: const Size(0, 54),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             textStyle: const TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
@@ -121,7 +140,9 @@ class MyApp extends StatelessWidget {
             foregroundColor: AppColors.textPrimary,
             side: const BorderSide(color: AppColors.border),
             minimumSize: const Size(0, 50),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
           ),
         ),
         dividerColor: AppColors.border,
